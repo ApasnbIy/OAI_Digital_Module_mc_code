@@ -38,6 +38,14 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+	
+typedef struct {
+
+	uint16_t period; //micro_sec
+	
+	
+}type_time_segmentation;
+
 
 /* USER CODE END ET */
 

@@ -8,19 +8,23 @@
   ******************************************************************************
   */
 #include "modbus_rtu.h"
+#include "modbus_data_formater.h"
 
 uint8_t rx_tx_data_buff[256];
 uint8_t len;
-uint16_t addr;
+
+
+
 void modbus_struct_init_constant(type_modbus_data* modbus_ptr)
 {
-    for(uint16_t i = 0; i<ANALOG_INPUTS_OUTPUTS_Size; i++)
+    for(uint16_t i = 0; i < MB_DATA_SIZE; i++)
     {
-      modbus_ptr->analog_inputs[i] = i;
-      modbus_ptr->analog_outputs[i]= i;
-      modbus_ptr->discret_inputs[i] = i;
-      modbus_ptr->discret_outputs[i] = i;
+      modbus_ptr->analog_inputs[i] = 0;
+      modbus_ptr->analog_outputs[i]= 0;
+      modbus_ptr->discret_inputs[i] = 0;
+      modbus_ptr->discret_outputs[i] = 0;
     }
+		
 
 }
 
@@ -30,7 +34,7 @@ void modbus_struct_init_constant(type_modbus_data* modbus_ptr)
 */
 
 uint8_t modbus_RX_TX_handler(type_modbus_data* modbus_ptr, type_VCP_UART* vcp_ptr){
-	
+	uint16_t addr;
   if(vcp_ptr->rx_data[0] == DEVICE_ID){
 		if(vcp_ptr->rx_data[1] == 0x03){ //read analog outputs (addr, code (0x03), Hi_addr, Lo_addr, Hi_reg_num), Lo_reg_num, CRC16) 
 			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){
@@ -40,7 +44,7 @@ uint8_t modbus_RX_TX_handler(type_modbus_data* modbus_ptr, type_VCP_UART* vcp_pt
         vcp_ptr->rx_position = 0;
 			}
     }
-    else if(vcp_ptr->rx_data[1] == 0x04){ //read analog inputs (addr, code (0x04), Hi_addr, Lo_addr, Hi_reg_num), Lo_reg_num, CRC16) 
+    else if(vcp_ptr->rx_data[1] == 0x04){ //read analog inputs (addr, code (0x04), Hi_addr, Lo_addr, Hi_reg_num, Lo_reg_num, CRC16) 
 			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){
         addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
 				len = modbus_answ(vcp_ptr->rx_data[1],vcp_ptr->rx_data[5],rx_tx_data_buff, modbus_ptr->analog_inputs, addr);
@@ -62,15 +66,60 @@ uint8_t modbus_RX_TX_handler(type_modbus_data* modbus_ptr, type_VCP_UART* vcp_pt
     else if(vcp_ptr->rx_data[1] == 0x10){ //write analog outputs
       if(MRTU_CRC(vcp_ptr->rx_data, (0x09 + vcp_ptr->rx_data[0x06])) == 0 ){
         addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
-        #pragma pack(1)        
-        memcpy(&modbus_ptr->analog_outputs[addr], &vcp_ptr->rx_data[7], vcp_ptr->rx_data[0x06]);
-        #pragma pack(8)
+				    
+				memcpy(&modbus_ptr->analog_outputs[addr], &vcp_ptr->rx_data[7], vcp_ptr->rx_data[0x06]);
+				
         modbus_answ_shrt(rx_tx_data_buff, vcp_ptr->rx_data);
         vcp_uart_write(vcp_ptr, rx_tx_data_buff, 0x08);
         vcp_ptr->rx_position = 0;
 			return 0;
+			}	
+    }
+		
+		/*
+		if(vcp_ptr->rx_data[1] == 0x01){ //read discrete outputs (addr, code (0x03), Hi_addr, Lo_addr, Hi_reg_num), Lo_reg_num, CRC16) 
+			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){
+        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
+				len = modbus_answ(vcp_ptr->rx_data[1],vcp_ptr->rx_data[5],rx_tx_data_buff, modbus_ptr->discret_outputs, addr);
+        vcp_uart_write(vcp_ptr,rx_tx_data_buff,len);
+        vcp_ptr->rx_position = 0;
 			}
     }
+    else if(vcp_ptr->rx_data[1] == 0x02){ //read discret inputs (addr, code (0x04), Hi_addr, Lo_addr, Hi_reg_num, Lo_reg_num, CRC16) 
+			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){
+        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
+				len = modbus_answ(vcp_ptr->rx_data[1],vcp_ptr->rx_data[5],rx_tx_data_buff, modbus_ptr->discret_inputs, addr);
+        vcp_uart_write(vcp_ptr,rx_tx_data_buff,len);
+        vcp_ptr->rx_position = 0;
+			}
+      
+    }
+    else if(vcp_ptr->rx_data[1] == 0x04){ //write single discret output
+      if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){ 
+        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;        
+        memcpy(&modbus_ptr->discret_outputs[addr], &vcp_ptr->rx_data[4], 0x02);
+        modbus_answ_shrt(rx_tx_data_buff, vcp_ptr->rx_data);
+        vcp_uart_write(vcp_ptr, rx_tx_data_buff, 0x08);
+        vcp_ptr->rx_position = 0;
+        return 0;
+			}
+    }
+    else if(vcp_ptr->rx_data[1] == 0x15){ //write discret outputs
+      if(MRTU_CRC(vcp_ptr->rx_data, (0x09 + vcp_ptr->rx_data[0x06])) == 0 ){
+        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
+				    
+				memcpy(&modbus_ptr->discret_outputs[addr], &vcp_ptr->rx_data[7], vcp_ptr->rx_data[0x06]);
+				
+        modbus_answ_shrt(rx_tx_data_buff, vcp_ptr->rx_data);
+        vcp_uart_write(vcp_ptr, rx_tx_data_buff, 0x08);
+        vcp_ptr->rx_position = 0;
+			return 0;
+			}	
+    }
+		
+		*/
+		
+		
 	}
   else{
     vcp_ptr->rx_position = 0;
@@ -161,3 +210,28 @@ uint16_t MRTU_CRC(uint8_t *data, uint8_t len)
     }
     return (((uint16_t)(uchCRCLo) << 8) | (uint16_t)(uchCRCHi));
 }
+
+
+
+
+
+
+void MB_Data_Adress_set(type_MB_Address_space* Addr_space, uint32_t* ptr_to_destination_struct, uint32_t* ptr_to_copy_struct, uint16_t offset_c, uint16_t offset_d, uint16_t len)
+{
+		Addr_space->pointer_to_destination_struct = ptr_to_destination_struct;
+    Addr_space->pointer_to_copy_struct = ptr_to_copy_struct;
+    Addr_space->offset_in_dest = offset_c;
+		Addr_space->offset_in_dest = offset_d;
+    Addr_space->len = len;
+}		
+
+void MB_data_update(type_MB_Address_space* ptr_MB_Addres_space, uint16_t last_address)
+{	
+	for(int i = 0; i < last_address+1; i++){
+		memcpy((uint8_t*)((uint8_t*)ptr_MB_Addres_space[i].pointer_to_destination_struct + (uint16_t)ptr_MB_Addres_space[i].offset_in_dest), (uint8_t*)ptr_MB_Addres_space[i].pointer_to_copy_struct  + (uint16_t)ptr_MB_Addres_space[i].offset_in_copy, ptr_MB_Addres_space[i].len);
+	 }
+ }
+
+
+
+

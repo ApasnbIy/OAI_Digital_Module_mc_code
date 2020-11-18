@@ -54,3 +54,6 @@ kpa_bdk2\modbus_rtu.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 kpa_bdk2\modbus_rtu.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 kpa_bdk2\modbus_rtu.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 kpa_bdk2\modbus_rtu.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+kpa_bdk2\modbus_rtu.o: ..\my_lib\modbus_data_formater.h
+kpa_bdk2\modbus_rtu.o: ..\my_lib\INA226.h
+kpa_bdk2\modbus_rtu.o: ../Inc/i2c.h

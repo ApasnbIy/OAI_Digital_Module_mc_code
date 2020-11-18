@@ -49,6 +49,8 @@
 "kpa_bdk2\usbd_cdc.o"
 "kpa_bdk2\vcp_time_segmentation.o"
 "kpa_bdk2\modbus_rtu.o"
+"kpa_bdk2\modbus_data_formater.o"
+"kpa_bdk2\ina226.o"
 --library_type=microlib --strict --scatter "KPA_BDK2\KPA_BDK2.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
