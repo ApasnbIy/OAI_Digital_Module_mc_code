@@ -5,30 +5,6 @@
 #include "modbus_rtu.h"
 #include "INA226.h"
 
-#define MB_ADC1_OFFSET_MB_DATA			0 //analog input
-#define MB_ADC1_OFFSET_COPY         2
-#define MB_ADC1_ADDRES							0
-
-
-#define MB_INA3V3_OFFSET_MB_DATA 		16
-#define MB_INA3V3_OFFSET_COPY				0
-#define MB_INA3V3_ADDRES						1
-
-
-#define MB_INA5V_OFFSET_MB_DATA 		32
-#define MB_INA5V_OFFSET_COPY				0
-#define MB_INA5V_ADDRES							2
-
-
-#define MB_DAC1_OFFSET_MB_DATA    	(MB_DATA_SIZE + 0) // analog output
-#define MB_DAC1_OFFSET_COPY					0
-#define MB_DAC1_ADDRES							0
-
-
-#define MB_DAC2_OFFSET_MB_DATA			(MB_DATA_SIZE + 1028)
-#define MB_DAC2_OFFSET_COPY					0
-#define MB_DAC2_ADDRES							1
-
 
 #pragma pack(push, 2)
 typedef struct
@@ -54,6 +30,9 @@ typedef struct
 	uint16_t reserved[11];
 	uint16_t data[512];	
 }type_dac_data_struct;
+
+
+
 
 
 

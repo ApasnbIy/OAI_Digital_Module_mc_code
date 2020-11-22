@@ -202,7 +202,7 @@ void ina226_body_read_queue(type_INA226_DEVICE* ina226_ptr)
 
 
 
-void ina226_snake_2(type_INA226_Snake* Snake){
+void ina226_snake(type_INA226_Snake* Snake){
 		Snake->ch_read_queue += 1;
 		if(Snake->ch_read_queue > 1){
 					Snake->ch_read_queue = 0;					

@@ -17,6 +17,9 @@
             "intelliSenseMode": "clang-x64",
             "includePath": [
                 "${workspaceFolder}/Inc",
+                "${workspaceFolder}/Drivers",
+                "${workspaceFolder}/Drivers/CMSIS",
+                "${workspaceFolder}/Middlewares",
                 "${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc",
                 "${workspaceFolder}/Drivers/CMSIS/Include",
                 "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
@@ -27,7 +30,8 @@
                 
                 "C:/Keil_v5/ARM/ARMCLANG/include"
             ],
-            "forcedInclude": [
+
+            "forcedInclude": ["${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc"
             ]
         }
     ],

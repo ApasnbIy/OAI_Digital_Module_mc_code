@@ -40,6 +40,7 @@
 #include "math.h"
 #include "modbus_data_formater.h"
 #include "INA226.h"
+#include "my_GPIO.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -83,12 +84,6 @@ type_adc_settings 	 mb_adc_settings;
 type_dac_data_struct mb_dac1;
 type_dac_data_struct mb_dac2;
 
-
-/*
-type_INA226_DEVICE ina_5;
-type_INA226_DEVICE ina_3;
-uint8_t ina_number = 0;
-*/
 union{
 type_modbus_data mb_data;
 type_modbus_data_named mb_data_named;
@@ -96,16 +91,6 @@ type_modbus_data_named mb_data_named;
 
 #pragma pack(pop)
 
-//void ina226_snake_2(type_INA226_Snake* Snake);
-/*
-void ina226_snake_2(type_INA226_Snake* Snake){
-		Snake->ch_read_queue += 1;
-		if(Snake->ch_read_queue > 1){
-					Snake->ch_read_queue = 0;					
-				}
-		ina226_start_read_queue(&Snake->INA_226[Snake->ch_read_queue]);
-}
-*/
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -178,7 +163,7 @@ int main(void)
 	
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
 	
-  	ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
+  ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
 	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
 	
 	modbus_struct_init_constant(&mb_data_union.mb_data);
@@ -211,16 +196,7 @@ int main(void)
 		if((current_time - previous_time_1)>= 300){
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
 				
-			
-				/*
-				ina_226.ch_read_queue += 1;
-				if(ina_226.ch_read_queue > 1){
-					ina_226.ch_read_queue = 0;					
-				}
-				ina226_start_read_queue(&ina_226.INA_226[ina_226.ch_read_queue]);
-				*/
-				
-				ina226_snake_2(&ina_226);
+				ina226_snake(&ina_226);
 			
 				previous_time_1 = 0;
 				current_time = 0;

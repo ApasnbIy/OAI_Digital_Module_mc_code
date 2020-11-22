@@ -66,3 +66,4 @@ kpa_bdk2\main.o: ..\my_lib\modbus_rtu.h
 kpa_bdk2\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 kpa_bdk2\main.o: ..\my_lib\modbus_data_formater.h
 kpa_bdk2\main.o: ..\my_lib\INA226.h
+kpa_bdk2\main.o: ..\my_lib\my_GPIO.h

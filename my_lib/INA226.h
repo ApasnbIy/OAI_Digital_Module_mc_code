@@ -90,6 +90,6 @@ uint16_t ina226_read_IT_callback(type_INA226_DEVICE* ina226_ptr);
 void ina226_start_read_queue(type_INA226_DEVICE* ina226_ptr);
 void ina226_body_read_queue(type_INA226_DEVICE* ina226_ptr);
 void ina226_error_process(type_INA226_DEVICE* ina226_ptr);
-void ina226_snake_2( type_INA226_Snake* Snake);
+void ina226_snake( type_INA226_Snake* Snake);
 
 #endif
