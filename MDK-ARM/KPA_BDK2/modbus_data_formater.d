@@ -57,3 +57,4 @@ kpa_bdk2\modbus_data_formater.o: ../Middlewares/ST/STM32_USB_Device_Library/Core
 kpa_bdk2\modbus_data_formater.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
 kpa_bdk2\modbus_data_formater.o: ..\my_lib\INA226.h
 kpa_bdk2\modbus_data_formater.o: ../Inc/i2c.h
+kpa_bdk2\modbus_data_formater.o: ..\my_lib\my_GPIO.h

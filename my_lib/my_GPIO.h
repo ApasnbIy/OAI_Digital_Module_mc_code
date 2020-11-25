@@ -1,7 +1,7 @@
 #ifndef _MY_GPIO_H
 #define _MY_GPIO_H
-
-
+#include "main.h"
+//#include "string.h"
 
 //portC
 #define GPIO1  GPIO_PIN_0
@@ -70,46 +70,128 @@
 #define GPIO55  GPIO_PIN_8
 #define GPIO56  GPIO_PIN_9
 #define GPIO58	GPIO_PIN_11
-
-
+	
 #pragma pack(push, 1)
 
 typedef struct
-{
-	unsigned	state		:1;
-	unsigned	o_i_put :1;
-	unsigned 	dummy		:6;
-}type_single_gpio_struct;
+{	
+	
+	unsigned gpio12:1;
+	unsigned gpio11:1;
+	unsigned gpio10:1;
+	unsigned gpio9:1;
+	unsigned gpio8:1;
+	unsigned gpio7:1;
+	unsigned gpio6:1;
+	unsigned gpio5:1;
+	unsigned gpio4:1;
+	unsigned gpio3:1;
+	unsigned gpio2:1;
+	unsigned gpio1:1;
+	unsigned data_updater:		4;
+	
+	unsigned gpio28:1;
+	unsigned gpio27:1;
+	unsigned gpio26:1;
+	unsigned gpio25:1;	
+	unsigned gpio24:1;
+	unsigned gpio23:1;
+	unsigned gpio22:1;
+	unsigned gpio21:1;
+	unsigned gpio20:1;
+	unsigned gpio19:1;
+	unsigned gpio18:1;
+	unsigned gpio17:1;
+	unsigned gpio16:1;
+	unsigned gpio15:1;
+	unsigned gpio14:1;
+	unsigned gpio13:1;
+	
+	unsigned gpio44:1;
+	unsigned gpio43:1;
+	unsigned gpio42:1;
+	unsigned gpio41:1;
+	unsigned gpio40:1;
+	unsigned gpio39:1;
+	unsigned gpio38:1;
+	unsigned gpio37:1;
+	unsigned gpio36:1;
+	unsigned gpio35:1;
+	unsigned gpio34:1;
+	unsigned gpio33:1;
+	unsigned gpio32:1;
+	unsigned gpio31:1;
+	unsigned gpio30:1;
+	unsigned gpio29:1;
+	
+	unsigned gpio60:1;
+	unsigned gpio59:1;
+	unsigned gpio58:1;
+	unsigned gpio57:1;
+	unsigned gpio56:1;
+	unsigned gpio55:1;
+	unsigned gpio54:1;
+	unsigned gpio53:1;
+	unsigned gpio52:1;
+	unsigned gpio51:1;
+	unsigned gpio50:1;
+	unsigned gpio49:1;
+	unsigned gpio48:1;
+	unsigned gpio47:1;
+	unsigned gpio46:1;
+	unsigned gpio45:1;
+	
+}
+type_gpio_named; // 64 bits
 
 typedef struct
 {	// using port flags
+	
 	unsigned portC:1;
 	unsigned portE:1;
 	unsigned portG:1;
 	unsigned portD:1;
 	unsigned portF:1;
 	unsigned portB:1;
-	unsigned update_scaler:2;
-	// i/o mask2;
-	unsigned portC_mask:8;	// 1 - 8
-	unsigned portE_mask:16;	// 9 - 24
-	unsigned portG_mask:16;	// 25 - 40
-	unsigned portD_mask:8;  // 41 - 48
-	unsigned portF_mask:9; 	// 49 - 54, 57, 59, 60
-	unsigned portB_mask:3; 	// 55, 56, 58	
-	unsigned dummy_1:		4;
-}type_gpio_config;
+	unsigned reserved:1;
+	unsigned init_flag:1;
+	unsigned update_scaler:8;
+}
+type_on_off_mask;
 
 typedef struct
 {
+	
+	type_on_off_mask			 on_of_mask;
+	type_gpio_named				 mask_config_named;
+}
+type_gpio_conf_named;
+
+typedef union
+{
+	//type_gpio_conf				conf;
+	type_gpio_conf_named	conf_named;
+}
+type_gpio_config_union;
+
+
+/*
+typedef struct
+{
 	// if input - result
-	unsigned portC_in:8;	// 1 - 8
-	unsigned portE_in:16;	// 9 - 24
-	unsigned portG_in:16;	// 25 - 40
-	unsigned portD_in:8;  // 41 - 48
-	unsigned portF_in:9; 	// 49 - 54, 57, 59, 60
-	unsigned portB_in:3; 	// 55, 56, 58	
-	unsigned dummy:		4;
+	unsigned portC_in:8;	// 1 - 8								// 0xFF
+	unsigned portE_in:16;	// 9 - 24								// 0xFFFF
+	unsigned portG_in:16;	// 25 - 40							// 0xFFFF	
+	unsigned portD_in:8;  // 41 - 48							// 0xFF
+	unsigned portF_in:9; 	// 49 - 54, 57, 59, 60	// 0x1FF
+	unsigned portB_in:3; 	// 55, 56, 58						// 0x7	
+	unsigned data_updater:		3;									// 0x7
+	unsigned init_flag:	1;												// 0x1
+}
+type_gpio_in; //64 bits
+
+typedef struct
+{
 	// if output - state
 	unsigned portC_out:8;	// 1 - 8
 	unsigned portE_out:16;	// 9 - 24
@@ -117,88 +199,36 @@ typedef struct
 	unsigned portD_out:8;  // 41 - 48
 	unsigned portF_out:9; 	// 49 - 54, 57, 59, 60
 	unsigned portB_out:3; 	// 55, 56, 58	
-	unsigned dummy_2:	4;
-}type_gpio_state;
+	unsigned data_updater:		3;
+	unsigned init_flag:	1;
+}
+type_gpio_out;
+*/
 
-typedef struct
+
+typedef union
 {
-	unsigned gpio1:1;
-	unsigned gpio2:1;
-	unsigned gpio3:1;
-	unsigned gpio4:1;
-	unsigned gpio5:1;
-	unsigned gpio6:1;
-	unsigned gpio7:1;
-	unsigned gpio8:1;
-	unsigned gpio9:1;
-	unsigned gpio10:1;
-	unsigned gpio11:1;
-	unsigned gpio12:1;
-	unsigned gpio13:1;
-	unsigned gpio14:1;
-	unsigned gpio15:1;
-	unsigned gpio16:1;
-	unsigned gpio17:1;
-	unsigned gpio18:1;
-	unsigned gpio19:1;
-	unsigned gpio20:1;
-	unsigned gpio21:1;
-	unsigned gpio22:1;
-	unsigned gpio23:1;
-	unsigned gpio24:1;
-	unsigned gpio25:1;
-	unsigned gpio26:1;
-	unsigned gpio27:1;
-	unsigned gpio28:1;
-	unsigned gpio29:1;
-	unsigned gpio30:1;
-	unsigned gpio31:1;
-	unsigned gpio32:1;
-	unsigned gpio33:1;
-	unsigned gpio34:1;
-	unsigned gpio35:1;
-	unsigned gpio36:1;
-	unsigned gpio37:1;
-	unsigned gpio38:1;
-	unsigned gpio39:1;
-	unsigned gpio40:1;
-	unsigned gpio41:1;
-	unsigned gpio42:1;
-	unsigned gpio43:1;
-	unsigned gpio44:1;
-	unsigned gpio45:1;
-	unsigned gpio46:1;
-	unsigned gpio47:1;
-	unsigned gpio48:1;
-	unsigned gpio49:1;
-	unsigned gpio50:1;
-	unsigned gpio51:1;
-	unsigned gpio52:1;
-	unsigned gpio53:1;
-	unsigned gpio54:1;
-	unsigned gpio55:1;
-	unsigned gpio56:1;
-	unsigned gpio57:1;
-	unsigned gpio58:1;
-	unsigned gpio59:1;
-	unsigned gpio60:1;
-	unsigned dummy: 4;
-}type_gpio_named;
+	//type_gpio_out		gpio_out;
+	type_gpio_named		gpio_out_named;
+}
+type_gpio_out_union;
 
-typedef struct
+typedef union
 {
-	uint8_t mask;
-	type_gpio_named gpio;
-}type_gpio_config_named;
-
-typedef union{
-	type_gpio_config config;
-	type_gpio_config_named config_named;
-}GPIO_init_Struct;
-
-
-
-
-
+	//type_gpio_in		gpio_in;
+	type_gpio_named 	gpio_in_named;
+}
+type_gpio_in_union;
 #pragma pack(pop)
+
+
+
+void my_gpio_init(type_gpio_config_union* gpio_conf);
+void my_gpio_set(type_gpio_out_union* gpio_out);
+void my_gpio_get(type_gpio_in_union* gpio_in);
+
+
+
+
+
 #endif

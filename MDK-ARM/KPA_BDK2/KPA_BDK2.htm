@@ -3,9 +3,9 @@
 <title>Static Call Graph - [KPA_BDK2\KPA_BDK2.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image KPA_BDK2\KPA_BDK2.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Sun Nov 22 18:52:19 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Tue Nov 24 21:14:20 2020
 <BR><P>
-<H3>Maximum Stack Usage =        216 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        232 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 main &rArr; ina226_init &rArr; HAL_I2C_Master_Receive &rArr; I2C_MasterRequestRead &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 <P>
@@ -16,7 +16,7 @@ Mutually Recursive functions
  <LI><a href="#[17]">HardFault_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[17]">HardFault_Handler</a><BR>
  <LI><a href="#[18]">MemManage_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[18]">MemManage_Handler</a><BR>
  <LI><a href="#[1a]">UsageFault_Handler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[1a]">UsageFault_Handler</a><BR>
- <LI><a href="#[180]">vcp_uart_write</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[180]">vcp_uart_write</a><BR>
+ <LI><a href="#[183]">vcp_uart_write</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[183]">vcp_uart_write</a><BR>
 </UL>
 <P>
 <H3>
@@ -153,7 +153,7 @@ Global Symbols
 <P><STRONG><a name="[6f]"></a>__main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry.o(.ARM.Collect$$$$00000000))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(.text)
 </UL>
-<P><STRONG><a name="[187]"></a>_main_stk</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry2.o(.ARM.Collect$$$$00000001))
+<P><STRONG><a name="[18a]"></a>_main_stk</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry2.o(.ARM.Collect$$$$00000001))
 
 <P><STRONG><a name="[7a]"></a>_main_scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry5.o(.ARM.Collect$$$$00000004))
 <BR><BR>[Calls]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
@@ -163,15 +163,15 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
 </UL>
 
-<P><STRONG><a name="[188]"></a>_main_clock</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry7b.o(.ARM.Collect$$$$00000008))
+<P><STRONG><a name="[18b]"></a>_main_clock</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry7b.o(.ARM.Collect$$$$00000008))
 
-<P><STRONG><a name="[189]"></a>_main_cpp_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry8b.o(.ARM.Collect$$$$0000000A))
+<P><STRONG><a name="[18c]"></a>_main_cpp_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry8b.o(.ARM.Collect$$$$0000000A))
 
-<P><STRONG><a name="[18a]"></a>_main_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry9a.o(.ARM.Collect$$$$0000000B))
+<P><STRONG><a name="[18d]"></a>_main_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry9a.o(.ARM.Collect$$$$0000000B))
 
-<P><STRONG><a name="[18b]"></a>__rt_final_cpp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry10a.o(.ARM.Collect$$$$0000000D))
+<P><STRONG><a name="[18e]"></a>__rt_final_cpp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry10a.o(.ARM.Collect$$$$0000000D))
 
-<P><STRONG><a name="[18c]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
+<P><STRONG><a name="[18f]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
 
 <P><STRONG><a name="[15]"></a>Reset_Handler</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, startup_stm32f405xx.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
@@ -403,27 +403,27 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[175]"></a>__aeabi_memcpy</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, memcpya.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[17d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
+<BR><BR>[Called By]<UL><LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
 <LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ina226_init
 <LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_CDC_Receive
-<LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ
+<LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ
 </UL>
 
 <P><STRONG><a name="[ff]"></a>__aeabi_memcpy4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memcpya.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_Init
 </UL>
 
-<P><STRONG><a name="[18d]"></a>__aeabi_memcpy8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memcpya.o(.text), UNUSED)
+<P><STRONG><a name="[190]"></a>__aeabi_memcpy8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memcpya.o(.text), UNUSED)
 
 <P><STRONG><a name="[80]"></a>__aeabi_memset</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 <BR><BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_memset$wrapper
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 </UL>
 
-<P><STRONG><a name="[18e]"></a>__aeabi_memset4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[191]"></a>__aeabi_memset4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
-<P><STRONG><a name="[18f]"></a>__aeabi_memset8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[192]"></a>__aeabi_memset8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
 <P><STRONG><a name="[7f]"></a>__aeabi_memclr</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
@@ -434,13 +434,14 @@ Global Symbols
 <LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DAC_MspInit
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_MspInit
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_ADC_MspInit
+<LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_gpio_init
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
 <LI><a href="#[149]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 <LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PCD_MspInit
 <LI><a href="#[124]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
 </UL>
 
-<P><STRONG><a name="[190]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[193]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
 <P><STRONG><a name="[81]"></a>_memset$wrapper</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, memseta.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
@@ -481,7 +482,7 @@ Global Symbols
 <LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
 
-<P><STRONG><a name="[191]"></a>_ll_shift_l</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
+<P><STRONG><a name="[194]"></a>_ll_shift_l</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llshl.o(.text), UNUSED)
 
 <P><STRONG><a name="[7d]"></a>__aeabi_llsr</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, llushr.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_double_epilogue
@@ -489,9 +490,9 @@ Global Symbols
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2uiz
 </UL>
 
-<P><STRONG><a name="[192]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
+<P><STRONG><a name="[195]"></a>_ll_ushift_r</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llushr.o(.text), UNUSED)
 
-<P><STRONG><a name="[193]"></a>__I$use$fp</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, iusefp.o(.text), UNUSED)
+<P><STRONG><a name="[196]"></a>__I$use$fp</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, iusefp.o(.text), UNUSED)
 
 <P><STRONG><a name="[86]"></a>_double_round</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, depilogue.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = _double_round
@@ -516,11 +517,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_main_scatterload
 </UL>
 
-<P><STRONG><a name="[194]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
+<P><STRONG><a name="[197]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
-<P><STRONG><a name="[195]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
+<P><STRONG><a name="[198]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
 
-<P><STRONG><a name="[196]"></a>__decompress1</STRONG> (Thumb, 86 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
+<P><STRONG><a name="[199]"></a>__decompress1</STRONG> (Thumb, 86 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
 
 <P><STRONG><a name="[19]"></a>BusFault_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.BusFault_Handler))
 <BR><BR>[Calls]<UL><LI><a href="#[19]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BusFault_Handler
@@ -797,6 +798,7 @@ Global Symbols
 <LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DAC_MspInit
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_MspInit
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_ADC_MspInit
+<LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_gpio_init
 <LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
 <LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_MCOConfig
 <LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HardResetUSB
@@ -805,7 +807,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[127]"></a>HAL_GPIO_WritePin</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, stm32f4xx_hal_gpio.o(i.HAL_GPIO_WritePin))
-<BR><BR>[Called By]<UL><LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
+<BR><BR>[Called By]<UL><LI><a href="#[17f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_gpio_set
+<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_GPIO_Init
 <LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HardResetUSB
 </UL>
 
@@ -1343,11 +1346,11 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[184]"></a>HAL_TIM_Base_Start_IT</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Start_IT))
+<P><STRONG><a name="[187]"></a>HAL_TIM_Base_Start_IT</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Start_IT))
 <BR><BR>[Called By]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_CDC_Receive
 </UL>
 
-<P><STRONG><a name="[183]"></a>HAL_TIM_Base_Stop_IT</STRONG> (Thumb, 42 bytes, Stack size 0 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Stop_IT))
+<P><STRONG><a name="[186]"></a>HAL_TIM_Base_Stop_IT</STRONG> (Thumb, 42 bytes, Stack size 0 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Stop_IT))
 <BR><BR>[Called By]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_CDC_Receive
 </UL>
 
@@ -1449,12 +1452,12 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
 </UL>
-<P><STRONG><a name="[17e]"></a>MRTU_CRC</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, modbus_rtu.o(i.MRTU_CRC))
+<P><STRONG><a name="[181]"></a>MRTU_CRC</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, modbus_rtu.o(i.MRTU_CRC))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = MRTU_CRC
 </UL>
-<BR>[Called By]<UL><LI><a href="#[17d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
-<LI><a href="#[17f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ_shrt
-<LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ
+<BR>[Called By]<UL><LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
+<LI><a href="#[182]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ_shrt
+<LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ
 </UL>
 
 <P><STRONG><a name="[131]"></a>MX_ADC3_Init</STRONG> (Thumb, 226 bytes, Stack size 32 bytes, adc.o(i.MX_ADC3_Init))
@@ -1504,7 +1507,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[138]"></a>MX_GPIO_Init</STRONG> (Thumb, 180 bytes, Stack size 40 bytes, gpio.o(i.MX_GPIO_Init))
+<P><STRONG><a name="[138]"></a>MX_GPIO_Init</STRONG> (Thumb, 196 bytes, Stack size 40 bytes, gpio.o(i.MX_GPIO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = MX_GPIO_Init &rArr; HAL_GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
@@ -1684,13 +1687,13 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_USB_DEVICE_Init
 </UL>
 
-<P><STRONG><a name="[186]"></a>USBD_CDC_SetRxBuffer</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, usbd_cdc.o(i.USBD_CDC_SetRxBuffer))
+<P><STRONG><a name="[189]"></a>USBD_CDC_SetRxBuffer</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, usbd_cdc.o(i.USBD_CDC_SetRxBuffer))
 <BR><BR>[Called By]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_init
 </UL>
 
-<P><STRONG><a name="[185]"></a>USBD_CDC_SetTxBuffer</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, usbd_cdc.o(i.USBD_CDC_SetTxBuffer))
+<P><STRONG><a name="[188]"></a>USBD_CDC_SetTxBuffer</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, usbd_cdc.o(i.USBD_CDC_SetTxBuffer))
 <BR><BR>[Called By]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_init
-<LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
+<LI><a href="#[183]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
 </UL>
 
 <P><STRONG><a name="[156]"></a>USBD_CDC_TransmitPacket</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, usbd_cdc.o(i.USBD_CDC_TransmitPacket))
@@ -1698,7 +1701,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_LL_Transmit
 </UL>
-<BR>[Called By]<UL><LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
+<BR>[Called By]<UL><LI><a href="#[183]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
 </UL>
 
 <P><STRONG><a name="[16c]"></a>USBD_ClrClassConfig</STRONG> (Thumb, 14 bytes, Stack size 8 bytes, usbd_core.o(i.USBD_ClrClassConfig))
@@ -2250,13 +2253,13 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f405xx.o(RESET)
 </UL>
-<P><STRONG><a name="[197]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
+<P><STRONG><a name="[19a]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
 
-<P><STRONG><a name="[198]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
+<P><STRONG><a name="[19b]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
 
-<P><STRONG><a name="[199]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
+<P><STRONG><a name="[19c]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
-<P><STRONG><a name="[182]"></a>_timer_is_run</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, vcp_time_segmentation.o(i._timer_is_run))
+<P><STRONG><a name="[185]"></a>_timer_is_run</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, vcp_time_segmentation.o(i._timer_is_run))
 <BR><BR>[Called By]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_CDC_Receive
 </UL>
 
@@ -2320,11 +2323,14 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[173]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ina226_reg_addr_set
 </UL>
 
-<P><STRONG><a name="[6d]"></a>main</STRONG> (Thumb, 406 bytes, Stack size 16 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 216<LI>Call Chain = main &rArr; ina226_init &rArr; HAL_I2C_Master_Receive &rArr; I2C_MasterRequestRead &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
+<P><STRONG><a name="[6d]"></a>main</STRONG> (Thumb, 612 bytes, Stack size 32 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = main &rArr; ina226_init &rArr; HAL_I2C_Master_Receive &rArr; I2C_MasterRequestRead &rArr; I2C_WaitOnMasterAddressFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[17b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_struct_init_constant
-<LI><a href="#[17d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
+<BR>[Calls]<UL><LI><a href="#[17f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_gpio_set
+<LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_gpio_init
+<LI><a href="#[17d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;my_gpio_get
+<LI><a href="#[17b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_struct_init_constant
+<LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
 <LI><a href="#[17c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ina226_snake
 <LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ina226_init
 <LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_USB_DEVICE_Init
@@ -2360,33 +2366,33 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_Init
 </UL>
 
-<P><STRONG><a name="[17d]"></a>modbus_RX_TX_handler</STRONG> (Thumb, 208 bytes, Stack size 32 bytes, modbus_rtu.o(i.modbus_RX_TX_handler))
+<P><STRONG><a name="[180]"></a>modbus_RX_TX_handler</STRONG> (Thumb, 208 bytes, Stack size 32 bytes, modbus_rtu.o(i.modbus_RX_TX_handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = modbus_RX_TX_handler &rArr; vcp_uart_write &rArr;  vcp_uart_write (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
-<LI><a href="#[17f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ_shrt
-<LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ
-<LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MRTU_CRC
-<LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
+<LI><a href="#[182]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ_shrt
+<LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_answ
+<LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MRTU_CRC
+<LI><a href="#[183]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
 </UL>
 <BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[181]"></a>modbus_answ</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, modbus_rtu.o(i.modbus_answ))
+<P><STRONG><a name="[184]"></a>modbus_answ</STRONG> (Thumb, 62 bytes, Stack size 16 bytes, modbus_rtu.o(i.modbus_answ))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = modbus_answ &rArr; MRTU_CRC
 </UL>
 <BR>[Calls]<UL><LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
-<LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MRTU_CRC
+<LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MRTU_CRC
 </UL>
-<BR>[Called By]<UL><LI><a href="#[17d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
+<BR>[Called By]<UL><LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
 </UL>
 
-<P><STRONG><a name="[17f]"></a>modbus_answ_shrt</STRONG> (Thumb, 32 bytes, Stack size 12 bytes, modbus_rtu.o(i.modbus_answ_shrt))
+<P><STRONG><a name="[182]"></a>modbus_answ_shrt</STRONG> (Thumb, 32 bytes, Stack size 12 bytes, modbus_rtu.o(i.modbus_answ_shrt))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = modbus_answ_shrt &rArr; MRTU_CRC
 </UL>
-<BR>[Calls]<UL><LI><a href="#[17e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MRTU_CRC
+<BR>[Calls]<UL><LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MRTU_CRC
 </UL>
-<BR>[Called By]<UL><LI><a href="#[17d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
+<BR>[Called By]<UL><LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
 </UL>
 
 <P><STRONG><a name="[17b]"></a>modbus_struct_init_constant</STRONG> (Thumb, 46 bytes, Stack size 12 bytes, modbus_rtu.o(i.modbus_struct_init_constant))
@@ -2395,13 +2401,34 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
+<P><STRONG><a name="[17d]"></a>my_gpio_get</STRONG> (Thumb, 1214 bytes, Stack size 0 bytes, my_gpio.o(i.my_gpio_get))
+<BR><BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[17e]"></a>my_gpio_init</STRONG> (Thumb, 1754 bytes, Stack size 56 bytes, my_gpio.o(i.my_gpio_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = my_gpio_init &rArr; HAL_GPIO_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_Init
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
+</UL>
+<BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[17f]"></a>my_gpio_set</STRONG> (Thumb, 1498 bytes, Stack size 32 bytes, my_gpio.o(i.my_gpio_set))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = my_gpio_set
+</UL>
+<BR>[Calls]<UL><LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
+</UL>
+<BR>[Called By]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
 <P><STRONG><a name="[8c]"></a>vcp_uart_CDC_Receive</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, vcp_time_segmentation.o(i.vcp_uart_CDC_Receive))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = vcp_uart_CDC_Receive &rArr; USBD_CDC_ReceivePacket &rArr; USBD_LL_PrepareReceive &rArr; HAL_PCD_EP_Receive &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[183]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Stop_IT
-<LI><a href="#[184]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Start_IT
+<BR>[Calls]<UL><LI><a href="#[186]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Stop_IT
+<LI><a href="#[187]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Start_IT
 <LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
-<LI><a href="#[182]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_timer_is_run
+<LI><a href="#[185]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_timer_is_run
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_ReceivePacket
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CDC_Receive_FS
@@ -2410,23 +2437,23 @@ Global Symbols
 <P><STRONG><a name="[8b]"></a>vcp_uart_init</STRONG> (Thumb, 74 bytes, Stack size 8 bytes, vcp_time_segmentation.o(i.vcp_uart_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = vcp_uart_init &rArr; USBD_CDC_ReceivePacket &rArr; USBD_LL_PrepareReceive &rArr; HAL_PCD_EP_Receive &rArr; USB_EPStartXfer &rArr; USB_WritePacket
 </UL>
-<BR>[Calls]<UL><LI><a href="#[185]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_SetTxBuffer
-<LI><a href="#[186]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_SetRxBuffer
+<BR>[Calls]<UL><LI><a href="#[188]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_SetTxBuffer
+<LI><a href="#[189]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_SetRxBuffer
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_ReceivePacket
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CDC_Init_FS
 </UL>
 
-<P><STRONG><a name="[180]"></a>vcp_uart_write</STRONG> (Thumb, 128 bytes, Stack size 32 bytes, vcp_time_segmentation.o(i.vcp_uart_write))
+<P><STRONG><a name="[183]"></a>vcp_uart_write</STRONG> (Thumb, 128 bytes, Stack size 32 bytes, vcp_time_segmentation.o(i.vcp_uart_write))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96 + In Cycle
 <LI>Call Chain = vcp_uart_write &rArr;  vcp_uart_write (Cycle)
 </UL>
 <BR>[Calls]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_TransmitPacket
-<LI><a href="#[185]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_SetTxBuffer
-<LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
+<LI><a href="#[188]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USBD_CDC_SetTxBuffer
+<LI><a href="#[183]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
 </UL>
-<BR>[Called By]<UL><LI><a href="#[17d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
-<LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
+<BR>[Called By]<UL><LI><a href="#[180]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;modbus_RX_TX_handler
+<LI><a href="#[183]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vcp_uart_write
 </UL>
 <P>
 <H3>

@@ -65,31 +65,35 @@
 #define ADC_DATA_LAST_ADDRESS 0
 #define DAC_DATA_LAST_ADDRESS 1
 
-type_INA226_Snake ina_226;
+
 
 
 #pragma pack(push, 2)
-
 type_modbus_data MB_Data;
 type_VCP_UART vcp;
-
-type_MB_Address_space MB_Address_Space_ADC_DATA[ADC_DATA_LAST_ADDRESS+1];
-type_MB_Address_space MB_Address_Space_DAC_DATA[DAC_DATA_LAST_ADDRESS+1];
-
- 
-
-
 type_adc_data_struct mb_adc;
 type_adc_settings 	 mb_adc_settings;
 type_dac_data_struct mb_dac1;
 type_dac_data_struct mb_dac2;
-
+type_INA226_Snake ina_226;
 union{
 type_modbus_data mb_data;
 type_modbus_data_named mb_data_named;
 }mb_data_union;
-
 #pragma pack(pop)
+
+
+type_gpio_in_union 			mb_gpio_inputs;
+type_gpio_out_union 		mb_gpio_outputs;
+type_gpio_config_union	mb_gpio_config;
+
+
+
+
+
+
+
+
 
 /* USER CODE END PV */
 
@@ -149,8 +153,11 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
+	volatile uint16_t len_massive[] = {sizeof(type_adc_data_struct), sizeof(mb_dac1), sizeof(mb_dac2), sizeof(mb_adc_settings), sizeof(type_gpio_out_union), sizeof(type_gpio_in_union)};
+
 	
- 
+	
+
 	
 	
 	
@@ -172,7 +179,8 @@ int main(void)
 	volatile uint16_t previous_time_1;
 	volatile uint16_t previous_time_2;
 	
-	
+	__HAL_RCC_GPIOG_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
 	
 	current_time = 0;
 	previous_time_1 = 0;
@@ -193,19 +201,25 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		current_time = (uint16_t)TIM5->CNT;
 		
-		if((current_time - previous_time_1)>= 300){
+		if((current_time - previous_time_1)>= 250){
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
-				
-				ina226_snake(&ina_226);
-			
-				previous_time_1 = 0;
-				current_time = 0;
-				TIM5->CNT = 0;
-				//memcpy(&mb_data_union, mb_adc.data, sizeof(mb_adc.data)); 
-				//MB_data_update(MB_Address_Space_ADC_DATA, ADC_DATA_LAST_ADDRESS);
+   			ina226_snake(&ina_226); 
+				previous_time_1 = current_time;				
 		}
+		if((current_time - previous_time_2)>=500){
+      if(mb_gpio_config.conf_named.on_of_mask.init_flag){
+        my_gpio_get(&mb_gpio_inputs);
+        memcpy(&mb_data_union.mb_data_named.mb_gpio_in_union, &mb_gpio_inputs, sizeof(mb_gpio_inputs));
+      }
+      previous_time_2 = 0;
+      previous_time_1 = 0;
+			current_time = 0;
+			TIM5->CNT = 0;
+    }
+    
+
 	
-		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler!= mb_dac1.settings_scaler){
+		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler!= mb_dac1.settings_scaler){ // dac1 start/stop/config
 				memcpy(&mb_dac1.settings_scaler, &mb_data_union.mb_data_named.mb_dac1, sizeof(mb_dac1));
 				if(mb_dac1.start == 1){	
 					HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)mb_dac1.data, (sizeof(mb_dac1.data)/2), DAC_ALIGN_12B_R);  
@@ -215,7 +229,7 @@ int main(void)
 				}
 		}
 		
-		if(mb_data_union.mb_data_named.mb_dac2.settings_scaler!= mb_dac2.settings_scaler){
+		if(mb_data_union.mb_data_named.mb_dac2.settings_scaler!= mb_dac2.settings_scaler){// dac2 start/stop/config
 			memcpy(&mb_dac2, &mb_data_union.mb_data_named.mb_dac2,  sizeof(mb_dac2));
 			if(mb_dac2.start == 1){
 					HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)mb_dac2.data, (sizeof(mb_dac2.data)/2), DAC_ALIGN_12B_R);  
@@ -225,7 +239,7 @@ int main(void)
 				}	
 		}
 		
-		if(mb_data_union.mb_data_named.mb_adc_settings.settings_scaler!= mb_adc_settings.settings_scaler){
+		if(mb_data_union.mb_data_named.mb_adc_settings.settings_scaler!= mb_adc_settings.settings_scaler){ // adc start/stop
 			memcpy(&mb_adc_settings.settings_scaler, &mb_data_union.mb_data_named.mb_adc_settings, sizeof(mb_adc_settings));
 			if(mb_adc_settings.start == 1){
 					HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8);  
@@ -233,8 +247,18 @@ int main(void)
 				else{
 					HAL_ADC_Stop_DMA(&hadc3);
 				}
-		
 		}
+		
+		if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.on_of_mask.update_scaler != mb_gpio_config.conf_named.on_of_mask.update_scaler){
+			memcpy(&mb_gpio_config.conf_named, &mb_data_union.mb_data_named.mb_gpio_config_union, sizeof(mb_gpio_config.conf_named));
+			my_gpio_init(&mb_gpio_config);
+		}
+		if(mb_gpio_config.conf_named.on_of_mask.init_flag){
+      if(mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater != mb_gpio_outputs.gpio_out_named.data_updater){
+        memcpy(&mb_gpio_outputs, &mb_data_union.mb_data_named.mb_gpio_out_union, sizeof(mb_gpio_outputs));
+        my_gpio_set(&mb_gpio_outputs);
+      }
+    }
 		    
 		
 		
