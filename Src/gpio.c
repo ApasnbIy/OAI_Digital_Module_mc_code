@@ -30,9 +30,9 @@
 
 /* USER CODE END 1 */
 
-/** Configure pins as 
-        * Analog 
-        * Input 
+/** Configure pins as
+        * Analog
+        * Input
         * Output
         * EVENT_OUT
         * EXTI
@@ -51,8 +51,7 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-	__HAL_RCC_GPIOE_CLK_ENABLE();
-	
+
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_3|GPIO_PIN_4, GPIO_PIN_RESET);
 

@@ -4,7 +4,7 @@
 #include "main.h"
 #include "vcp_time_segmentation.h"
 
-#define MB_DATA_SIZE 4096
+#define MB_DATA_SIZE 8192
 
 
 
