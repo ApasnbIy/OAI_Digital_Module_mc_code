@@ -161,52 +161,7 @@
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mb_gpio_outputs</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>mb_gpio_config</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>mb_gpio_inputs</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x0800UL))</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x1000UL))</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x1800UL))</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x0800UL))</ItemText>
-        </Ww>
-        <Ww>
-          <count>9</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>gpio1</ItemText>
-        </Ww>
-        <Ww>
-          <count>10</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>gpio_in_named</ItemText>
-        </Ww>
-        <Ww>
-          <count>11</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>MB_Data</ItemText>
+          <ItemText>aa</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -219,6 +174,11 @@
           <count>1</count>
           <WinNumber>2</WinNumber>
           <ItemText>mb_data_union</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\KPA_BDK2\../Src/main.c\mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.BAUD,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
@@ -244,7 +204,7 @@
         <aLa>0</aLa>
         <aPa1>0</aPa1>
         <AscS4>0</AscS4>
-        <aSer4>0</aSer4>
+        <aSer4>1</aSer4>
         <StkLoc>0</StkLoc>
         <TrcWin>0</TrcWin>
         <newCpu>0</newCpu>
@@ -898,7 +858,7 @@
       <GroupNumber>6</GroupNumber>
       <FileNumber>49</FileNumber>
       <FileType>1</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\my_lib\modbus_rtu.c</PathWithFileName>
