@@ -89,6 +89,8 @@ type_gpio_out_union 		mb_gpio_outputs;
 type_gpio_config_union	mb_gpio_config;
 type_uart_transmit_struct mb_uart1_transmit;
 type_uart_setting_union   mb_uart1_setting;
+type_uart_transmit_struct mb_uart2_transmit;
+type_uart_setting_union   mb_uart2_setting;
 type_uart_setting_union 	UART_settings_default;
 
 
@@ -120,6 +122,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	 
   /* USER CODE END 1 */
+  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -155,8 +158,8 @@ int main(void)
   MX_TIM5_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-	volatile uint16_t len_massive[] = {sizeof(type_adc_data_struct), sizeof(mb_dac1), sizeof(mb_dac2), sizeof(mb_adc_settings), sizeof(type_gpio_out_union), sizeof(type_gpio_in_union)};
-	
+	//volatile uint16_t len_massive[] = {sizeof(type_uart_recive_struct), sizeof(type_uart_setting_union ), sizeof(mb_dac2), sizeof(mb_adc_settings), sizeof(type_gpio_out_union), sizeof(type_gpio_in_union)};
+	                                           
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	HAL_TIM_Base_Start(&htim5);	
@@ -164,14 +167,17 @@ int main(void)
 	// ADC + UART1 default start
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
 	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_recive_struct.data[mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr],1);
-	
+	HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_recive_struct.data[mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr],1);
+
   ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
 	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
   MY_USART_UART_struct_default_init(&UART_settings_default);
   MY_USART_UART_struct_default_init(&mb_uart1_setting);
   MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart1_setting_struct);
-
-
+	MY_USART_UART_struct_default_init(&mb_uart2_setting);
+  MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart2_setting_struct);
+	
+	
 	
 	//modbus_struct_init_constant(&mb_data_union.mb_data);
 	//memset(&mb_data_union.mb_data_named.mb_uart1_recive_struct.data, 0xFF, 0xFF);
@@ -293,6 +299,34 @@ int main(void)
 			}
 		}
 		
+		//обновление и отправка посылки по uart1
+		if(mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler != mb_uart2_transmit.scaler){
+			memcpy(&mb_uart2_transmit, &mb_data_union.mb_data_named.mb_uart2_transmit_struct, sizeof(mb_uart2_transmit));
+			if(mb_uart2_transmit.start == 0x01 && mb_uart2_transmit.len != 0x00){
+				HAL_UART_Transmit_IT(&huart2, mb_uart2_transmit.data, mb_uart2_transmit.len);
+			}
+		}
+		//Настройки ЮАРТ, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
+		if(mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler != mb_uart2_setting.settings_named.scaler){
+			memcpy(&mb_uart2_setting, &mb_data_union.mb_data_named.mb_uart2_setting_struct, sizeof(type_uart_setting_union));
+			if(mb_uart2_setting.settings_named.BAUD!=0){
+				HAL_UART_Abort_IT(&huart2);
+				MY_USART2_UART_Init(&mb_uart2_setting);
+				mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr = 0x00;
+				memset(&mb_data_union.mb_data_named.mb_uart2_recive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_recive_struct.data));
+				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_recive_struct.data[mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr],1);
+				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x01;
+			}
+			else{
+				HAL_UART_Abort_IT(&huart2);
+				MY_USART2_UART_Init(&UART_settings_default);
+				mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr = 0x00;
+				memset(&mb_data_union.mb_data_named.mb_uart2_recive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_recive_struct.data));
+				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_recive_struct.data[mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr],1);
+				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x08;	
+			}
+		}
+		
 		
 		
 		
@@ -319,11 +353,11 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
+  /** Configure the main internal regulator output voltage 
   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks
+  /** Initializes the CPU, AHB and APB busses clocks 
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -337,7 +371,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks
+  /** Initializes the CPU, AHB and APB busses clocks 
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -395,11 +429,16 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 		//mb_uart_transmit.transmit_flag = 1;
 		mb_data_union.mb_data_named.mb_uart1_transmit_struct.transmit_flag = 0x01;
 		mb_uart1_transmit.transmit_flag = 0x01;
-		USART1->SR; // неявный сброс прерывания
-		USART1->DR;
+		HAL_UART_AbortTransmit_IT(&huart1);
 	}
-	
+	else if(huart == &huart2){
+		//mb_uart_transmit.transmit_flag = 1;
+		mb_data_union.mb_data_named.mb_uart2_transmit_struct.transmit_flag = 0x01;
+		mb_uart2_transmit.transmit_flag = 0x01;
+		HAL_UART_AbortTransmit_IT(&huart2);
+	}	
 }
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -409,6 +448,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr = 0;
 			}
 			HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_recive_struct.data[mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr],1);
+		
+	}
+	else if(huart == &huart2){
+			mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr++;
+			if(mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr == (UART_RECIVE_DATA_BUFF)){
+				mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr = 0;
+			}
+			HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_recive_struct.data[mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr],1);
 		
 	}
 }
@@ -444,7 +491,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{
+{ 
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

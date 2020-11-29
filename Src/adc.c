@@ -32,7 +32,7 @@ void MX_ADC3_Init(void)
 {
   ADC_ChannelConfTypeDef sConfig = {0};
 
-  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
   */
   hadc3.Instance = ADC3;
   hadc3.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
@@ -50,7 +50,7 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
   */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
@@ -59,7 +59,7 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = 2;
@@ -67,7 +67,7 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
   */
   sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = 3;
@@ -75,7 +75,7 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
   */
   sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = 4;
@@ -83,7 +83,7 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
   */
   sConfig.Channel = ADC_CHANNEL_4;
   sConfig.Rank = 5;
@@ -91,7 +91,7 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
   */
   sConfig.Channel = ADC_CHANNEL_5;
   sConfig.Rank = 6;
@@ -99,7 +99,7 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
   */
   sConfig.Channel = ADC_CHANNEL_6;
   sConfig.Rank = 7;
@@ -107,7 +107,7 @@ void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
   */
   sConfig.Channel = ADC_CHANNEL_7;
   sConfig.Rank = 8;
@@ -129,10 +129,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
   /* USER CODE END ADC3_MspInit 0 */
     /* ADC3 clock enable */
     __HAL_RCC_ADC3_CLK_ENABLE();
-
+  
     __HAL_RCC_GPIOF_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
-    /**ADC3 GPIO Configuration
+    /**ADC3 GPIO Configuration    
     PF6     ------> ADC3_IN4
     PF7     ------> ADC3_IN5
     PF8     ------> ADC3_IN6
@@ -140,7 +140,7 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* adcHandle)
     PA0-WKUP     ------> ADC3_IN0
     PA1     ------> ADC3_IN1
     PA2     ------> ADC3_IN2
-    PA3     ------> ADC3_IN3
+    PA3     ------> ADC3_IN3 
     */
     GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
@@ -190,8 +190,8 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
   /* USER CODE END ADC3_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_ADC3_CLK_DISABLE();
-
-    /**ADC3 GPIO Configuration
+  
+    /**ADC3 GPIO Configuration    
     PF6     ------> ADC3_IN4
     PF7     ------> ADC3_IN5
     PF8     ------> ADC3_IN6
@@ -199,7 +199,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
     PA0-WKUP     ------> ADC3_IN0
     PA1     ------> ADC3_IN1
     PA2     ------> ADC3_IN2
-    PA3     ------> ADC3_IN3
+    PA3     ------> ADC3_IN3 
     */
     HAL_GPIO_DeInit(GPIOF, GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9);
 
@@ -211,7 +211,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 
   /* USER CODE END ADC3_MspDeInit 1 */
   }
-}
+} 
 
 /* USER CODE BEGIN 1 */
 

@@ -67,6 +67,7 @@ type_uart_setting_union;
 
 void MY_USART1_UART_Init(type_uart_setting_union* uart_settings);
 void MY_USART_UART_struct_default_init(type_uart_setting_union* uart_settings);
+void MY_USART2_UART_Init(type_uart_setting_union* uart_settings);
 
 
 #endif
