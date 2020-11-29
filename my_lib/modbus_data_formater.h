@@ -4,10 +4,11 @@
 
 #include "modbus_rtu.h"
 #include "INA226.h"
-#include "my_GPIO.h"
 
-#define UART_TRANSMIT_DATA_BUFF 128
-#define UART_RECIVE_DATA_BUFF 2048
+#include "my_GPIO.h"
+#include "my_UART.h"
+
+
 
 #pragma pack(push, 2)
 typedef struct
@@ -35,58 +36,6 @@ typedef struct
 }type_dac_data_struct;
 
 
-typedef struct
-{
-	uint16_t scaler;
-	uint16_t start;
-	uint16_t transmit_flag;
-	uint16_t len;
-	uint8_t	 data[UART_TRANSMIT_DATA_BUFF];
-}
-type_uart_transmit_struct;
-typedef struct
-{
-	uint16_t scaler;
-	uint16_t start;
-	uint16_t write_ptr;
-	uint16_t len;
-	uint8_t	 data[UART_RECIVE_DATA_BUFF];
-	
-}
-type_uart_recive_struct;
-
-typedef struct
-{
-	uint16_t scaler;
-	uint16_t HIGH_BAUD;
-	uint16_t LOW_BAUD;
-	uint16_t HIGH_WORDlenght;
-	uint16_t LOW_WORDlenght;
-	uint16_t HIGH_STOPBITS;
-	uint16_t LOW_STOPBITS;
-	uint16_t HIGH_PARITY;
-	uint16_t LOW_PARITY;
-	uint16_t flag;							// 10regs
-}
-type_uart_setting_struct;
-
-typedef struct
-{
-	uint16_t scaler;
-	uint32_t BAUD;			
-	uint32_t WORDlenght;
-	uint32_t STOPBITS;
-	uint32_t PARITY;
-	uint16_t flag;
-}
-type_uart_setting_named_struct;
-
-typedef union
-{
-	type_uart_setting_struct         settings;
-	type_uart_setting_named_struct	 settings_named;	
-}
-type_uart_setting_union;
 
 typedef struct
 {

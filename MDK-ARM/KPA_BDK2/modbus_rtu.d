@@ -58,3 +58,5 @@ kpa_bdk2\modbus_rtu.o: ..\my_lib\modbus_data_formater.h
 kpa_bdk2\modbus_rtu.o: ..\my_lib\INA226.h
 kpa_bdk2\modbus_rtu.o: ../Inc/i2c.h
 kpa_bdk2\modbus_rtu.o: ..\my_lib\my_GPIO.h
+kpa_bdk2\modbus_rtu.o: ..\my_lib\my_UART.h
+kpa_bdk2\modbus_rtu.o: ../Inc/usart.h

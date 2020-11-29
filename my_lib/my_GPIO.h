@@ -175,36 +175,6 @@ typedef union
 type_gpio_config_union;
 
 
-/*
-typedef struct
-{
-	// if input - result
-	unsigned portC_in:8;	// 1 - 8								// 0xFF
-	unsigned portE_in:16;	// 9 - 24								// 0xFFFF
-	unsigned portG_in:16;	// 25 - 40							// 0xFFFF	
-	unsigned portD_in:8;  // 41 - 48							// 0xFF
-	unsigned portF_in:9; 	// 49 - 54, 57, 59, 60	// 0x1FF
-	unsigned portB_in:3; 	// 55, 56, 58						// 0x7	
-	unsigned data_updater:		3;									// 0x7
-	unsigned init_flag:	1;												// 0x1
-}
-type_gpio_in; //64 bits
-
-typedef struct
-{
-	// if output - state
-	unsigned portC_out:8;	// 1 - 8
-	unsigned portE_out:16;	// 9 - 24
-	unsigned portG_out:16;	// 25 - 40
-	unsigned portD_out:8;  // 41 - 48
-	unsigned portF_out:9; 	// 49 - 54, 57, 59, 60
-	unsigned portB_out:3; 	// 55, 56, 58	
-	unsigned data_updater:		3;
-	unsigned init_flag:	1;
-}
-type_gpio_out;
-*/
-
 
 typedef union
 {

@@ -163,6 +163,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>aa</ItemText>
         </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>mb_uart1_recive</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -179,6 +184,11 @@
           <count>2</count>
           <WinNumber>2</WinNumber>
           <ItemText>\\KPA_BDK2\../Src/main.c\mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.BAUD,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>mb_uart1_setting</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
@@ -204,7 +214,7 @@
         <aLa>0</aLa>
         <aPa1>0</aPa1>
         <AscS4>0</AscS4>
-        <aSer4>1</aSer4>
+        <aSer4>0</aSer4>
         <StkLoc>0</StkLoc>
         <TrcWin>0</TrcWin>
         <newCpu>0</newCpu>
@@ -959,6 +969,30 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\my_lib\my_GPIO.h</PathWithFileName>
       <FilenameWithoutPath>my_GPIO.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>58</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\my_lib\my_UART.c</PathWithFileName>
+      <FilenameWithoutPath>my_UART.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>59</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\my_lib\my_UART.h</PathWithFileName>
+      <FilenameWithoutPath>my_UART.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
