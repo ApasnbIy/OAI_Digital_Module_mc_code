@@ -168,6 +168,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>con_state_led</ItemText>
         </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>htim2</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>HAL_GPIO_WritePin</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x1000UL))</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -189,6 +204,11 @@
           <count>3</count>
           <WinNumber>2</WinNumber>
           <ItemText>mb_uart1_setting</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\KPA_BDK2\../Src/tim.c\htim2.Instance-&gt;CNT,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

@@ -68,6 +68,7 @@ typedef struct
 	type_uart_setting_union  mb_uart1_setting_struct;		//  +2280 bytes // + 1140 regs 0x474
 	type_uart_transmit_struct	mb_uart2_transmit_struct; //  +2300 bytes // + 1150 regs 0x47E
 	type_uart_setting_union  mb_uart2_setting_struct;		//	+2436 bytes // + 1218 regs 0x4C2
+	type_alternative_gpio_out_struct mb_gpio_alternative_out; // +2456 bytes //+1228 regs 
 	uint16_t								dummy2[MB_DATA_SIZE - (sizeof(type_uart_setting_union)/2) - (sizeof(type_dac_data_struct)/2)-(sizeof(type_dac_data_struct)/2) - (sizeof(type_adc_settings)/2)-(sizeof(type_gpio_config_union)/2) - (sizeof(type_gpio_out_union)/2) - (sizeof(type_gpio_in_union)/2)]; // sizeof in bytes, uint8, massive is uint16
 	uint16_t								dummy3[MB_DATA_SIZE];
 	uint16_t								dummy4[MB_DATA_SIZE];

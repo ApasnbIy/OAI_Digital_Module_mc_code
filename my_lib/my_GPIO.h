@@ -172,14 +172,19 @@ typedef union
 }
 type_gpio_out_union;
 
-typedef union
+typedef struct
 {
-	uint16_t					scaler;
-	uint16_t					LOW_time;
-	uint16_t					HIGH_time;
-	type_gpio_named		gpio_out_named;
+	uint16_t		scaler; 		// +0
+	uint16_t		LOW_time; 	// +1
+	uint16_t		HIGH_time; 	// +2
+	uint16_t		start;			// +3
+	uint16_t		end_flag;		// +4
+	uint16_t		stop;				// +5
+	uint16_t		it_scaler;// +6	
+	uint16_t		reserved[3];// +7
+	type_gpio_out_union		gpio_out_named; // +10
 }
-type_alternative_gpio_out_union;
+type_alternative_gpio_out_struct;
 
 
 
@@ -196,7 +201,7 @@ type_gpio_in_union;
 void my_gpio_init(type_gpio_config_union* gpio_conf);
 void my_gpio_set(type_gpio_out_union* gpio_out);
 void my_gpio_get(type_gpio_in_union* gpio_in);
-void my_gpio_alt_set(type_alternative_gpio_out_union* gpio_out);
+void my_gpio_alt_set(type_alternative_gpio_out_struct* gpio_out);
 
 
 

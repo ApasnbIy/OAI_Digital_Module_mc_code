@@ -96,6 +96,7 @@ type_uart_transmit_struct mb_uart2_transmit;
 type_uart_setting_union   mb_uart2_setting;
 type_uart_setting_union 	UART_settings_default;
 type_LED_INDICATOR mcu_state_led, con_state_led;
+type_alternative_gpio_out_struct mb_gpio_alternative_outputs;
 uint8_t timer_slot_5ms_counter = 0;
 uint8_t time_slot_flag_5ms = 0;
 
@@ -165,14 +166,41 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM7_Init();
   MX_SPI2_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 	//volatile uint16_t len_massive[] = {sizeof(type_uart_recive_struct), sizeof(type_uart_setting_union ), sizeof(mb_dac2), sizeof(mb_adc_settings), sizeof(type_gpio_out_union), sizeof(type_gpio_in_union)};
-	                                           
+	__HAL_RCC_GPIOE_CLK_ENABLE();
+	__HAL_RCC_GPIOG_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();	  
+	
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA	
 	HAL_TIM_Base_Start(&htim6);	// таймер ModBus
 	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды
+	//HAL_TIM_Base_Start(&htim2);
+	/*
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+	GPIO_InitStruct.Pin = GPIO_PIN_4;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+	
+	HAL_GPIO_WritePin (GPIOE, GPIO_PIN_4 ,GPIO_PIN_SET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin (GPIOE, GPIO_PIN_4 ,GPIO_PIN_RESET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin (GPIOE, GPIO_PIN_4 ,GPIO_PIN_SET);
+	HAL_Delay(100);
+	HAL_GPIO_WritePin (GPIOE, GPIO_PIN_4 ,GPIO_PIN_RESET);
+	HAL_Delay(100);
+	HAL_TIM_Base_Start_IT(&htim2);
+	*/
+	
+	
+	
+	
 	// ADC + UART1 default start
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
 	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_recive_struct.data[mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr],1);
@@ -180,7 +208,8 @@ int main(void)
 
   ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
 	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
-  MY_USART_UART_struct_default_init(&UART_settings_default);
+  
+	MY_USART_UART_struct_default_init(&UART_settings_default);
   MY_USART_UART_struct_default_init(&mb_uart1_setting);
   MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart1_setting_struct);
 	MY_USART_UART_struct_default_init(&mb_uart2_setting);
@@ -197,9 +226,7 @@ int main(void)
 	
 	//volatile uint16_t aa = sizeof(type_uart_transmit_struct);
 	
-	__HAL_RCC_GPIOE_CLK_ENABLE();
-	__HAL_RCC_GPIOG_CLK_ENABLE();
-	__HAL_RCC_GPIOC_CLK_ENABLE();
+	
 	
 	
 	led_init(&con_state_led, 1);
@@ -348,6 +375,17 @@ int main(void)
 				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x08;	
 			}
 		}
+		
+		if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler !=  mb_gpio_alternative_outputs.scaler){
+				memcpy(&mb_gpio_alternative_outputs, &mb_data_union.mb_data_named.mb_gpio_alternative_out, sizeof(mb_gpio_alternative_outputs));
+				if(mb_gpio_alternative_outputs.start == 0x0001 && mb_gpio_alternative_outputs.stop == 0x00){
+					my_gpio_alt_set(&mb_gpio_alternative_outputs);	
+				}
+				else if(mb_gpio_alternative_outputs.stop == 0x0001){
+					HAL_TIM_Base_Stop_IT(&htim2);
+					my_gpio_set(&mb_gpio_outputs);
+				}
+		}
 						
 		if(vcp.rx_position>4){
 			led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 200);
@@ -485,7 +523,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     led_processor(&con_state_led, 5);
 		time_slot_flag_5ms = 5;
 	}
-}
+	
+	if(htim == &htim2){
+		//HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_4);
+			if(mb_gpio_alternative_outputs.it_scaler == 0){
+				mb_gpio_alternative_outputs.it_scaler = 1;
+			}
+			else if(mb_gpio_alternative_outputs.it_scaler == 1){
+			my_gpio_set(&mb_gpio_outputs);
+			mb_gpio_alternative_outputs.end_flag = 0x0001;
+			HAL_TIM_Base_Stop_IT(&htim2);	
+			
+			}
+		}
+	}
 
 
 
