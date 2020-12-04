@@ -12,7 +12,6 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 	
-	if(gpio_conf->conf_named.on_of_mask.portB ==1){
 		(gpio_conf->conf_named.mask_config_named.gpio55 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO55) : (PIN_IN = PIN_IN|GPIO55);
 		(gpio_conf->conf_named.mask_config_named.gpio56 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO56) : (PIN_IN = PIN_IN|GPIO56);
 		(gpio_conf->conf_named.mask_config_named.gpio58 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO58) : (PIN_IN = PIN_IN|GPIO58);
@@ -32,11 +31,11 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 		}
 		
-	}
+	
 	PIN_IN = 0;
 	PIN_OUT = 0;
 	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-	if(gpio_conf->conf_named.on_of_mask.portC ==1){
+	
 		(gpio_conf->conf_named.mask_config_named.gpio1 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO1) : (PIN_IN = PIN_IN|GPIO1);
 		(gpio_conf->conf_named.mask_config_named.gpio2 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO2) : (PIN_IN = PIN_IN|GPIO2);
 		(gpio_conf->conf_named.mask_config_named.gpio3 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO3) : (PIN_IN = PIN_IN|GPIO3);
@@ -60,11 +59,11 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 			HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 		}
-	}
+	
 	PIN_IN = 0;
 	PIN_OUT = 0;
 	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-	if(gpio_conf->conf_named.on_of_mask.portD ==1){
+	
 		(gpio_conf->conf_named.mask_config_named.gpio41 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO41) : (PIN_IN = PIN_IN|GPIO41);
 		(gpio_conf->conf_named.mask_config_named.gpio42 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO42) : (PIN_IN = PIN_IN|GPIO42);
 		(gpio_conf->conf_named.mask_config_named.gpio43 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO43) : (PIN_IN = PIN_IN|GPIO43);
@@ -88,11 +87,11 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 			HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 		}
-	}		
+			
 	PIN_IN = 0;
 	PIN_OUT = 0;
 	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-	if(gpio_conf->conf_named.on_of_mask.portE ==1){
+	
 		(gpio_conf->conf_named.mask_config_named.gpio9  && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO9 ) :  (PIN_IN = PIN_IN|GPIO9);
 		(gpio_conf->conf_named.mask_config_named.gpio10 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO10) : (PIN_IN = PIN_IN|GPIO10);
 		(gpio_conf->conf_named.mask_config_named.gpio11 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO11) : (PIN_IN = PIN_IN|GPIO11);
@@ -124,11 +123,11 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 			HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 		}
-	}
+	
 	PIN_IN = 0;
 	PIN_OUT = 0;
 	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-	if(gpio_conf->conf_named.on_of_mask.portF ==1){
+	
 		(gpio_conf->conf_named.mask_config_named.gpio49 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO49) : (PIN_IN = PIN_IN|GPIO49);
 		(gpio_conf->conf_named.mask_config_named.gpio50 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO50) : (PIN_IN = PIN_IN|GPIO50);
 		(gpio_conf->conf_named.mask_config_named.gpio51 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO51) : (PIN_IN = PIN_IN|GPIO51);
@@ -154,11 +153,11 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 		}
 	
-	}
+	
 	PIN_IN = 0;
 	PIN_OUT = 0;
 	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-	if(gpio_conf->conf_named.on_of_mask.portG ==1){
+	
 		(gpio_conf->conf_named.mask_config_named.gpio25 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO25) : (PIN_IN = PIN_IN|GPIO25);
 		(gpio_conf->conf_named.mask_config_named.gpio26 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO26) : (PIN_IN = PIN_IN|GPIO26);
 		(gpio_conf->conf_named.mask_config_named.gpio27 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO27) : (PIN_IN = PIN_IN|GPIO27);
@@ -190,7 +189,7 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 			HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 		}
-	}
+	
 	gpio_conf->conf_named.on_of_mask.init_flag = 1;
 }
 
@@ -355,4 +354,12 @@ void my_gpio_get(type_gpio_in_union* gpio_in)
 	(GPIOB -> IDR & GPIO58 )	? (gpio_in->gpio_in_named.gpio58 = 0x01) : (gpio_in->gpio_in_named.gpio58 = 0x00);
 
 }
+
+void my_gpio_alt_set(type_alternative_gpio_out_union* gpio_out){
+
+
+
+}
+
+
 

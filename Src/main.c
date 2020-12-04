@@ -25,6 +25,7 @@
 #include "dac.h"
 #include "dma.h"
 #include "i2c.h"
+#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "usb_device.h"
@@ -42,6 +43,8 @@
 #include "INA226.h"
 #include "my_GPIO.h"
 #include "my_UART.h"
+#include "my_SPI.h"
+#include "led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,7 +95,11 @@ type_uart_setting_union   mb_uart1_setting;
 type_uart_transmit_struct mb_uart2_transmit;
 type_uart_setting_union   mb_uart2_setting;
 type_uart_setting_union 	UART_settings_default;
+type_LED_INDICATOR mcu_state_led, con_state_led;
+uint8_t timer_slot_5ms_counter = 0;
+uint8_t time_slot_flag_5ms = 0;
 
+	
 
 
 
@@ -122,7 +129,6 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	 
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -157,13 +163,16 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM5_Init();
   MX_USART1_UART_Init();
+  MX_TIM7_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 	//volatile uint16_t len_massive[] = {sizeof(type_uart_recive_struct), sizeof(type_uart_setting_union ), sizeof(mb_dac2), sizeof(mb_adc_settings), sizeof(type_gpio_out_union), sizeof(type_gpio_in_union)};
 	                                           
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
-	HAL_TIM_Base_Start(&htim5);	
-	HAL_TIM_Base_Start(&htim6);	
+	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA	
+	HAL_TIM_Base_Start(&htim6);	// таймер ModBus
+	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды
 	// ADC + UART1 default start
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
 	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_recive_struct.data[mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr],1);
@@ -177,6 +186,7 @@ int main(void)
 	MY_USART_UART_struct_default_init(&mb_uart2_setting);
   MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart2_setting_struct);
 	
+
 	
 	
 	//modbus_struct_init_constant(&mb_data_union.mb_data);
@@ -184,15 +194,25 @@ int main(void)
 	volatile uint16_t current_time ;
 	volatile uint16_t previous_time_1;
 	volatile uint16_t previous_time_2;
+	
 	//volatile uint16_t aa = sizeof(type_uart_transmit_struct);
 	
 	__HAL_RCC_GPIOE_CLK_ENABLE();
 	__HAL_RCC_GPIOG_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 	
+	
+	led_init(&con_state_led, 1);
+	led_init(&mcu_state_led, 0);
+	led_setup(&con_state_led, LED_ON, 0, 0);
+  led_setup(&mcu_state_led, LED_HEART_BEAT, 1000, 0);
+  led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 2000);
+  led_alt_setup(&mcu_state_led, LED_BLINK, 200, 127, 2000);
+	
 	current_time = 0;
 	previous_time_1 = 0;
 	previous_time_2 = 0;
+	timer_slot_5ms_counter = 0;
 		
 	/*
 	ina226_snake(&ina_226);
@@ -260,7 +280,7 @@ int main(void)
 				}
 		}
 		// инициализация GPIO
-		if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.on_of_mask.update_scaler != mb_gpio_config.conf_named.on_of_mask.update_scaler){
+		if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater != mb_gpio_config.conf_named.mask_config_named.data_updater){
 			memcpy(&mb_gpio_config.conf_named, &mb_data_union.mb_data_named.mb_gpio_config_union, sizeof(mb_gpio_config.conf_named));
 			my_gpio_init(&mb_gpio_config);
 		}
@@ -275,6 +295,8 @@ int main(void)
 		if(mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler != mb_uart1_transmit.scaler){
 			memcpy(&mb_uart1_transmit, &mb_data_union.mb_data_named.mb_uart1_transmit_struct, sizeof(mb_uart1_transmit));
 			if(mb_uart1_transmit.start == 0x01 && mb_uart1_transmit.len != 0x00){
+				mb_data_union.mb_data_named.mb_uart1_transmit_struct.transmit_flag = 0x0000;
+				mb_uart1_transmit.transmit_flag = 0x0000;
 				HAL_UART_Transmit_IT(&huart1, mb_uart1_transmit.data, mb_uart1_transmit.len);
 			}
 		}
@@ -326,18 +348,9 @@ int main(void)
 				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x08;	
 			}
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-				
+						
 		if(vcp.rx_position>4){
+			led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 200);
 			modbus_RX_TX_handler(&mb_data_union.mb_data, &vcp);
 		}
   }
@@ -353,11 +366,11 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage 
+  /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -371,7 +384,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -461,6 +474,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim == &htim7) {
+    timer_slot_5ms_counter += 1;
+    if (timer_slot_5ms_counter >= 2){ //создание искусственного события c периодом 10 мс
+      timer_slot_5ms_counter = 0;
+    }
+    led_processor(&mcu_state_led, 5);
+    led_processor(&con_state_led, 5);
+		time_slot_flag_5ms = 5;
+	}
+}
+
 
 
 /* USER CODE BEGIN 0 */
@@ -491,7 +517,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

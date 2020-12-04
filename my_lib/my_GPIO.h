@@ -146,22 +146,13 @@ type_gpio_named; // 64 bits
 
 typedef struct
 {	// using port flags
-	
-	unsigned portC:1;
-	unsigned portE:1;
-	unsigned portG:1;
-	unsigned portD:1;
-	unsigned portF:1;
-	unsigned portB:1;
-	unsigned reserved:1;
 	unsigned init_flag:1;
-	unsigned update_scaler:8;
+	unsigned reserved:15;
 }
 type_on_off_mask;
 
 typedef struct
 {
-	
 	type_on_off_mask			 on_of_mask;
 	type_gpio_named				 mask_config_named;
 }
@@ -169,7 +160,6 @@ type_gpio_conf_named;
 
 typedef union
 {
-	//type_gpio_conf				conf;
 	type_gpio_conf_named	conf_named;
 }
 type_gpio_config_union;
@@ -178,14 +168,24 @@ type_gpio_config_union;
 
 typedef union
 {
-	//type_gpio_out		gpio_out;
 	type_gpio_named		gpio_out_named;
 }
 type_gpio_out_union;
 
 typedef union
 {
-	//type_gpio_in		gpio_in;
+	uint16_t					scaler;
+	uint16_t					LOW_time;
+	uint16_t					HIGH_time;
+	type_gpio_named		gpio_out_named;
+}
+type_alternative_gpio_out_union;
+
+
+
+
+typedef union
+{
 	type_gpio_named 	gpio_in_named;
 }
 type_gpio_in_union;
@@ -196,6 +196,7 @@ type_gpio_in_union;
 void my_gpio_init(type_gpio_config_union* gpio_conf);
 void my_gpio_set(type_gpio_out_union* gpio_out);
 void my_gpio_get(type_gpio_in_union* gpio_in);
+void my_gpio_alt_set(type_alternative_gpio_out_union* gpio_out);
 
 
 

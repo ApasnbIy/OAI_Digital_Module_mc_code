@@ -35,6 +35,7 @@ kpa_bdk2\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
 kpa_bdk2\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 kpa_bdk2\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 kpa_bdk2\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+kpa_bdk2\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 kpa_bdk2\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 kpa_bdk2\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 kpa_bdk2\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
@@ -46,6 +47,7 @@ kpa_bdk2\main.o: ../Inc/can.h
 kpa_bdk2\main.o: ../Inc/dac.h
 kpa_bdk2\main.o: ../Inc/dma.h
 kpa_bdk2\main.o: ../Inc/i2c.h
+kpa_bdk2\main.o: ../Inc/spi.h
 kpa_bdk2\main.o: ../Inc/tim.h
 kpa_bdk2\main.o: ../Inc/usart.h
 kpa_bdk2\main.o: ../Inc/usb_device.h
@@ -68,3 +70,5 @@ kpa_bdk2\main.o: ..\my_lib\modbus_data_formater.h
 kpa_bdk2\main.o: ..\my_lib\INA226.h
 kpa_bdk2\main.o: ..\my_lib\my_GPIO.h
 kpa_bdk2\main.o: ..\my_lib\my_UART.h
+kpa_bdk2\main.o: ..\my_lib\my_SPI.h
+kpa_bdk2\main.o: ..\my_lib\led.h

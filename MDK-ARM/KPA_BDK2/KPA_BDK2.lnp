@@ -7,7 +7,7 @@
 "kpa_bdk2\dac.o"
 "kpa_bdk2\dma.o"
 "kpa_bdk2\i2c.o"
-"kpa_bdk2\sys.o"
+"kpa_bdk2\spi.o"
 "kpa_bdk2\tim.o"
 "kpa_bdk2\usart.o"
 "kpa_bdk2\usb_device.o"
@@ -39,6 +39,7 @@
 "kpa_bdk2\stm32f4xx_hal_dac_ex.o"
 "kpa_bdk2\stm32f4xx_hal_i2c.o"
 "kpa_bdk2\stm32f4xx_hal_i2c_ex.o"
+"kpa_bdk2\stm32f4xx_hal_spi.o"
 "kpa_bdk2\stm32f4xx_hal_tim.o"
 "kpa_bdk2\stm32f4xx_hal_tim_ex.o"
 "kpa_bdk2\stm32f4xx_hal_uart.o"
@@ -53,6 +54,8 @@
 "kpa_bdk2\ina226.o"
 "kpa_bdk2\my_gpio.o"
 "kpa_bdk2\my_uart.o"
+"kpa_bdk2\led.o"
+"kpa_bdk2\my_spi.o"
 --library_type=microlib --strict --scatter "KPA_BDK2\KPA_BDK2.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

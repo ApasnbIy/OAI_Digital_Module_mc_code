@@ -36,6 +36,7 @@ kpa_bdk2\modbus_rtu.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
 kpa_bdk2\modbus_rtu.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 kpa_bdk2\modbus_rtu.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 kpa_bdk2\modbus_rtu.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+kpa_bdk2\modbus_rtu.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 kpa_bdk2\modbus_rtu.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 kpa_bdk2\modbus_rtu.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 kpa_bdk2\modbus_rtu.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
@@ -60,3 +61,4 @@ kpa_bdk2\modbus_rtu.o: ../Inc/i2c.h
 kpa_bdk2\modbus_rtu.o: ..\my_lib\my_GPIO.h
 kpa_bdk2\modbus_rtu.o: ..\my_lib\my_UART.h
 kpa_bdk2\modbus_rtu.o: ../Inc/usart.h
+kpa_bdk2\modbus_rtu.o: ..\my_lib\led.h
