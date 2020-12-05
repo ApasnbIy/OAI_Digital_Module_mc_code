@@ -240,6 +240,7 @@ int main(void)
 	previous_time_1 = 0;
 	previous_time_2 = 0;
 	timer_slot_5ms_counter = 0;
+	uint32_t temp;
 		
 	/*
 	ina226_snake(&ina_226);
@@ -257,7 +258,10 @@ int main(void)
 		
 		if((current_time - previous_time_1)>= 400){ // запуск опроса ina226. копирование данных ацп
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
-			
+				if(mb_gpio_alternative_outputs.start == 1 && mb_gpio_alternative_outputs.end_flag == 0){ // if alt started
+					temp = (uint32_t) TIM2->CNT;
+					memcpy(&mb_data_union.mb_data_named.mb_gpio_alternative_out.LOW_time_left, &temp, 4); // update the time in alt_gpio
+				}
 				if(ina_226.ch_read_queue == 0){memcpy(&mb_data_union.mb_data_named.ina226_5v, &ina_226.INA_226[0].voltage, sizeof(type_ina_226_data));}
 				else if(ina_226.ch_read_queue == 1){memcpy(&mb_data_union.mb_data_named.ina226_3v3, &ina_226.INA_226[1].voltage, sizeof(type_ina_226_data));}
    			
@@ -379,10 +383,13 @@ int main(void)
 		if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler !=  mb_gpio_alternative_outputs.scaler){
 				memcpy(&mb_gpio_alternative_outputs, &mb_data_union.mb_data_named.mb_gpio_alternative_out, sizeof(mb_gpio_alternative_outputs));
 				if(mb_gpio_alternative_outputs.start == 0x0001 && mb_gpio_alternative_outputs.stop == 0x00){
+					mb_gpio_alternative_outputs.end_flag = 0;
 					my_gpio_alt_set(&mb_gpio_alternative_outputs);	
 				}
 				else if(mb_gpio_alternative_outputs.stop == 0x0001){
 					HAL_TIM_Base_Stop_IT(&htim2);
+					mb_gpio_alternative_outputs.end_flag = 0;
+					mb_gpio_alternative_outputs.start = 0;
 					my_gpio_set(&mb_gpio_outputs);
 				}
 		}
@@ -530,9 +537,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				mb_gpio_alternative_outputs.it_scaler = 1;
 			}
 			else if(mb_gpio_alternative_outputs.it_scaler == 1){
-			my_gpio_set(&mb_gpio_outputs);
-			mb_gpio_alternative_outputs.end_flag = 0x0001;
-			HAL_TIM_Base_Stop_IT(&htim2);	
+				my_gpio_set(&mb_gpio_outputs);
+				mb_gpio_alternative_outputs.end_flag = 0x0001;
+				HAL_TIM_Base_Stop_IT(&htim2);	
+				//TIM2->CNT = 0x0;	
 			
 			}
 		}

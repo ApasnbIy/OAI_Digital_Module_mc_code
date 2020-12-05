@@ -174,15 +174,18 @@ type_gpio_out_union;
 
 typedef struct
 {
-	uint16_t		scaler; 		// +0
-	uint16_t		LOW_time; 	// +1
-	uint16_t		HIGH_time; 	// +2
-	uint16_t		start;			// +3
-	uint16_t		end_flag;		// +4
-	uint16_t		stop;				// +5
-	uint16_t		it_scaler;// +6	
-	uint16_t		reserved[3];// +7
-	type_gpio_out_union		gpio_out_named; // +10
+	uint16_t		scaler; 									// +0
+	uint16_t		LOW_time; 								// +1
+	uint16_t		HIGH_time; 								// +2
+	uint16_t		start;										// +3
+	uint16_t		end_flag;									// +4
+	uint16_t		stop;											// +5
+	uint16_t		process_flag;							// +6
+	uint16_t		it_scaler;								// +7	
+	uint16_t		LOW_time_left;						// +8
+	uint16_t		HIGH_time_left;						// +9
+	uint16_t		reserved[4];							// +10
+	type_gpio_out_union		gpio_out_named; // +14	
 }
 type_alternative_gpio_out_struct;
 

@@ -359,19 +359,13 @@ void my_gpio_get(type_gpio_in_union* gpio_in)
 
 void my_gpio_alt_set(type_alternative_gpio_out_struct* gpio_out){
 	my_gpio_set(&gpio_out->gpio_out_named);
-	
 	gpio_out->it_scaler = 0;
-	
-	
-  
+	gpio_out->end_flag	= 0;
 	htim2.Init.Period = (gpio_out->HIGH_time << 16) | (gpio_out->LOW_time);
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
-  }
-	
-	
-	
+  }	
 	HAL_TIM_Base_Start_IT(&htim2);
 }
 
