@@ -61,3 +61,4 @@ kpa_bdk2\modbus_data_formater.o: ../Inc/i2c.h
 kpa_bdk2\modbus_data_formater.o: ..\my_lib\my_GPIO.h
 kpa_bdk2\modbus_data_formater.o: ..\my_lib\my_UART.h
 kpa_bdk2\modbus_data_formater.o: ../Inc/usart.h
+kpa_bdk2\modbus_data_formater.o: ..\my_lib\my_spi.h

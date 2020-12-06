@@ -15,7 +15,7 @@ typedef struct
 	uint16_t start;
 	uint16_t transmit_flag;
 	uint16_t len;
-	uint8_t	 data[UART_TRANSMIT_DATA_BUFF];
+	uint16_t data[UART_TRANSMIT_DATA_BUFF/2];
 }
 type_uart_transmit_struct;
 
@@ -27,7 +27,7 @@ typedef struct
 	uint16_t len;
 	uint8_t	 data[UART_RECIVE_DATA_BUFF];	
 }
-type_uart_recive_struct;
+type_uart_receive_struct;
 
 typedef struct
 {

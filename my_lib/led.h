@@ -17,6 +17,7 @@
   * @note   для работы vcp_uart необходимо наличие таймера настроенного на шаг 1 мкс, считающего вниз, в one-pulse режиме
   
   */
+#pragma pack(push, 2)
 typedef struct  
 {
 	uint8_t led_num;  //0 - State PD3, 1 - Connection PD4
@@ -29,7 +30,7 @@ typedef struct
 	uint16_t alt_period_ms;
 	uint8_t alt_duty;	
 }type_LED_INDICATOR;
-
+#pragma pack(pop)
 
 void led_init(type_LED_INDICATOR* led_ptr, uint8_t led_num);
 void led_processor(type_LED_INDICATOR* led_ptr, uint32_t process_period_ms);

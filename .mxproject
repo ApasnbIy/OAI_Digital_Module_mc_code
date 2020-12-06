@@ -12,8 +12,11 @@ HeaderPath=Drivers\STM32F4xx_HAL_Driver\Inc;Drivers\STM32F4xx_HAL_Driver\Inc\Leg
 CDefines=USE_HAL_DRIVER;STM32F405xx;USE_HAL_DRIVER;USE_HAL_DRIVER;
 
 [PreviousGenFiles]
-HeaderPath=C:/Work/KPA-BDK2-STM/Inc
-HeaderFiles=gpio.h;adc.h;can.h;dac.h;dma.h;i2c.h;spi.h;tim.h;usart.h;usb_device.h;usbd_conf.h;usbd_desc.h;usbd_cdc_if.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;
-SourcePath=C:/Work/KPA-BDK2-STM/Src
-SourceFiles=gpio.c;adc.c;can.c;dac.c;dma.c;i2c.c;spi.c;tim.c;usart.c;usb_device.c;usbd_conf.c;usbd_desc.c;usbd_cdc_if.c;stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;
+HeaderPath=G:/OAI_Digital_Module_mc_code/Inc
+HeaderFiles=gpio.h;adc.h;can.h;dac.h;dma.h;i2c.h;spi.h;tim.h;usart.h;usb_device.h;usbd_conf.h;usbd_desc.h;usbd_cdc_if.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;sys.h;
+SourcePath=G:/OAI_Digital_Module_mc_code/Src
+SourceFiles=gpio.c;adc.c;can.c;dac.c;dma.c;i2c.c;spi.c;tim.c;usart.c;usb_device.c;usbd_conf.c;usbd_desc.c;usbd_cdc_if.c;stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;sys.c;
+
+[]
+SourceFiles=;;
 

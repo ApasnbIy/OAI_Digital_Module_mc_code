@@ -72,6 +72,12 @@
 
 
 
+
+
+
+
+
+
 #pragma pack(push, 2)
 type_modbus_data MB_Data;
 type_VCP_UART vcp;
@@ -87,15 +93,24 @@ type_modbus_data_named mb_data_named;
 #pragma pack(pop)
 
 
-type_gpio_in_union 			mb_gpio_inputs;
-type_gpio_out_union 		mb_gpio_outputs;
-type_gpio_config_union	mb_gpio_config;
+
 type_uart_transmit_struct mb_uart1_transmit;
 type_uart_setting_union   mb_uart1_setting;
 type_uart_transmit_struct mb_uart2_transmit;
 type_uart_setting_union   mb_uart2_setting;
 type_uart_setting_union 	UART_settings_default;
-type_LED_INDICATOR mcu_state_led, con_state_led;
+type_spi_settings_struct					mb_spi_settings;
+type_spi_transmit_struct					mb_spi_transmit;
+type_spi_receive_struct						mb_spi_receive;
+
+type_LED_INDICATOR mcu_state_led;
+type_LED_INDICATOR con_state_led;
+
+
+
+type_gpio_in_union 			mb_gpio_inputs;
+type_gpio_out_union 		mb_gpio_outputs;
+type_gpio_config_union	mb_gpio_config;
 type_alternative_gpio_out_struct mb_gpio_alternative_outputs;
 uint8_t timer_slot_5ms_counter = 0;
 uint8_t time_slot_flag_5ms = 0;
@@ -114,6 +129,7 @@ uint8_t time_slot_flag_5ms = 0;
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void HardResetUSB(void);
+void Reverse_Bytes_Order_16(uint16_t* word);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -130,6 +146,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	 
   /* USER CODE END 1 */
+  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -168,7 +185,17 @@ int main(void)
   MX_SPI2_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-	//volatile uint16_t len_massive[] = {sizeof(type_uart_recive_struct), sizeof(type_uart_setting_union ), sizeof(mb_dac2), sizeof(mb_adc_settings), sizeof(type_gpio_out_union), sizeof(type_gpio_in_union)};
+	//volatile uint16_t len_massive[] = {sizeof(type_adc_data_struct), sizeof(type_ina_226_data ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
+	/*
+	type_adc_data_struct 			
+	type_ina_226_data					
+	type_ina_226_data					
+	type_uart_receive_struct	
+	type_uart_receive_struct 	
+	type_gpio_in_union				
+	type_spi_receive_data			
+	*/
+	
 	__HAL_RCC_GPIOE_CLK_ENABLE();
 	__HAL_RCC_GPIOG_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();	  
@@ -178,43 +205,24 @@ int main(void)
 	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA	
 	HAL_TIM_Base_Start(&htim6);	// таймер ModBus
 	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды
-	//HAL_TIM_Base_Start(&htim2);
-	/*
-	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = GPIO_PIN_4;
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 	
-	HAL_GPIO_WritePin (GPIOE, GPIO_PIN_4 ,GPIO_PIN_SET);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin (GPIOE, GPIO_PIN_4 ,GPIO_PIN_RESET);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin (GPIOE, GPIO_PIN_4 ,GPIO_PIN_SET);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin (GPIOE, GPIO_PIN_4 ,GPIO_PIN_RESET);
-	HAL_Delay(100);
-	HAL_TIM_Base_Start_IT(&htim2);
-	*/
-	
-	
-	
-	
-	// ADC + UART1 default start
+		// ADC + UART1, UART2 default start
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
-	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_recive_struct.data[mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr],1);
-	HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_recive_struct.data[mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr],1);
-
-  ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
-	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
-  
-	MY_USART_UART_struct_default_init(&UART_settings_default);
-  MY_USART_UART_struct_default_init(&mb_uart1_setting);
-  MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart1_setting_struct);
-	MY_USART_UART_struct_default_init(&mb_uart2_setting);
-  MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart2_setting_struct);
 	
+	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
+	HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
+
+	ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
+	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
+
+	MY_USART_UART_struct_default_init(&UART_settings_default);
+	MY_USART_UART_struct_default_init(&mb_uart1_setting);
+	MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart1_setting_struct);
+	MY_USART_UART_struct_default_init(&mb_uart2_setting);
+	MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart2_setting_struct);
+	
+	my_spi_default_settings(&mb_spi_settings);
+	my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
 
 	
 	
@@ -228,20 +236,22 @@ int main(void)
 	
 	
 	
-	
-	led_init(&con_state_led, 1);
 	led_init(&mcu_state_led, 0);
+	led_init(&con_state_led, 1);
+	
+	
 	led_setup(&con_state_led, LED_ON, 0, 0);
-  led_setup(&mcu_state_led, LED_HEART_BEAT, 1000, 0);
-  led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 2000);
-  led_alt_setup(&mcu_state_led, LED_BLINK, 200, 127, 2000);
+	led_setup(&mcu_state_led, LED_HEART_BEAT, 1000, 0);
+	
+	led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 2000);
+	led_alt_setup(&mcu_state_led, LED_BLINK, 200, 127, 2000);
 	
 	current_time = 0;
 	previous_time_1 = 0;
 	previous_time_2 = 0;
 	timer_slot_5ms_counter = 0;
 	uint32_t temp;
-		
+	
 	/*
 	ina226_snake(&ina_226);
 	*/
@@ -258,10 +268,12 @@ int main(void)
 		
 		if((current_time - previous_time_1)>= 400){ // запуск опроса ina226. копирование данных ацп
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
-				if(mb_gpio_alternative_outputs.start == 1 && mb_gpio_alternative_outputs.end_flag == 0){ // if alt started
-					temp = (uint32_t) TIM2->CNT;
+				
+			  if(mb_gpio_alternative_outputs.start == 1 && mb_gpio_alternative_outputs.end_flag == 0){ // if alt started
+					temp = ((uint32_t)(TIM2->ARR)) - ((uint32_t) TIM2->CNT);
 					memcpy(&mb_data_union.mb_data_named.mb_gpio_alternative_out.LOW_time_left, &temp, 4); // update the time in alt_gpio
 				}
+				
 				if(ina_226.ch_read_queue == 0){memcpy(&mb_data_union.mb_data_named.ina226_5v, &ina_226.INA_226[0].voltage, sizeof(type_ina_226_data));}
 				else if(ina_226.ch_read_queue == 1){memcpy(&mb_data_union.mb_data_named.ina226_3v3, &ina_226.INA_226[1].voltage, sizeof(type_ina_226_data));}
    			
@@ -328,58 +340,65 @@ int main(void)
 			if(mb_uart1_transmit.start == 0x01 && mb_uart1_transmit.len != 0x00){
 				mb_data_union.mb_data_named.mb_uart1_transmit_struct.transmit_flag = 0x0000;
 				mb_uart1_transmit.transmit_flag = 0x0000;
-				HAL_UART_Transmit_IT(&huart1, mb_uart1_transmit.data, mb_uart1_transmit.len);
+				for(int i = 0; i<= mb_uart1_transmit.len; i++){ 
+					Reverse_Bytes_Order_16(&mb_uart1_transmit.data[i]);
+				}
+				HAL_UART_Transmit_IT(&huart1, (uint8_t*) mb_uart1_transmit.data, mb_uart1_transmit.len);
 			}
 		}
-		//Настройки ЮАРТ, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
+		//Настройки ЮАРТ1, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
 		if(mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler != mb_uart1_setting.settings_named.scaler){
 			memcpy(&mb_uart1_setting, &mb_data_union.mb_data_named.mb_uart1_setting_struct, sizeof(type_uart_setting_union));
 			if(mb_uart1_setting.settings_named.BAUD!=0){
 				HAL_UART_Abort_IT(&huart1);
 				MY_USART1_UART_Init(&mb_uart1_setting);
-				mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr = 0x00;
-				memset(&mb_data_union.mb_data_named.mb_uart1_recive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_recive_struct.data));
-				HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_recive_struct.data[mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr],1);
+				mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr = 0x00;
+				memset(&mb_data_union.mb_data_named.mb_uart1_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_receive_struct.data));
+				HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
 				mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.flag = 0x01;
 			}
 			else{
 				HAL_UART_Abort_IT(&huart1);
 				MY_USART1_UART_Init(&UART_settings_default);
-				mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr = 0x00;
-				memset(&mb_data_union.mb_data_named.mb_uart1_recive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_recive_struct.data));
-				HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_recive_struct.data[mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr],1);
+				mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr = 0x00;
+				memset(&mb_data_union.mb_data_named.mb_uart1_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_receive_struct.data));
+				HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
 				mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.flag = 0x08;	
 			}
 		}
 		
-		//обновление и отправка посылки по uart1
+		//обновление и отправка посылки по uart2
 		if(mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler != mb_uart2_transmit.scaler){
 			memcpy(&mb_uart2_transmit, &mb_data_union.mb_data_named.mb_uart2_transmit_struct, sizeof(mb_uart2_transmit));
 			if(mb_uart2_transmit.start == 0x01 && mb_uart2_transmit.len != 0x00){
-				HAL_UART_Transmit_IT(&huart2, mb_uart2_transmit.data, mb_uart2_transmit.len);
+				for(int i = 0; i<= mb_uart2_transmit.len; i++){ 
+					Reverse_Bytes_Order_16(&mb_uart2_transmit.data[i]);
+				}
+				HAL_UART_Transmit_IT(&huart2, (uint8_t*) mb_uart2_transmit.data, mb_uart2_transmit.len);
 			}
 		}
-		//Настройки ЮАРТ, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
+		//Настройки ЮАРТ2, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
 		if(mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler != mb_uart2_setting.settings_named.scaler){
 			memcpy(&mb_uart2_setting, &mb_data_union.mb_data_named.mb_uart2_setting_struct, sizeof(type_uart_setting_union));
 			if(mb_uart2_setting.settings_named.BAUD!=0){
 				HAL_UART_Abort_IT(&huart2);
 				MY_USART2_UART_Init(&mb_uart2_setting);
-				mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr = 0x00;
-				memset(&mb_data_union.mb_data_named.mb_uart2_recive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_recive_struct.data));
-				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_recive_struct.data[mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr],1);
+				mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr = 0x00;
+				memset(&mb_data_union.mb_data_named.mb_uart2_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_receive_struct.data));
+				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
 				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x01;
 			}
 			else{
 				HAL_UART_Abort_IT(&huart2);
 				MY_USART2_UART_Init(&UART_settings_default);
-				mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr = 0x00;
-				memset(&mb_data_union.mb_data_named.mb_uart2_recive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_recive_struct.data));
-				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_recive_struct.data[mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr],1);
+				mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr = 0x00;
+				memset(&mb_data_union.mb_data_named.mb_uart2_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_receive_struct.data));
+				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
 				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x08;	
 			}
 		}
 		
+		// alternative GPIO set
 		if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler !=  mb_gpio_alternative_outputs.scaler){
 				memcpy(&mb_gpio_alternative_outputs, &mb_data_union.mb_data_named.mb_gpio_alternative_out, sizeof(mb_gpio_alternative_outputs));
 				if(mb_gpio_alternative_outputs.start == 0x0001 && mb_gpio_alternative_outputs.stop == 0x00){
@@ -393,6 +412,44 @@ int main(void)
 					my_gpio_set(&mb_gpio_outputs);
 				}
 		}
+		// spi transmit
+		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler != mb_spi_transmit.scaler){
+			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
+			if(mb_spi_transmit.start == 1){
+				mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 0;
+				if(mb_spi_transmit.rx_tx_flag == 1){
+					my_spi_transmit_recive( &mb_data_union.mb_data_named.mb_spi_receive_data, &mb_spi_transmit);
+				}
+				else if(mb_spi_transmit.rx_tx_flag == 0){
+					my_spi_transmit(&mb_spi_transmit);
+				}
+			}
+		}
+		//spi receive
+		if(mb_data_union.mb_data_named.mb_spi_receive.scaler != mb_spi_receive.scaler){
+			memcpy(&mb_spi_receive, &mb_data_union.mb_data_named.mb_spi_receive, 20); // 20 bites are control part of struct
+			if(mb_spi_receive.start == 1){
+				mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 0;
+				my_spi_receive(&mb_spi_receive ,&mb_data_union.mb_data_named.mb_spi_receive_data);
+			}
+		}
+		//spi settings
+		if(mb_data_union.mb_data_named.mb_spi_settings.scaler != mb_spi_settings.scaler){
+			memcpy(&mb_spi_settings, &mb_data_union.mb_data_named.mb_spi_settings, sizeof(type_spi_settings_struct));
+			if(mb_spi_settings.set_default == 0x01){
+				my_spi_default_settings(&mb_spi_settings);
+				MY_SPI2_Init(&mb_spi_settings);
+			}
+			else{
+				MY_SPI2_Init(&mb_spi_settings);
+			}
+				
+		}
+			
+		
+
+
+
 						
 		if(vcp.rx_position>4){
 			led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 200);
@@ -411,11 +468,11 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
+  /** Configure the main internal regulator output voltage 
   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks
+  /** Initializes the CPU, AHB and APB busses clocks 
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -429,7 +486,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks
+  /** Initializes the CPU, AHB and APB busses clocks 
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -460,6 +517,16 @@ void HardResetUSB(void)
   
 }
 
+void Reverse_Bytes_Order_16(uint16_t* word){
+	volatile uint16_t temp; 
+	temp = *word;  			// berem snachenie po ukasately
+	temp = ((temp<<8)&0xFF00)| ((temp>>8)&0xFF); // delaem vsiakie nepotrebnocty
+	*word = temp;									// sapisivaem obratno chto poluchilos
+}
+	
+
+
+
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
     if(hadc->Instance == ADC3)
@@ -486,13 +553,17 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	if(huart == &huart1){
 		//mb_uart_transmit.transmit_flag = 1;
 		mb_data_union.mb_data_named.mb_uart1_transmit_struct.transmit_flag = 0x01;
+		mb_data_union.mb_data_named.mb_uart1_transmit_struct.start = 0x0;
 		mb_uart1_transmit.transmit_flag = 0x01;
 		HAL_UART_AbortTransmit_IT(&huart1);
 	}
 	else if(huart == &huart2){
 		//mb_uart_transmit.transmit_flag = 1;
 		mb_data_union.mb_data_named.mb_uart2_transmit_struct.transmit_flag = 0x01;
+		mb_data_union.mb_data_named.mb_uart2_transmit_struct.start = 0x0;
 		mb_uart2_transmit.transmit_flag = 0x01;
+				 
+
 		HAL_UART_AbortTransmit_IT(&huart2);
 	}	
 }
@@ -501,19 +572,19 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart == &huart1){
-			mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr++;
-			if(mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr == (UART_RECIVE_DATA_BUFF)){
-				mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr = 0;
+			mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr++;
+			if(mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr == (UART_RECIVE_DATA_BUFF)){
+				mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr = 0;
 			}
-			HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_recive_struct.data[mb_data_union.mb_data_named.mb_uart1_recive_struct.write_ptr],1);
+			HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
 		
 	}
 	else if(huart == &huart2){
-			mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr++;
-			if(mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr == (UART_RECIVE_DATA_BUFF)){
-				mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr = 0;
+			mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr++;
+			if(mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr == (UART_RECIVE_DATA_BUFF)){
+				mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr = 0;
 			}
-			HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_recive_struct.data[mb_data_union.mb_data_named.mb_uart2_recive_struct.write_ptr],1);
+			HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
 		
 	}
 }
@@ -539,6 +610,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			else if(mb_gpio_alternative_outputs.it_scaler == 1){
 				my_gpio_set(&mb_gpio_outputs);
 				mb_gpio_alternative_outputs.end_flag = 0x0001;
+				mb_gpio_alternative_outputs.start = 0x0000;
 				HAL_TIM_Base_Stop_IT(&htim2);	
 				//TIM2->CNT = 0x0;	
 			
@@ -546,7 +618,51 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 	}
 
+	
+	
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+  if(hspi == &hspi2)
+  {
+    if(hspi2.TxXferCount==0)
+    {
+      HAL_SPI_Abort_IT(&hspi2);
+			mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 1;
+			mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
+    }
+  }
+}
 
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+  if(hspi == &hspi2)
+  {
+    if(hspi2.TxXferCount==0 && hspi2.TxXferCount==0)
+    {
+      HAL_SPI_Abort_IT(&hspi2);
+			mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 1;
+			mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
+			mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 1;
+			mb_data_union.mb_data_named.mb_spi_receive.start = 0;
+    }
+  }
+}
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+  if(hspi == &hspi2)
+  {
+    if(hspi2.RxXferCount==0)
+    {
+      HAL_SPI_Abort_IT(&hspi2);
+			mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 1;
+			mb_data_union.mb_data_named.mb_spi_receive.start = 0;
+    }
+  }
+}
+	
+	
+	
+	
 
 /* USER CODE BEGIN 0 */
 
@@ -576,7 +692,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{
+{ 
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

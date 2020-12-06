@@ -32,6 +32,7 @@ void led_init(type_LED_INDICATOR* led_ptr, uint8_t led_num)
 			led_ptr->led_num = 1;
 	}
 	
+	
 		
 	led_ptr->mode = DEFAULT_BLINK_MODE;
 	led_ptr->period_ms = DEFAULT_BLINK_PERIOD_MS;

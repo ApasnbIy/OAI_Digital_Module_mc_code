@@ -70,5 +70,5 @@ kpa_bdk2\main.o: ..\my_lib\modbus_data_formater.h
 kpa_bdk2\main.o: ..\my_lib\INA226.h
 kpa_bdk2\main.o: ..\my_lib\my_GPIO.h
 kpa_bdk2\main.o: ..\my_lib\my_UART.h
-kpa_bdk2\main.o: ..\my_lib\my_SPI.h
+kpa_bdk2\main.o: ..\my_lib\my_spi.h
 kpa_bdk2\main.o: ..\my_lib\led.h
