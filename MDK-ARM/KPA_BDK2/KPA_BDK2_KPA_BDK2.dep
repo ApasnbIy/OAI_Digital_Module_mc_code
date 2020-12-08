@@ -1,6 +1,6 @@
 Dependencies for Project 'KPA_BDK2', Target 'KPA_BDK2': (DO NOT MODIFY !)
 F (startup_stm32f405xx.s)(0x5FCF382A)(--cpu Cortex-M4.fp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 524" --pd "_RTE_ SETA 1" --pd "STM32F405xx SETA 1"--list startup_stm32f405xx.lst --xref -o kpa_bdk2\startup_stm32f405xx.o --depend kpa_bdk2\startup_stm32f405xx.d)
-F (../Src/main.c)(0x5FCF389C)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\main.o --omf_browse kpa_bdk2\main.crf --depend kpa_bdk2\main.d)
+F (../Src/main.c)(0x5FCF7BAE)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\main.o --omf_browse kpa_bdk2\main.crf --depend kpa_bdk2\main.d)
 I (../Inc/main.h)(0x5FCF3827)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DDBCE37)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5FCF3827)
@@ -66,13 +66,13 @@ I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x5DDBCD87)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x5DDBCD87)
 I (..\my_lib\modbus_rtu.h)(0x5FCB2A32)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x588B9154)
-I (..\my_lib\modbus_data_formater.h)(0x5FCF0D1E)
+I (..\my_lib\modbus_data_formater.h)(0x5FCF7BAE)
 I (..\my_lib\INA226.h)(0x5FCB2A32)
 I (..\my_lib\my_GPIO.h)(0x5FCB2A32)
-I (..\my_lib\my_UART.h)(0x5FCCC6C9)
+I (..\my_lib\my_UART.h)(0x5FCF6996)
 I (..\my_lib\my_spi.h)(0x5FCF326A)
 I (..\my_lib\led.h)(0x5FCCDC72)
-F (../Src/gpio.c)(0x5FCF3823)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\gpio.o --omf_browse kpa_bdk2\gpio.crf --depend kpa_bdk2\gpio.d)
+F (../Src/gpio.c)(0x5FCF6B27)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\gpio.o --omf_browse kpa_bdk2\gpio.crf --depend kpa_bdk2\gpio.d)
 I (../Inc/gpio.h)(0x5FCF3823)
 I (../Inc/main.h)(0x5FCF3827)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DDBCE37)
@@ -336,7 +336,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x5DDBCE37)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h)(0x5DDBCE37)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x5DDBCE37)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x5DDBCE37)
-F (../Src/spi.c)(0x5FCF3825)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\spi.o --omf_browse kpa_bdk2\spi.crf --depend kpa_bdk2\spi.d)
+F (../Src/spi.c)(0x5FCF7C7A)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\spi.o --omf_browse kpa_bdk2\spi.crf --depend kpa_bdk2\spi.d)
 I (../Inc/spi.h)(0x5FCF3825)
 I (../Inc/main.h)(0x5FCF3827)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DDBCE37)
@@ -2302,16 +2302,16 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x588B9154)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B9154)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x5DDBCD87)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x5DDBCD87)
-I (..\my_lib\modbus_data_formater.h)(0x5FCF0D1E)
+I (..\my_lib\modbus_data_formater.h)(0x5FCF7BAE)
 I (..\my_lib\INA226.h)(0x5FCB2A32)
 I (../Inc/i2c.h)(0x5FCF3825)
 I (..\my_lib\my_GPIO.h)(0x5FCB2A32)
-I (..\my_lib\my_UART.h)(0x5FCCC6C9)
+I (..\my_lib\my_UART.h)(0x5FCF6996)
 I (../Inc/usart.h)(0x5FCF3826)
 I (..\my_lib\my_spi.h)(0x5FCF326A)
 I (..\my_lib\led.h)(0x5FCCDC72)
 F (..\my_lib\modbus_data_formater.c)(0x5FCB2A32)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\modbus_data_formater.o --omf_browse kpa_bdk2\modbus_data_formater.crf --depend kpa_bdk2\modbus_data_formater.d)
-I (..\my_lib\modbus_data_formater.h)(0x5FCF0D1E)
+I (..\my_lib\modbus_data_formater.h)(0x5FCF7BAE)
 I (..\my_lib\modbus_rtu.h)(0x5FCB2A32)
 I (../Inc/main.h)(0x5FCF3827)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DDBCE37)
@@ -2369,7 +2369,7 @@ I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x5DDBCD87
 I (..\my_lib\INA226.h)(0x5FCB2A32)
 I (../Inc/i2c.h)(0x5FCF3825)
 I (..\my_lib\my_GPIO.h)(0x5FCB2A32)
-I (..\my_lib\my_UART.h)(0x5FCCC6C9)
+I (..\my_lib\my_UART.h)(0x5FCF6996)
 I (../Inc/usart.h)(0x5FCF3826)
 I (..\my_lib\my_spi.h)(0x5FCF326A)
 F (..\my_lib\INA226.c)(0x5FCB2A32)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\ina226.o --omf_browse kpa_bdk2\ina226.crf --depend kpa_bdk2\ina226.d)
@@ -2419,7 +2419,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x5DDBCE37)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x5DDBCE37)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B9154)
 F (..\my_lib\INA226.h)(0x5FCB2A32)()
-F (..\my_lib\modbus_data_formater.h)(0x5FCF0D1E)()
+F (..\my_lib\modbus_data_formater.h)(0x5FCF7BAE)()
 F (..\my_lib\modbus_rtu.h)(0x5FCB2A32)()
 F (..\my_lib\vcp_time_segmentation.h)(0x5FCB2A32)()
 F (..\my_lib\my_GPIO.c)(0x5FCB2A32)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\my_gpio.o --omf_browse kpa_bdk2\my_gpio.crf --depend kpa_bdk2\my_gpio.d)
@@ -2469,8 +2469,8 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x5DDBCE37)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x588B9154)
 I (../Inc/tim.h)(0x5FCF3826)
 F (..\my_lib\my_GPIO.h)(0x5FCB2A32)()
-F (..\my_lib\my_UART.c)(0x5FCB2A32)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\my_uart.o --omf_browse kpa_bdk2\my_uart.crf --depend kpa_bdk2\my_uart.d)
-I (..\my_lib\my_UART.h)(0x5FCCC6C9)
+F (..\my_lib\my_UART.c)(0x5FCF6996)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\my_uart.o --omf_browse kpa_bdk2\my_uart.crf --depend kpa_bdk2\my_uart.d)
+I (..\my_lib\my_UART.h)(0x5FCF6996)
 I (../Inc/main.h)(0x5FCF3827)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x5DDBCE37)
 I (../Inc/stm32f4xx_hal_conf.h)(0x5FCF3827)
@@ -2514,7 +2514,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h)(0x5DDBCE37)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h)(0x5DDBCE37)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h)(0x5DDBCE37)
 I (../Inc/usart.h)(0x5FCF3826)
-F (..\my_lib\my_UART.h)(0x5FCCC6C9)()
+F (..\my_lib\my_UART.h)(0x5FCF6996)()
 F (..\my_lib\led.c)(0x5FCCDD0F)(--c99 -c --cpu Cortex-M4.fp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I ..\my_lib-I.\RTE\_KPA_BDK2-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F405xx -DUSE_HAL_DRIVER -DSTM32F405xx-o kpa_bdk2\led.o --omf_browse kpa_bdk2\led.crf --depend kpa_bdk2\led.d)
 I (..\my_lib\led.h)(0x5FCCDC72)
 I (../Inc/main.h)(0x5FCF3827)

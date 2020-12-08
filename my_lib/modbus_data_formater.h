@@ -70,9 +70,9 @@ typedef struct
 	type_gpio_out_union								mb_gpio_out_union;					//	+2128 bytes	// +1064 regs 0x428
 	type_gpio_in_union								reserved;										//	+2136	bytes	// +1068 regs 0x42C	
 	type_uart_transmit_struct					mb_uart1_transmit_struct; 	// 	+2144 bytes // +1072 regs 0x430
-	type_uart_setting_union  					mb_uart1_setting_struct;	// 	+2280 bytes // +1140 regs 0x474
-	type_uart_transmit_struct					mb_uart2_transmit_struct;	// 	+2300 bytes // +1150 regs 0x47E
-	type_uart_setting_union  					mb_uart2_setting_struct;	//	+2436 bytes // +1218 regs 0x4C2
+	type_uart_setting_union  					mb_uart1_setting_struct;		// 	+2280 bytes // +1140 regs 0x474
+	type_uart_transmit_struct					mb_uart2_transmit_struct;		// 	+2300 bytes // +1150 regs 0x47E
+	type_uart_setting_union  					mb_uart2_setting_struct;		//	+2436 bytes // +1218 regs 0x4C2
 	type_alternative_gpio_out_struct	mb_gpio_alternative_out; 		//	+2456 bytes // +1228 regs
 	type_spi_settings_struct					mb_spi_settings;						//	+2492 bytes // +1246 regs
 	type_spi_transmit_struct					mb_spi_transmit;						//  +2532 bytes // +1266 regs

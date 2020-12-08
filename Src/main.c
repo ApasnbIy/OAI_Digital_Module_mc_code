@@ -110,7 +110,7 @@ type_LED_INDICATOR con_state_led;
 
 type_gpio_in_union 			mb_gpio_inputs;
 type_gpio_out_union 		mb_gpio_outputs;
-type_gpio_config_union	mb_gpio_config = {0};
+type_gpio_config_union	mb_gpio_config;
 type_alternative_gpio_out_struct mb_gpio_alternative_outputs;
 uint8_t timer_slot_5ms_counter = 0;
 uint8_t time_slot_flag_5ms = 0;
@@ -145,7 +145,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	 
-	 my_gpio_init(&mb_gpio_config);
+	 
   /* USER CODE END 1 */
   
 
@@ -163,6 +163,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   HardResetUSB();
+		
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -196,9 +197,9 @@ int main(void)
 	type_spi_receive_data			
 	*/
 	
-	__HAL_RCC_GPIOE_CLK_ENABLE();
-	__HAL_RCC_GPIOG_CLK_ENABLE();
-	__HAL_RCC_GPIOC_CLK_ENABLE();	  
+	
+	my_gpio_init(&mb_gpio_config);
+	  
 	
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
@@ -223,6 +224,7 @@ int main(void)
 	
 	my_spi_default_settings(&mb_spi_settings);
 	my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
+	
 	
 	
 	
