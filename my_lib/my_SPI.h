@@ -20,43 +20,43 @@ ti_mode				0 - disable, 1 - enable
 
 typedef struct
 {
-	uint16_t	scaler; 			//+0
-	uint16_t	mode; 				//+1
-	uint16_t  direction; 		//+2
-	uint16_t  data_size;		//+3
-	uint16_t  polarity; 		//+4
-	uint16_t  phase;				//+5
-	uint16_t  slave;				//+6
-	uint16_t  baud;					//+7
-	uint16_t  firs_bit;			//+8
-	uint16_t	ti_mode;			//+9
-	uint16_t	init_flag;		//+10
-	uint16_t  set_default;	//+10
-	uint16_t  reserved[8];	//+11
+	uint16_t	scaler; 			//+0 	1246
+	uint16_t	mode; 				//+1 	1247
+	uint16_t  direction; 		//+2 	1248
+	uint16_t  data_size;		//+3 	1249
+	uint16_t  polarity; 		//+4 	1250
+	uint16_t  phase;				//+5	1251
+	uint16_t  slave;				//+6	1252	
+	uint16_t  baud;					//+7	1253
+	uint16_t  firs_bit;			//+8	1254	
+	uint16_t	ti_mode;			//+9	1255
+	uint16_t	init_flag;		//+10	1256
+	uint16_t  set_default;	//+10	1257
+	uint16_t  reserved[8];	//+11	1258
 }
 type_spi_settings_struct;
 
 typedef struct
 {
-	uint16_t scaler;					//+0												
-	uint16_t reserved0;				//+1												
-	uint16_t len;							//+2
-	uint16_t start;						//+3	
-	uint16_t transaction_end;	//+4
-	uint16_t rx_tx_flag;
-	uint16_t reserved[4];			//+5	
-	uint16_t data[32];				//+10
+	uint16_t scaler;					//+0 	1266											
+	uint16_t reserved0;				//+1	1267												
+	uint16_t len;							//+2	1268
+	uint16_t start;						//+3	1269
+	uint16_t transaction_end;	//+4	1270
+	uint16_t rx_tx_flag;			//+5	1271
+	uint16_t reserved[4];			//+6	1272
+	uint16_t data[32];				//+10	1276
 	
 }
 type_spi_transmit_struct;
 
 typedef struct
 {
-	uint16_t scaler;					//+0												
-	uint16_t reg_addres;			//+1												
-	uint16_t len;							//+2
-	uint16_t start;						//+3	
-	uint16_t transaction_end;	//+4
+	uint16_t scaler;					//+0		1308										
+	uint16_t reserved1;				//+1		1309											
+	uint16_t len;							//+2		1310
+	uint16_t start;						//+3		1311
+	uint16_t transaction_end;	//+4		1312
 	uint16_t reserved[5];			//+5	len =10
 	
 }

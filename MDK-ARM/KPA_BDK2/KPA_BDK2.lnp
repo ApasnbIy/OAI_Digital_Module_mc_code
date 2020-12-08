@@ -8,6 +8,7 @@
 "kpa_bdk2\dma.o"
 "kpa_bdk2\i2c.o"
 "kpa_bdk2\spi.o"
+"kpa_bdk2\sys.o"
 "kpa_bdk2\tim.o"
 "kpa_bdk2\usart.o"
 "kpa_bdk2\usb_device.o"

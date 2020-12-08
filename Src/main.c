@@ -110,7 +110,7 @@ type_LED_INDICATOR con_state_led;
 
 type_gpio_in_union 			mb_gpio_inputs;
 type_gpio_out_union 		mb_gpio_outputs;
-type_gpio_config_union	mb_gpio_config;
+type_gpio_config_union	mb_gpio_config = {0};
 type_alternative_gpio_out_struct mb_gpio_alternative_outputs;
 uint8_t timer_slot_5ms_counter = 0;
 uint8_t time_slot_flag_5ms = 0;
@@ -145,6 +145,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	 
+	 my_gpio_init(&mb_gpio_config);
   /* USER CODE END 1 */
   
 
@@ -171,7 +172,6 @@ int main(void)
   //MX_DAC_Init();
   MX_I2C1_Init();
   MX_USART2_UART_Init();
-  MX_USART3_UART_Init();
   MX_DMA_Init();
   MX_CAN2_Init();
   MX_TIM3_Init();
@@ -223,7 +223,7 @@ int main(void)
 	
 	my_spi_default_settings(&mb_spi_settings);
 	my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
-
+	
 	
 	
 	//modbus_struct_init_constant(&mb_data_union.mb_data);
@@ -293,61 +293,78 @@ int main(void)
     
 
 	
-		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler!= mb_dac1.settings_scaler){ // dac1 start/stop/config
+		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler == 1){ // dac1 start/stop/config
 				memcpy(&mb_dac1.settings_scaler, &mb_data_union.mb_data_named.mb_dac1, sizeof(mb_dac1));
-				if(mb_dac1.start == 1){	
+				if(mb_dac1.start == 1){					
 					HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)mb_dac1.data, (sizeof(mb_dac1.data)/2), DAC_ALIGN_12B_R);  
+					mb_data_union.mb_data_named.mb_dac1.settings_scaler = 0;
 				}
 				else{
 					HAL_DAC_Stop_DMA(&hdac, DAC_CHANNEL_1);
+					mb_data_union.mb_data_named.mb_dac1.settings_scaler = 0;
 				}
 		}
 		
-		if(mb_data_union.mb_data_named.mb_dac2.settings_scaler!= mb_dac2.settings_scaler){// dac2 start/stop/config
+		if(mb_data_union.mb_data_named.mb_dac2.settings_scaler == 1){// dac2 start/stop/config
 			memcpy(&mb_dac2, &mb_data_union.mb_data_named.mb_dac2,  sizeof(mb_dac2));
 			if(mb_dac2.start == 1){
 					HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)mb_dac2.data, (sizeof(mb_dac2.data)/2), DAC_ALIGN_12B_R);  
+					mb_data_union.mb_data_named.mb_dac2.settings_scaler = 0;
 				}
 				else{
 					HAL_DAC_Stop_DMA(&hdac, DAC_CHANNEL_2);
+					mb_data_union.mb_data_named.mb_dac2.settings_scaler = 0;
 				}	
 		}
 		
-		if(mb_data_union.mb_data_named.mb_adc_settings.settings_scaler!= mb_adc_settings.settings_scaler){ // adc start/stop
+		if(mb_data_union.mb_data_named.mb_adc_settings.settings_scaler == 1){ // adc start/stop
 			memcpy(&mb_adc_settings.settings_scaler, &mb_data_union.mb_data_named.mb_adc_settings, sizeof(mb_adc_settings));
 			if(mb_adc_settings.start == 1){
-					HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8);  
+					HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8);
+					mb_data_union.mb_data_named.mb_adc_settings.settings_scaler = 0;				
 				}
 				else{
 					HAL_ADC_Stop_DMA(&hadc3);
+					mb_data_union.mb_data_named.mb_adc_settings.settings_scaler = 0;
 				}
 		}
 		// инициализация GPIO
-		if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater != mb_gpio_config.conf_named.mask_config_named.data_updater){
+		if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater == 1){
 			memcpy(&mb_gpio_config.conf_named, &mb_data_union.mb_data_named.mb_gpio_config_union, sizeof(mb_gpio_config.conf_named));
 			my_gpio_init(&mb_gpio_config);
+			mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater = 0;
+			
 		}
 		//обновление состояния GPIO настроенных на выход
 		if(mb_gpio_config.conf_named.on_of_mask.init_flag){
-      if(mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater != mb_gpio_outputs.gpio_out_named.data_updater){
+      if(mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater == 1){
         memcpy(&mb_gpio_outputs, &mb_data_union.mb_data_named.mb_gpio_out_union, sizeof(mb_gpio_outputs));
         my_gpio_set(&mb_gpio_outputs);
+				mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater = 0;
       }
     }
 		//обновление и отправка посылки по uart1
-		if(mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler != mb_uart1_transmit.scaler){
+		if(mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler == 1){
 			memcpy(&mb_uart1_transmit, &mb_data_union.mb_data_named.mb_uart1_transmit_struct, sizeof(mb_uart1_transmit));
 			if(mb_uart1_transmit.start == 0x01 && mb_uart1_transmit.len != 0x00){
 				mb_data_union.mb_data_named.mb_uart1_transmit_struct.transmit_flag = 0x0000;
 				mb_uart1_transmit.transmit_flag = 0x0000;
-				for(int i = 0; i<= mb_uart1_transmit.len; i++){ 
-					Reverse_Bytes_Order_16(&mb_uart1_transmit.data[i]);
+				if(mb_uart1_transmit.len < UART_TRANSMIT_DATA_BUFF){
+					for(int i = 0; i<= mb_uart1_transmit.len; i++){ 
+						Reverse_Bytes_Order_16(&mb_uart1_transmit.data[i]);
+					}
+					HAL_UART_Transmit_IT(&huart1, (uint8_t*) mb_uart1_transmit.data, mb_uart1_transmit.len);
+					mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler = 0;
 				}
-				HAL_UART_Transmit_IT(&huart1, (uint8_t*) mb_uart1_transmit.data, mb_uart1_transmit.len);
+				else{
+					mb_uart1_transmit.transmit_flag = 0xFF00;
+					mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler = 0;
+				}
+
 			}
 		}
 		//Настройки ЮАРТ1, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
-		if(mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler != mb_uart1_setting.settings_named.scaler){
+		if(mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler == 1){
 			memcpy(&mb_uart1_setting, &mb_data_union.mb_data_named.mb_uart1_setting_struct, sizeof(type_uart_setting_union));
 			if(mb_uart1_setting.settings_named.BAUD!=0){
 				HAL_UART_Abort_IT(&huart1);
@@ -356,6 +373,7 @@ int main(void)
 				memset(&mb_data_union.mb_data_named.mb_uart1_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_receive_struct.data));
 				HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
 				mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.flag = 0x01;
+				mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler =0;
 			}
 			else{
 				HAL_UART_Abort_IT(&huart1);
@@ -363,18 +381,29 @@ int main(void)
 				mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr = 0x00;
 				memset(&mb_data_union.mb_data_named.mb_uart1_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_receive_struct.data));
 				HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
-				mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.flag = 0x08;	
+				mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.flag = 0x10;
+				mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler =0;				
 			}
 		}
 		
 		//обновление и отправка посылки по uart2
-		if(mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler != mb_uart2_transmit.scaler){
+		if(mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler == 1){
 			memcpy(&mb_uart2_transmit, &mb_data_union.mb_data_named.mb_uart2_transmit_struct, sizeof(mb_uart2_transmit));
 			if(mb_uart2_transmit.start == 0x01 && mb_uart2_transmit.len != 0x00){
-				for(int i = 0; i<= mb_uart2_transmit.len; i++){ 
-					Reverse_Bytes_Order_16(&mb_uart2_transmit.data[i]);
+				mb_data_union.mb_data_named.mb_uart2_transmit_struct.transmit_flag = 0x0000;
+				mb_uart2_transmit.transmit_flag = 0x0000;
+				mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler = 2;
+				if(mb_uart2_transmit.len < UART_TRANSMIT_DATA_BUFF){
+					for(int i = 0; i<= mb_uart2_transmit.len; i++){ 
+						Reverse_Bytes_Order_16(&mb_uart2_transmit.data[i]);
+					}
+					HAL_UART_Transmit_IT(&huart2, (uint8_t*) mb_uart2_transmit.data, mb_uart2_transmit.len);
+					mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler = 0;
 				}
-				HAL_UART_Transmit_IT(&huart2, (uint8_t*) mb_uart2_transmit.data, mb_uart2_transmit.len);
+				else{
+					mb_uart2_transmit.transmit_flag = 0xFF00;
+					mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler = 0;
+				}
 			}
 		}
 		//Настройки ЮАРТ2, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
@@ -387,6 +416,7 @@ int main(void)
 				memset(&mb_data_union.mb_data_named.mb_uart2_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_receive_struct.data));
 				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
 				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x01;
+				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler = 0;	
 			}
 			else{
 				HAL_UART_Abort_IT(&huart2);
@@ -394,34 +424,40 @@ int main(void)
 				mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr = 0x00;
 				memset(&mb_data_union.mb_data_named.mb_uart2_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_receive_struct.data));
 				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
-				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x08;	
+				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x01;	
+				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler =0;	
 			}
 		}
 		
 		// alternative GPIO set
-		if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler !=  mb_gpio_alternative_outputs.scaler){
+		if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler ==  1){
 				memcpy(&mb_gpio_alternative_outputs, &mb_data_union.mb_data_named.mb_gpio_alternative_out, sizeof(mb_gpio_alternative_outputs));
 				if(mb_gpio_alternative_outputs.start == 0x0001 && mb_gpio_alternative_outputs.stop == 0x00){
 					mb_gpio_alternative_outputs.end_flag = 0;
-					my_gpio_alt_set(&mb_gpio_alternative_outputs);	
+					my_gpio_alt_set(&mb_gpio_alternative_outputs);
+					mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler = 0;
 				}
 				else if(mb_gpio_alternative_outputs.stop == 0x0001){
 					HAL_TIM_Base_Stop_IT(&htim2);
 					mb_gpio_alternative_outputs.end_flag = 0;
 					mb_gpio_alternative_outputs.start = 0;
 					my_gpio_set(&mb_gpio_outputs);
+					mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler = 0;
 				}
 		}
+		
 		// spi transmit
-		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler != mb_spi_transmit.scaler){
+		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
 			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
 			if(mb_spi_transmit.start == 1){
 				mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 0;
 				if(mb_spi_transmit.rx_tx_flag == 1){
 					my_spi_transmit_recive( &mb_data_union.mb_data_named.mb_spi_receive_data, &mb_spi_transmit);
+					mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
 				}
 				else if(mb_spi_transmit.rx_tx_flag == 0){
 					my_spi_transmit(&mb_spi_transmit);
+					mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
 				}
 			}
 		}
@@ -562,8 +598,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 		mb_data_union.mb_data_named.mb_uart2_transmit_struct.transmit_flag = 0x01;
 		mb_data_union.mb_data_named.mb_uart2_transmit_struct.start = 0x0;
 		mb_uart2_transmit.transmit_flag = 0x01;
-				 
-
 		HAL_UART_AbortTransmit_IT(&huart2);
 	}	
 }
