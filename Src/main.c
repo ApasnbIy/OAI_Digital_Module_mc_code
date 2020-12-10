@@ -76,23 +76,21 @@
 
 
 
-
+type_VCP_UART vcp;
 
 #pragma pack(push, 2)
 type_modbus_data MB_Data;
-type_VCP_UART vcp;
+
 type_adc_data_struct mb_adc;
 type_adc_settings 	 mb_adc_settings;
 type_dac_data_struct mb_dac1;
 type_dac_data_struct mb_dac2;
 type_INA226_Snake ina_226;
+
 union{
 type_modbus_data mb_data;
 type_modbus_data_named mb_data_named;
 }mb_data_union;
-#pragma pack(pop)
-
-
 
 type_uart_transmit_struct mb_uart1_transmit;
 type_uart_setting_union   mb_uart1_setting;
@@ -103,6 +101,7 @@ type_spi_settings_struct					mb_spi_settings;
 type_spi_transmit_struct					mb_spi_transmit;
 type_spi_receive_struct						mb_spi_receive;
 
+#pragma pack(pop)
 type_LED_INDICATOR mcu_state_led;
 type_LED_INDICATOR con_state_led;
 
@@ -155,15 +154,15 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-	
+	HardResetUSB();
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
+	
 
   /* USER CODE BEGIN SysInit */
-  HardResetUSB();
-		
+	
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -185,6 +184,7 @@ int main(void)
   MX_TIM7_Init();
   MX_SPI2_Init();
   MX_TIM2_Init();
+  MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
 	//volatile uint16_t len_massive[] = {sizeof(type_adc_data_struct), sizeof(type_ina_226_data ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
 	/*
@@ -198,21 +198,22 @@ int main(void)
 	*/
 	
 	
-	my_gpio_init(&mb_gpio_config);
-	  
+	//my_gpio_init(&mb_gpio_config);
+	memset(&mb_data_union, 0, sizeof(mb_data_union));
+	HAL_TIM_Base_Start(&htim8);	// таймер ModBus
+	
+	
 	
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA	
-	HAL_TIM_Base_Start(&htim6);	// таймер ModBus
+	
 	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды
 	
-		// ADC + UART1, UART2 default start
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
-	
 	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
 	HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
-
+	
 	ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
 	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
 
@@ -224,35 +225,25 @@ int main(void)
 	
 	my_spi_default_settings(&mb_spi_settings);
 	my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
-	
-	
-	
-	
+		
 	//modbus_struct_init_constant(&mb_data_union.mb_data);
 	//memset(&mb_data_union.mb_data_named.mb_uart1_recive_struct.data, 0xFF, 0xFF);
 	volatile uint16_t current_time ;
 	volatile uint16_t previous_time_1;
 	volatile uint16_t previous_time_2;
-	
-	//volatile uint16_t aa = sizeof(type_uart_transmit_struct);
-	
-	
-	
 	led_init(&mcu_state_led, 0);
 	led_init(&con_state_led, 1);
-	
-	
 	led_setup(&con_state_led, LED_ON, 0, 0);
 	led_setup(&mcu_state_led, LED_HEART_BEAT, 1000, 0);
-	
 	led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 2000);
 	led_alt_setup(&mcu_state_led, LED_BLINK, 200, 127, 2000);
-	
 	current_time = 0;
 	previous_time_1 = 0;
 	previous_time_2 = 0;
 	timer_slot_5ms_counter = 0;
 	uint32_t temp;
+	
+	
 	
 	/*
 	ina226_snake(&ina_226);
@@ -455,13 +446,12 @@ int main(void)
 				mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 0;
 				if(mb_spi_transmit.rx_tx_flag == 1){
 					my_spi_transmit_recive( &mb_data_union.mb_data_named.mb_spi_receive_data, &mb_spi_transmit);
-					mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
 				}
 				else if(mb_spi_transmit.rx_tx_flag == 0){
 					my_spi_transmit(&mb_spi_transmit);
-					mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
 				}
 			}
+			mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
 		}
 		//spi receive
 		if(mb_data_union.mb_data_named.mb_spi_receive.scaler != mb_spi_receive.scaler){

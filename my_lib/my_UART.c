@@ -17,7 +17,9 @@ void MY_USART1_UART_Init(type_uart_setting_union* uart_settings)
 			 huart1.Init.WordLength = UART_WORDLENGTH_8B;
 			break;
 		case 1:
-			 huart1.Init.WordLength = UART_WORDLENGTH_9B;
+			 huart1.Init.WordLength = UART_WORDLENGTH_8B;
+
+//			 huart1.Init.WordLength = UART_WORDLENGTH_9B;
 			break;
 		
 	}

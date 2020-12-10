@@ -66,7 +66,7 @@ type_spi_receive_struct;
 
 typedef struct
 {
-	uint16_t data[64];				// len == 64 regs
+	uint16_t data[64];				// len == 64 regs // +2074
 }
 type_spi_receive_data;
 

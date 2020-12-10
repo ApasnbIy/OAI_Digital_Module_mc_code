@@ -157,7 +157,7 @@ static int8_t CDC_Init_FS(void)
 {
   /* USER CODE BEGIN 3 */
   /* Set Application Buffers */
-  vcp_uart_init(&vcp, 1000, &htim5, &hUsbDeviceFS);
+  vcp_uart_init(&vcp, 1000, &htim8, &hUsbDeviceFS);
   return (USBD_OK);
   /* USER CODE END 3 */
 }

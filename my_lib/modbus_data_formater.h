@@ -21,19 +21,20 @@ typedef struct
 {
 	uint16_t settings_scaler;
 	uint16_t start;
-	uint16_t settings;
+	uint16_t stop;
 }type_adc_settings;
 
 
 typedef struct
-{
-	uint16_t settings_scaler;
-	uint16_t timer_counter;
-	uint16_t timer_prescaler;
-	uint16_t dma_cycl_single;
-	uint16_t start;
-	uint16_t reserved[11];
-	uint16_t data[512];	
+{																//dac1		//dac2
+	uint16_t settings_scaler;			// +0			//+528
+	uint16_t start;								//+1			//+529
+	uint16_t stop;								//+2			//+530
+	uint16_t timer_prescaler;			//+3			//+531
+	uint16_t dma_cycl_single;			//+4			//+532
+	uint16_t timer_counter;				//+5			//+533
+	uint16_t reserved[10];				//+6			//+534
+	uint16_t data[512];						//+16			//+544  //1056
 }type_dac_data_struct;
 
 
