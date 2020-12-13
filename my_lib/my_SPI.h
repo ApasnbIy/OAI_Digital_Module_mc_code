@@ -2,6 +2,7 @@
 #define _MY_SPI_H
 
 #include "main.h"
+#include "my_GPIO.h"
 
 /*
 mode 				 	master - 0, slave -1
@@ -36,6 +37,32 @@ typedef struct
 }
 type_spi_settings_struct;
 
+//15......0
+//cs16...cs1
+typedef struct
+{
+	uint16_t scaler;				//+1318
+	uint16_t num;						//+1319
+	uint16_t init_flag;			//+1320
+	uint16_t cs_1;					//+1321
+	uint16_t cs_2;					//+1322
+	uint16_t cs_3;					//+1323
+	uint16_t cs_4;					//+1324
+	uint16_t cs_5;					//+1325
+	uint16_t cs_6;					//+1326
+	uint16_t cs_7;					//+1327
+	uint16_t cs_8;					//+1328
+	uint16_t cs_9;					//+1329	
+	uint16_t cs_10;					//+1330
+	uint16_t cs_11;					//+1331
+	uint16_t cs_12;					//+1332	
+	uint16_t cs_13;					//+1333
+	uint16_t cs_14;					//+1334
+	uint16_t cs_15;					//+1335
+	uint16_t cs_16;					//+1336
+}
+type_spi_chipselect_settings;
+
 typedef struct
 {
 	uint16_t scaler;					//+0 	1266											
@@ -44,7 +71,8 @@ typedef struct
 	uint16_t start;						//+3	1269
 	uint16_t transaction_end;	//+4	1270
 	uint16_t rx_tx_flag;			//+5	1271
-	uint16_t reserved[4];			//+6	1272
+	uint16_t chip_mask;				//+6  1272
+	uint16_t reserved[3];			//+7	1273
 	uint16_t data[32];				//+10	1276
 	
 }
@@ -76,6 +104,8 @@ void my_spi_transmit(type_spi_transmit_struct* spi_transmit);
 void my_spi_receive(type_spi_receive_struct* spi_receive, type_spi_receive_data* spi_receive_data);
 void my_spi_default_settings(type_spi_settings_struct* spi_settings);
 void my_spi_transmit_recive(type_spi_receive_data* spi_receive_data, type_spi_transmit_struct* spi_transmit_str);
-
+void my_spi_chip_select(type_spi_transmit_struct* spi_transmit, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out);
+void my_spi_chip_deselect(type_spi_transmit_struct* spi_transmit, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out);
+void my_spi_chip_select_init(type_spi_chipselect_settings* chip_select_init, type_gpio_config_union* gpio_union);
 #endif
 

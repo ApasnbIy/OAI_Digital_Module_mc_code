@@ -86,6 +86,7 @@ type_adc_settings 	 mb_adc_settings;
 type_dac_data_struct mb_dac1;
 type_dac_data_struct mb_dac2;
 type_INA226_Snake ina_226;
+type_spi_chipselect_settings	mb_spi_cs_settings;
 
 union{
 type_modbus_data mb_data;
@@ -141,7 +142,7 @@ void Reverse_Bytes_Order_16(uint16_t* word);
   * @retval int
   */
 int main(void)
-{
+  {
   /* USER CODE BEGIN 1 */
 	 
 	 
@@ -154,7 +155,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-	HardResetUSB();
+	
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -176,7 +177,6 @@ int main(void)
   MX_CAN2_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  MX_USB_DEVICE_Init();
   MX_TIM6_Init();
   MX_TIM1_Init();
   MX_TIM5_Init();
@@ -185,6 +185,10 @@ int main(void)
   MX_SPI2_Init();
   MX_TIM2_Init();
   MX_TIM8_Init();
+	
+	HardResetUSB();
+  MX_USB_DEVICE_Init();
+
   /* USER CODE BEGIN 2 */
 	//volatile uint16_t len_massive[] = {sizeof(type_adc_data_struct), sizeof(type_ina_226_data ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
 	/*
@@ -207,7 +211,7 @@ int main(void)
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA	
-	
+															//timer 8 - usb
 	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды
 	
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
@@ -225,6 +229,7 @@ int main(void)
 	
 	my_spi_default_settings(&mb_spi_settings);
 	my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
+	MY_SPI2_Init(&mb_spi_settings);
 		
 	//modbus_struct_init_constant(&mb_data_union.mb_data);
 	//memset(&mb_data_union.mb_data_named.mb_uart1_recive_struct.data, 0xFF, 0xFF);
@@ -443,26 +448,31 @@ int main(void)
 		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
 			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
 			if(mb_spi_transmit.start == 1){
-				mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 0;
-				if(mb_spi_transmit.rx_tx_flag == 1){
-					my_spi_transmit_recive( &mb_data_union.mb_data_named.mb_spi_receive_data, &mb_spi_transmit);
-				}
-				else if(mb_spi_transmit.rx_tx_flag == 0){
-					my_spi_transmit(&mb_spi_transmit);
+				if(mb_spi_cs_settings.init_flag == 1){
+					mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 0;
+					my_spi_chip_deselect(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
+					my_spi_chip_select(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
+					if(mb_spi_transmit.rx_tx_flag == 1){
+						my_spi_transmit_recive( &mb_data_union.mb_data_named.mb_spi_receive_data, &mb_spi_transmit);
+					}
+					else if(mb_spi_transmit.rx_tx_flag == 0){
+						my_spi_transmit(&mb_spi_transmit);
+					}
 				}
 			}
 			mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
 		}
 		//spi receive
-		if(mb_data_union.mb_data_named.mb_spi_receive.scaler != mb_spi_receive.scaler){
+		if(mb_data_union.mb_data_named.mb_spi_receive.scaler == 1){
 			memcpy(&mb_spi_receive, &mb_data_union.mb_data_named.mb_spi_receive, 20); // 20 bites are control part of struct
 			if(mb_spi_receive.start == 1){
 				mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 0;
 				my_spi_receive(&mb_spi_receive ,&mb_data_union.mb_data_named.mb_spi_receive_data);
 			}
+			mb_data_union.mb_data_named.mb_spi_receive.scaler = 0;
 		}
 		//spi settings
-		if(mb_data_union.mb_data_named.mb_spi_settings.scaler != mb_spi_settings.scaler){
+		if(mb_data_union.mb_data_named.mb_spi_settings.scaler == 1){
 			memcpy(&mb_spi_settings, &mb_data_union.mb_data_named.mb_spi_settings, sizeof(type_spi_settings_struct));
 			if(mb_spi_settings.set_default == 0x01){
 				my_spi_default_settings(&mb_spi_settings);
@@ -471,7 +481,18 @@ int main(void)
 			else{
 				MY_SPI2_Init(&mb_spi_settings);
 			}
-				
+			mb_data_union.mb_data_named.mb_spi_settings.scaler = 0;	
+		}
+		
+		//spi ch_s settings
+		if(mb_data_union.mb_data_named.mb_spi_cs_settings.scaler == 1){
+			memcpy(&mb_spi_cs_settings, &mb_data_union.mb_data_named.mb_spi_cs_settings, sizeof(type_spi_chipselect_settings));
+			my_spi_chip_select_init(&mb_spi_cs_settings, &mb_gpio_config);
+			mb_data_union.mb_data_named.mb_spi_cs_settings.scaler = 0;
+			if(mb_spi_cs_settings.init_flag == 1){
+				mb_data_union.mb_data_named.mb_spi_cs_settings.init_flag = 1;
+			}
+			
 		}
 			
 		
@@ -655,6 +676,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
       HAL_SPI_Abort_IT(&hspi2);
 			mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 1;
 			mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
+			my_spi_chip_deselect(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
     }
   }
 }
@@ -670,6 +692,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 			mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
 			mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 1;
 			mb_data_union.mb_data_named.mb_spi_receive.start = 0;
+			my_spi_chip_deselect(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
     }
   }
 }

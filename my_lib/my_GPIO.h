@@ -158,16 +158,26 @@ typedef struct
 }
 type_gpio_conf_named;
 
+typedef struct
+{
+	uint16_t							formater;
+	uint32_t 							gpio;
+}
+gpio_formater;
+
 typedef union
 {
+	gpio_formater 				gpio;
 	type_gpio_conf_named	conf_named;
 }
 type_gpio_config_union;
 
 
 
+
 typedef union
 {
+	uint32_t 					gpio;
 	type_gpio_named		gpio_out_named;
 }
 type_gpio_out_union;

@@ -78,6 +78,7 @@ typedef struct
 	type_spi_settings_struct					mb_spi_settings;						//	+2492 bytes // +1246 regs
 	type_spi_transmit_struct					mb_spi_transmit;						//  +2532 bytes // +1266 regs
 	type_spi_receive_struct						mb_spi_receive;							//  +2616 bytes // +1308 regs
+	type_spi_chipselect_settings			mb_spi_cs_settings;					//  +						// +1318 regs
 	
 	uint16_t								dummy2[MB_DATA_SIZE - (sizeof(type_uart_setting_union)/2) - (sizeof(type_dac_data_struct)) - \
 		(sizeof(type_adc_settings)/2)-(sizeof(type_gpio_config_union)/2) - (sizeof(type_gpio_out_union)/2) - (sizeof(type_gpio_in_union)/2) - \
