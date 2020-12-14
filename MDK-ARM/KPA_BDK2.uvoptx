@@ -178,6 +178,21 @@
           <WinNumber>1</WinNumber>
           <ItemText>mb_gpio_config</ItemText>
         </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>mb_spi_cs_settings</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>mb_spi_transmit</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>spi_transmit</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

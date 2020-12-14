@@ -142,7 +142,7 @@ void Reverse_Bytes_Order_16(uint16_t* word);
   * @retval int
   */
 int main(void)
-  {
+   {
   /* USER CODE BEGIN 1 */
 	 
 	 
