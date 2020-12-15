@@ -10,8 +10,8 @@
 #include "modbus_rtu.h"
 #include "modbus_data_formater.h"
 #include "led.h"
-uint8_t rx_tx_data_buff[256];
-uint8_t len;
+
+
 extern type_LED_INDICATOR con_state_led;
 
 
@@ -34,6 +34,9 @@ void modbus_struct_init_constant(type_modbus_data* modbus_ptr)
 
 uint8_t modbus_RX_TX_handler(type_modbus_data* modbus_ptr, type_VCP_UART* vcp_ptr){
 	uint16_t addr;
+	uint8_t len;
+	uint8_t rx_tx_data_buff[256] = {0};
+	
   if(vcp_ptr->rx_data[0] == DEVICE_ID){
 		if(vcp_ptr->rx_data[1] == 0x03){ //read analog outputs (addr, code (0x03), Hi_addr, Lo_addr, Hi_reg_num), Lo_reg_num, CRC16) 
 			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){

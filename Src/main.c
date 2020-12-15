@@ -303,7 +303,7 @@ int main(void)
 				}
 		}
 		
-		if(mb_data_union.mb_data_named.mb_dac2.settings_scaler == 1){// dac2 start/stop/config
+		else if(mb_data_union.mb_data_named.mb_dac2.settings_scaler == 1){// dac2 start/stop/config
 			memcpy(&mb_dac2, &mb_data_union.mb_data_named.mb_dac2,  sizeof(mb_dac2));
 			if(mb_dac2.start == 1){
 					HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)mb_dac2.data, (sizeof(mb_dac2.data)/2), DAC_ALIGN_12B_R);  
@@ -315,7 +315,7 @@ int main(void)
 				}	
 		}
 		
-		if(mb_data_union.mb_data_named.mb_adc_settings.settings_scaler == 1){ // adc start/stop
+		else if(mb_data_union.mb_data_named.mb_adc_settings.settings_scaler == 1){ // adc start/stop
 			memcpy(&mb_adc_settings.settings_scaler, &mb_data_union.mb_data_named.mb_adc_settings, sizeof(mb_adc_settings));
 			if(mb_adc_settings.start == 1){
 					HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8);
@@ -327,22 +327,24 @@ int main(void)
 				}
 		}
 		// инициализация GPIO
-		if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater == 1){
+		else if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater == 1){
 			memcpy(&mb_gpio_config.conf_named, &mb_data_union.mb_data_named.mb_gpio_config_union, sizeof(mb_gpio_config.conf_named));
 			my_gpio_init(&mb_gpio_config);
 			mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater = 0;
 			
 		}
+		
 		//обновление состояния GPIO настроенных на выход
-		if(mb_gpio_config.conf_named.on_of_mask.init_flag){
+		else if(mb_gpio_config.conf_named.on_of_mask.init_flag){
       if(mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater == 1){
         memcpy(&mb_gpio_outputs, &mb_data_union.mb_data_named.mb_gpio_out_union, sizeof(mb_gpio_outputs));
         my_gpio_set(&mb_gpio_outputs);
 				mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater = 0;
       }
     }
+		
 		//обновление и отправка посылки по uart1
-		if(mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler == 1){
+		else if(mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler == 1){
 			memcpy(&mb_uart1_transmit, &mb_data_union.mb_data_named.mb_uart1_transmit_struct, sizeof(mb_uart1_transmit));
 			if(mb_uart1_transmit.start == 0x01 && mb_uart1_transmit.len != 0x00){
 				mb_data_union.mb_data_named.mb_uart1_transmit_struct.transmit_flag = 0x0000;
@@ -362,7 +364,7 @@ int main(void)
 			}
 		}
 		//Настройки ЮАРТ1, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
-		if(mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler == 1){
+		else if(mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler == 1){
 			memcpy(&mb_uart1_setting, &mb_data_union.mb_data_named.mb_uart1_setting_struct, sizeof(type_uart_setting_union));
 			if(mb_uart1_setting.settings_named.BAUD!=0){
 				HAL_UART_Abort_IT(&huart1);
@@ -385,7 +387,7 @@ int main(void)
 		}
 		
 		//обновление и отправка посылки по uart2
-		if(mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler == 1){
+		else if(mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler == 1){
 			memcpy(&mb_uart2_transmit, &mb_data_union.mb_data_named.mb_uart2_transmit_struct, sizeof(mb_uart2_transmit));
 			if(mb_uart2_transmit.start == 0x01 && mb_uart2_transmit.len != 0x00){
 				mb_data_union.mb_data_named.mb_uart2_transmit_struct.transmit_flag = 0x0000;
@@ -405,7 +407,7 @@ int main(void)
 			}
 		}
 		//Настройки ЮАРТ2, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
-		if(mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler != mb_uart2_setting.settings_named.scaler){
+		else if(mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler != mb_uart2_setting.settings_named.scaler){
 			memcpy(&mb_uart2_setting, &mb_data_union.mb_data_named.mb_uart2_setting_struct, sizeof(type_uart_setting_union));
 			if(mb_uart2_setting.settings_named.BAUD!=0){
 				HAL_UART_Abort_IT(&huart2);
@@ -428,7 +430,7 @@ int main(void)
 		}
 		
 		// alternative GPIO set
-		if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler ==  1){
+		else if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler ==  1){
 				memcpy(&mb_gpio_alternative_outputs, &mb_data_union.mb_data_named.mb_gpio_alternative_out, sizeof(mb_gpio_alternative_outputs));
 				if(mb_gpio_alternative_outputs.start == 0x0001 && mb_gpio_alternative_outputs.stop == 0x00){
 					mb_gpio_alternative_outputs.end_flag = 0;
@@ -445,7 +447,7 @@ int main(void)
 		}
 		
 		// spi transmit
-		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
+		else if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
 			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
 			if(mb_spi_transmit.start == 1){
 				if(mb_spi_cs_settings.init_flag == 1){
@@ -462,8 +464,9 @@ int main(void)
 			}
 			mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
 		}
+		
 		//spi receive
-		if(mb_data_union.mb_data_named.mb_spi_receive.scaler == 1){
+		else if(mb_data_union.mb_data_named.mb_spi_receive.scaler == 1){
 			memcpy(&mb_spi_receive, &mb_data_union.mb_data_named.mb_spi_receive, 20); // 20 bites are control part of struct
 			if(mb_spi_receive.start == 1){
 				mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 0;
@@ -471,8 +474,9 @@ int main(void)
 			}
 			mb_data_union.mb_data_named.mb_spi_receive.scaler = 0;
 		}
+		
 		//spi settings
-		if(mb_data_union.mb_data_named.mb_spi_settings.scaler == 1){
+		else if(mb_data_union.mb_data_named.mb_spi_settings.scaler == 1){
 			memcpy(&mb_spi_settings, &mb_data_union.mb_data_named.mb_spi_settings, sizeof(type_spi_settings_struct));
 			if(mb_spi_settings.set_default == 0x01){
 				my_spi_default_settings(&mb_spi_settings);
@@ -485,7 +489,7 @@ int main(void)
 		}
 		
 		//spi ch_s settings
-		if(mb_data_union.mb_data_named.mb_spi_cs_settings.scaler == 1){
+		else if(mb_data_union.mb_data_named.mb_spi_cs_settings.scaler == 1){
 			memcpy(&mb_spi_cs_settings, &mb_data_union.mb_data_named.mb_spi_cs_settings, sizeof(type_spi_chipselect_settings));
 			my_spi_chip_select_init(&mb_spi_cs_settings, &mb_gpio_config);
 			mb_data_union.mb_data_named.mb_spi_cs_settings.scaler = 0;
@@ -493,16 +497,12 @@ int main(void)
 				mb_data_union.mb_data_named.mb_spi_cs_settings.init_flag = 1;
 			}
 			
-		}
-			
-		
-
-
-
-						
+		}					
+		//vcp read
 		if(vcp.rx_position>4){
 			led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 200);
 			modbus_RX_TX_handler(&mb_data_union.mb_data, &vcp);
+			//vcp.rx_position = 0;
 		}
   }
   /* USER CODE END 3 */
