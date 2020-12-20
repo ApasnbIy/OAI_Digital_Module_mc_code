@@ -8,7 +8,7 @@
 #include "my_GPIO.h"
 #include "my_UART.h"
 #include "my_spi.h"
-
+#include "Power_module.h"
 
 
 #pragma pack(push, 2)
@@ -41,11 +41,13 @@ typedef struct
 
 typedef struct
 {
-	int16_t voltage;
-	int16_t	current;
-	int16_t power;
+	uint16_t voltage;
+	uint16_t	current;
+	uint16_t power;
 }
 type_ina_226_data;
+
+
 
 
 
@@ -79,6 +81,7 @@ typedef struct
 	type_spi_transmit_struct					mb_spi_transmit;						//  +2532 bytes // +1266 regs
 	type_spi_receive_struct						mb_spi_receive;							//  +2616 bytes // +1308 regs
 	type_spi_chipselect_settings			mb_spi_cs_settings;					//  +						// +1318 regs
+	type_power_module									mb_power_module;
 	
 	uint16_t								dummy2[MB_DATA_SIZE - (sizeof(type_uart_setting_union)/2) - (sizeof(type_dac_data_struct)) - \
 		(sizeof(type_adc_settings)/2)-(sizeof(type_gpio_config_union)/2) - (sizeof(type_gpio_out_union)/2) - (sizeof(type_gpio_in_union)/2) - \

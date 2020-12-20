@@ -45,6 +45,7 @@
 #include "my_UART.h"
 #include "my_SPI.h"
 #include "led.h"
+#include "Power_module.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -86,6 +87,10 @@ type_adc_settings 	 mb_adc_settings;
 type_dac_data_struct mb_dac1;
 type_dac_data_struct mb_dac2;
 type_INA226_Snake ina_226;
+type_INA226_Snake	power_module_ina;
+type_power_module mb_power_module;
+
+
 type_spi_chipselect_settings	mb_spi_cs_settings;
 
 union{
@@ -130,6 +135,12 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void HardResetUSB(void);
 void Reverse_Bytes_Order_16(uint16_t* word);
+
+
+
+
+
+uint8_t test_flag;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -142,7 +153,7 @@ void Reverse_Bytes_Order_16(uint16_t* word);
   * @retval int
   */
 int main(void)
-   {
+{
   /* USER CODE BEGIN 1 */
 	 
 	 
@@ -160,7 +171,6 @@ int main(void)
 
   /* Configure the system clock */
   SystemClock_Config();
-	
 
   /* USER CODE BEGIN SysInit */
 	
@@ -177,6 +187,7 @@ int main(void)
   MX_CAN2_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
+  MX_USB_DEVICE_Init();
   MX_TIM6_Init();
   MX_TIM1_Init();
   MX_TIM5_Init();
@@ -184,11 +195,8 @@ int main(void)
   MX_TIM7_Init();
   MX_SPI2_Init();
   MX_TIM2_Init();
+  MX_I2C2_Init();
   MX_TIM8_Init();
-	
-	HardResetUSB();
-  MX_USB_DEVICE_Init();
-
   /* USER CODE BEGIN 2 */
 	//volatile uint16_t len_massive[] = {sizeof(type_adc_data_struct), sizeof(type_ina_226_data ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
 	/*
@@ -220,6 +228,9 @@ int main(void)
 	
 	ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
 	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
+	
+	ina226_power_module_init(&power_module_ina.INA_226[0], &hi2c2, 0x40, 0x5500);
+	
 
 	MY_USART_UART_struct_default_init(&UART_settings_default);
 	MY_USART_UART_struct_default_init(&mb_uart1_setting);
@@ -248,7 +259,7 @@ int main(void)
 	timer_slot_5ms_counter = 0;
 	uint32_t temp;
 	
-	
+	mb_power_module.it_is_power_module = 1;
 	
 	/*
 	ina226_snake(&ina_226);
@@ -257,14 +268,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		
 		current_time = (uint16_t)TIM5->CNT;
 		
-		if((current_time - previous_time_1)>= 400){ // запуск опроса ina226. копирование данных ацп
+		if((current_time - previous_time_1)>= 400){ // запуск опроса ina226 . копирование данных ацп
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
 				
 			  if(mb_gpio_alternative_outputs.start == 1 && mb_gpio_alternative_outputs.end_flag == 0){ // if alt started
@@ -272,25 +285,37 @@ int main(void)
 					memcpy(&mb_data_union.mb_data_named.mb_gpio_alternative_out.LOW_time_left, &temp, 4); // update the time in alt_gpio
 				}
 				
-				if(ina_226.ch_read_queue == 0){memcpy(&mb_data_union.mb_data_named.ina226_5v, &ina_226.INA_226[0].voltage, sizeof(type_ina_226_data));}
-				else if(ina_226.ch_read_queue == 1){memcpy(&mb_data_union.mb_data_named.ina226_3v3, &ina_226.INA_226[1].voltage, sizeof(type_ina_226_data));}
+				if(ina_226.ch_read_queue == 0){
+					memcpy(&mb_data_union.mb_data_named.ina226_5v, &ina_226.INA_226[0].voltage, sizeof(type_ina_226_data));
+					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_5v.voltage);
+					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_5v.current);
+				}
+				else if(ina_226.ch_read_queue == 1){
+					memcpy(&mb_data_union.mb_data_named.ina226_3v3, &ina_226.INA_226[1].voltage, sizeof(type_ina_226_data));
+					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_3v3.voltage);
+					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_3v3.current);
+				}
+				
    			
 				ina226_snake(&ina_226); 
 				previous_time_1 = current_time;				
 		}
+		
 		if((current_time - previous_time_2)>=800){	// обновление состояния GPIO 
       if(mb_gpio_config.conf_named.on_of_mask.init_flag){
         my_gpio_get(&mb_gpio_inputs);
         memcpy(&mb_data_union.mb_data_named.mb_gpio_in_union, &mb_gpio_inputs, sizeof(mb_gpio_inputs));
       }
+			if (mb_power_module.it_is_power_module == 1){
+						power_module_ina.ch_read_queue = 1;	
+						ina226_snake(&power_module_ina);							
+			}
       previous_time_2 = 0;
       previous_time_1 = 0;
 			current_time = 0;
 			TIM5->CNT = 0;
     }
-    
-
-	
+  
 		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler == 1){ // dac1 start/stop/config
 				memcpy(&mb_dac1.settings_scaler, &mb_data_union.mb_data_named.mb_dac1, sizeof(mb_dac1));
 				if(mb_dac1.start == 1){					
@@ -497,7 +522,14 @@ int main(void)
 				mb_data_union.mb_data_named.mb_spi_cs_settings.init_flag = 1;
 			}
 			
-		}					
+		}			
+		
+		//power_module_cnfg
+		else if(mb_data_union.mb_data_named.mb_power_module.scaler == 1){
+			memcpy(&mb_power_module, &mb_data_union.mb_data_named.mb_power_module, sizeof(type_power_module));
+			
+		}
+			
 		//vcp read
 		if(vcp.rx_position>4){
 			led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 200);
@@ -588,6 +620,10 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 	if(hi2c == &hi2c1){
 		ina226_body_read_queue(&ina_226.INA_226[ina_226.ch_read_queue]);
 	}
+	if(hi2c == &hi2c2){
+		ina226_body_read_queue(&power_module_ina.INA_226[power_module_ina.ch_read_queue]);
+	}
+	
 }
 
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
@@ -595,7 +631,11 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 	if(hi2c == &hi2c1){
 		ina226_body_read_queue(&ina_226.INA_226[ina_226.ch_read_queue]);
 	}
+	if(hi2c == &hi2c2){
+		ina226_body_read_queue(&power_module_ina.INA_226[power_module_ina.ch_read_queue]);
+	}
 }
+
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {

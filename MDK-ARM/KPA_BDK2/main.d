@@ -71,4 +71,5 @@ kpa_bdk2\main.o: ..\my_lib\INA226.h
 kpa_bdk2\main.o: ..\my_lib\my_GPIO.h
 kpa_bdk2\main.o: ..\my_lib\my_UART.h
 kpa_bdk2\main.o: ..\my_lib\my_spi.h
+kpa_bdk2\main.o: ..\my_lib\Power_module.h
 kpa_bdk2\main.o: ..\my_lib\led.h
