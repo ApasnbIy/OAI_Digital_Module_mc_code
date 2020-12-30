@@ -59,7 +59,7 @@ typedef struct
 	uint16_t cs_13;					//+1333
 	uint16_t cs_14;					//+1334
 	uint16_t cs_15;					//+1335
-	uint16_t cs_16;					//+1320
+	uint16_t cs_16;					//+1336
 }
 type_spi_chipselect_settings;
 

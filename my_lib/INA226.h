@@ -77,7 +77,7 @@ typedef struct
 typedef struct
 { 
 	uint16_t ch_read_queue;	
-	type_INA226_DEVICE INA_226[2];
+	type_INA226_DEVICE INA_226[3];
 }type_INA226_Snake;
 
 //#pragma pack(pop)

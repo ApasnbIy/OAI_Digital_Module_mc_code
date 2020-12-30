@@ -8,47 +8,10 @@
 #include "my_GPIO.h"
 #include "my_UART.h"
 #include "my_spi.h"
-#include "Power_module.h"
-
+#include "analog_data.h"
+#include "power_module.h"
 
 #pragma pack(push, 2)
-typedef struct
-{	
-	uint16_t data[8];
-}type_adc_data_struct;
-
-typedef struct
-{
-	uint16_t settings_scaler;
-	uint16_t start;
-	uint16_t stop;
-}type_adc_settings;
-
-
-typedef struct
-{																//dac1		//dac2
-	uint16_t settings_scaler;			// +0			//+528
-	uint16_t start;								//+1			//+529
-	uint16_t stop;								//+2			//+530
-	uint16_t timer_prescaler;			//+3			//+531
-	uint16_t dma_cycl_single;			//+4			//+532
-	uint16_t timer_counter;				//+5			//+533
-	uint16_t reserved[10];				//+6			//+534
-	uint16_t data[512];						//+16			//+544  //1056
-}type_dac_data_struct;
-
-
-
-typedef struct
-{
-	uint16_t voltage;
-	uint16_t	current;
-	uint16_t power;
-}
-type_ina_226_data;
-
-
-
 
 
 
@@ -62,8 +25,10 @@ typedef struct
 	type_uart_receive_struct 					mb_uart2_receive_struct;		//+2084		bytes			//+1042 regs				len bytes 2056			1026
 	type_gpio_in_union								mb_gpio_in_union;						//+4140		bytes			//+2070 regs				len bytes 8					4
 	type_spi_receive_data							mb_spi_receive_data;				//+4148		bytes			//+2074 regs				len bytes 128				64
+	type_ina_226_data									ina226_mother_board;				//+4276		bytes			//+2138 regs				len bytes 6					3
+	type_power_module_output_data			mb_power_module_output_data;//+4282		bytes			//+2141	regs				len bytes 6					3
 	uint16_t 													dummy1[MB_DATA_SIZE  - (sizeof(type_adc_data_struct)/2) -(sizeof(type_uart_receive_struct)) - (sizeof(type_ina_226_data)) - \
-																		 (sizeof(type_gpio_in_union)/2) - (sizeof(type_spi_receive_data)/2) ]; // +0x10
+																		 (sizeof(type_gpio_in_union)/2) - (sizeof(type_spi_receive_data)/2) - (sizeof(type_ina_226_data)/2) - (sizeof(type_power_module_output_data)/2) ]; // +0x10
 	
 	//analog_out			
 	type_dac_data_struct							mb_dac1; 										//	+0
@@ -81,8 +46,8 @@ typedef struct
 	type_spi_transmit_struct					mb_spi_transmit;						//  +2532 bytes // +1266 regs
 	type_spi_receive_struct						mb_spi_receive;							//  +2616 bytes // +1308 regs
 	type_spi_chipselect_settings			mb_spi_cs_settings;					//  +						// +1318 regs
-	type_power_module									mb_power_module;
-	
+	type_power_module_settings				mb_power_module_settings;		//	+						// +1337 regs
+																																//	+						// +1348 regs		
 	uint16_t								dummy2[MB_DATA_SIZE - (sizeof(type_uart_setting_union)/2) - (sizeof(type_dac_data_struct)) - \
 		(sizeof(type_adc_settings)/2)-(sizeof(type_gpio_config_union)/2) - (sizeof(type_gpio_out_union)/2) - (sizeof(type_gpio_in_union)/2) - \
 		(sizeof(type_uart_transmit_struct)) - (sizeof(type_alternative_gpio_out_struct)/2) - (sizeof(type_spi_settings_struct)/2) - \

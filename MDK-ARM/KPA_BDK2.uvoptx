@@ -150,18 +150,34 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>43</LineNumber>
+          <LineNumber>550</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134250270</Address>
+          <Address>134254416</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\my_lib\Power_module.c</Filename>
+          <Filename>../Src/main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\KPA_BDK2\../my_lib/Power_module.c\43</Expression>
+          <Expression>\\KPA_BDK2\../Src/main.c\550</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>549</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134254400</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>../Src/main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\KPA_BDK2\../Src/main.c\549</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -173,32 +189,27 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>hspi2</ItemText>
+          <ItemText>mb_power_module</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>hspi</ItemText>
+          <ItemText>power_module_ina</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>vcp</ItemText>
+          <ItemText>l</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>addr</ItemText>
+          <ItemText>validate_data</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>power_module_ina</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>power_module_ina</ItemText>
+          <ItemText>i2c_rx_data</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -251,6 +262,16 @@
           <count>9</count>
           <WinNumber>2</WinNumber>
           <ItemText>\\KPA_BDK2\../Src/main.c\power_module_ina.INA_226[0].current,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\KPA_BDK2\../Src/main.c\mb_power_module.pwm_1,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>\\KPA_BDK2\../Src/main.c\mb_data_union.mb_data_named.mb_power_module_output_data.current,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
@@ -1163,6 +1184,18 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\my_lib\Power_module.h</PathWithFileName>
       <FilenameWithoutPath>Power_module.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>69</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\my_lib\analog_data.h</PathWithFileName>
+      <FilenameWithoutPath>analog_data.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

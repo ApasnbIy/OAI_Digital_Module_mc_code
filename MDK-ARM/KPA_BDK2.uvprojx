@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F405xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;                                                    ../Drivers/STM32F4xx_HAL_Driver/Inc;                                                    ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                                                    ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                                                    ../Drivers/CMSIS/Include;                                                    ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;                                                    ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;                                                    ..\my_lib</IncludePath>
+              <IncludePath>../Inc;                                                            ../Drivers/STM32F4xx_HAL_Driver/Inc;                                                            ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;                                                            ../Drivers/CMSIS/Device/ST/STM32F4xx/Include;                                                            ../Drivers/CMSIS/Include;                                                            ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc;                                                            ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;                                                            ..\my_lib</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -744,6 +744,11 @@
               <FileName>Power_module.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\my_lib\Power_module.h</FilePath>
+            </File>
+            <File>
+              <FileName>analog_data.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\my_lib\analog_data.h</FilePath>
             </File>
           </Files>
         </Group>

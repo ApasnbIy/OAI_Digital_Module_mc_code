@@ -46,3 +46,6 @@ kpa_bdk2\power_module.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 kpa_bdk2\power_module.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 kpa_bdk2\power_module.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 kpa_bdk2\power_module.o: ..\my_lib\INA226.h
+kpa_bdk2\power_module.o: ../Inc/tim.h
+kpa_bdk2\power_module.o: ..\my_lib\my_GPIO.h
+kpa_bdk2\power_module.o: ..\my_lib\analog_data.h

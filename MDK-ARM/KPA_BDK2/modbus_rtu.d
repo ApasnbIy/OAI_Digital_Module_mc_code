@@ -62,5 +62,7 @@ kpa_bdk2\modbus_rtu.o: ..\my_lib\my_GPIO.h
 kpa_bdk2\modbus_rtu.o: ..\my_lib\my_UART.h
 kpa_bdk2\modbus_rtu.o: ../Inc/usart.h
 kpa_bdk2\modbus_rtu.o: ..\my_lib\my_spi.h
-kpa_bdk2\modbus_rtu.o: ..\my_lib\Power_module.h
+kpa_bdk2\modbus_rtu.o: ..\my_lib\analog_data.h
+kpa_bdk2\modbus_rtu.o: ..\my_lib\power_module.h
+kpa_bdk2\modbus_rtu.o: ../Inc/tim.h
 kpa_bdk2\modbus_rtu.o: ..\my_lib\led.h

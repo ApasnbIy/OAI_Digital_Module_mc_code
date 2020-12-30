@@ -61,6 +61,7 @@
 /* USER CODE BEGIN PM */
 
 /* USER CODE END PM */
+extern TIM_HandleTypeDef htim3;
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -69,8 +70,6 @@
 
 #define ADC_DATA_LAST_ADDRESS 0
 #define DAC_DATA_LAST_ADDRESS 1
-
-
 
 
 
@@ -88,6 +87,7 @@ type_dac_data_struct mb_dac1;
 type_dac_data_struct mb_dac2;
 type_INA226_Snake ina_226;
 type_INA226_Snake	power_module_ina;
+
 type_power_module mb_power_module;
 
 
@@ -155,7 +155,7 @@ uint8_t test_flag;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	 
+
 	 
   /* USER CODE END 1 */
   
@@ -185,7 +185,6 @@ int main(void)
   MX_USART2_UART_Init();
   MX_DMA_Init();
   MX_CAN2_Init();
-  MX_TIM3_Init();
   MX_TIM4_Init();
   MX_USB_DEVICE_Init();
   MX_TIM6_Init();
@@ -197,20 +196,12 @@ int main(void)
   MX_TIM2_Init();
   MX_I2C2_Init();
   MX_TIM8_Init();
+  MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
-	//volatile uint16_t len_massive[] = {sizeof(type_adc_data_struct), sizeof(type_ina_226_data ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
-	/*
-	type_adc_data_struct 			
-	type_ina_226_data					
-	type_ina_226_data					
-	type_uart_receive_struct	
-	type_uart_receive_struct 	
-	type_gpio_in_union				
-	type_spi_receive_data			
-	*/
+	//volatile uint16_t len_massive[] = {sizeof(mb_spi_cs_settings), sizeof(type_power_module_settings ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
 	
 	
-	//my_gpio_init(&mb_gpio_config);
+	
 	memset(&mb_data_union, 0, sizeof(mb_data_union));
 	HAL_TIM_Base_Start(&htim8);	// таймер ModBus
 	
@@ -218,7 +209,7 @@ int main(void)
 	
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
-	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA	
+	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA, GPIO	
 															//timer 8 - usb
 	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды
 	
@@ -228,8 +219,8 @@ int main(void)
 	
 	ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
 	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
+	ina226_init(&ina_226.INA_226[2],&hi2c1,0x44,5); // mother_board
 	
-	ina226_power_module_init(&power_module_ina.INA_226[0], &hi2c2, 0x40, 0x5500);
 	
 
 	MY_USART_UART_struct_default_init(&UART_settings_default);
@@ -259,11 +250,8 @@ int main(void)
 	timer_slot_5ms_counter = 0;
 	uint32_t temp;
 	
-	mb_power_module.it_is_power_module = 1;
 	
-	/*
-	ina226_snake(&ina_226);
-	*/
+		
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -279,7 +267,7 @@ int main(void)
 		
 		if((current_time - previous_time_1)>= 400){ // запуск опроса ina226 . копирование данных ацп
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
-				
+				memcpy(&mb_power_module.voltage_1, &mb_adc.data, 4);
 			  if(mb_gpio_alternative_outputs.start == 1 && mb_gpio_alternative_outputs.end_flag == 0){ // if alt started
 					temp = ((uint32_t)(TIM2->ARR)) - ((uint32_t) TIM2->CNT);
 					memcpy(&mb_data_union.mb_data_named.mb_gpio_alternative_out.LOW_time_left, &temp, 4); // update the time in alt_gpio
@@ -295,8 +283,26 @@ int main(void)
 					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_3v3.voltage);
 					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_3v3.current);
 				}
+				else if(ina_226.ch_read_queue == 2){
+					memcpy(&mb_data_union.mb_data_named.ina226_mother_board, &ina_226.INA_226[2].voltage, sizeof(type_ina_226_data));
+					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_mother_board.voltage);
+					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_mother_board.current);
+				}
+				if(mb_power_module.it_is_power_module == 1){
+					memcpy(&mb_data_union.mb_data_named.mb_power_module_output_data, &power_module_ina.INA_226[0].voltage, 4);
+					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.mb_power_module_output_data.voltage);	
+					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.mb_power_module_output_data.current);
+					power_module_ina.ch_read_queue = 2;	
+					ina226_snake(&power_module_ina);
+					if(mb_power_module.constrain_avalible == 1){
+						if(mb_power_module.overcurrent <= mb_data_union.mb_data_named.mb_power_module_output_data.current || mb_power_module.over_voltage_aligned+50 <= mb_data_union.mb_data_named.mb_power_module_output_data.voltage){
+							mb_data_union.mb_data_named.mb_power_module_settings.on_off = 0;
+							power_module_voltage_on_off(&mb_data_union.mb_data_named.mb_power_module_settings);
+							mb_data_union.mb_data_named.mb_power_module_output_data.allert = 1;
+						}	
+					}
+				}
 				
-   			
 				ina226_snake(&ina_226); 
 				previous_time_1 = current_time;				
 		}
@@ -306,10 +312,7 @@ int main(void)
         my_gpio_get(&mb_gpio_inputs);
         memcpy(&mb_data_union.mb_data_named.mb_gpio_in_union, &mb_gpio_inputs, sizeof(mb_gpio_inputs));
       }
-			if (mb_power_module.it_is_power_module == 1){
-						power_module_ina.ch_read_queue = 1;	
-						ina226_snake(&power_module_ina);							
-			}
+			
       previous_time_2 = 0;
       previous_time_1 = 0;
 			current_time = 0;
@@ -525,9 +528,43 @@ int main(void)
 		}			
 		
 		//power_module_cnfg
-		else if(mb_data_union.mb_data_named.mb_power_module.scaler == 1){
-			memcpy(&mb_power_module, &mb_data_union.mb_data_named.mb_power_module, sizeof(type_power_module));
+		else if(mb_data_union.mb_data_named.mb_power_module_settings.scaler == 1){
+			if(mb_power_module.it_is_power_module != 1){
+					power_module_init(&mb_power_module);
+					ina226_power_module_init(&power_module_ina.INA_226[0], &hi2c2, 0x40,mb_power_module.over_voltage_aligned );
+			}			
+			mb_power_module.voltage_aligned = mb_data_union.mb_data_named.mb_power_module_settings.voltage *0.08; // lsb 12.5 мВ
 			
+			mb_data_union.mb_data_named.mb_power_module_settings.on_off = mb_data_union.mb_data_named.mb_power_module_settings.on_off;
+			
+			
+					
+			
+			//проверка на обновление ограничений
+			if(mb_data_union.mb_data_named.mb_power_module_settings.new_constrain == 0x01){
+				mb_power_module.overcurrent = mb_data_union.mb_data_named.mb_power_module_settings.overcurent;
+				mb_power_module.over_voltage_aligned = (mb_data_union.mb_data_named.mb_power_module_settings.overvoltage) *0.8; // lsb - 1.25 мВ
+				HAL_I2C_AbortCpltCallback(&hi2c2);
+				ina226_power_allert_set(&power_module_ina.INA_226[0], mb_power_module.over_voltage_aligned);
+					
+				
+				
+				power_module_ina.INA_226[0].queue_state = 1;
+				ina226_snake(&power_module_ina);
+				mb_power_module.constrain_avalible = 1;
+				mb_data_union.mb_data_named.mb_power_module_settings.new_constrain = 0;
+			}
+			
+			
+			//проверка на обновление калибровок
+			if(mb_data_union.mb_data_named.mb_power_module_settings.new_constant == 0x01){
+				mb_power_module.delta_1 = mb_data_union.mb_data_named.mb_power_module_settings.delta_1*0.08;
+				mb_power_module.delta_2 = mb_data_union.mb_data_named.mb_power_module_settings.delta_2*0.08;
+				mb_data_union.mb_data_named.mb_power_module_settings.new_constant = 0x00;
+			}
+			
+			power_module_voltage_on_off(&mb_data_union.mb_data_named.mb_power_module_settings);
+			mb_data_union.mb_data_named.mb_power_module_settings.scaler = 0;
 		}
 			
 		//vcp read
@@ -703,7 +740,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			
 			}
 		}
+	if(htim == &htim9){ // voltage tuning 
+		
+			if((mb_power_module.voltage_aligned + mb_power_module.delta_1)< (mb_adc.data[0] - VOLTAGE_DEVIATION)){
+				mb_power_module.pwm_1++;
+			}
+			else if((mb_power_module.voltage_aligned + mb_power_module.delta_1) > (mb_adc.data[0] + VOLTAGE_DEVIATION)) {
+				mb_power_module.pwm_1--;
+			}
+			if((mb_power_module.voltage_aligned + mb_power_module.delta_2)< (mb_adc.data[1] - VOLTAGE_DEVIATION)){
+				mb_power_module.pwm_2++;
+			}
+			else if((mb_power_module.voltage_aligned + mb_power_module.delta_2) > (mb_adc.data[1] + VOLTAGE_DEVIATION)) {
+				mb_power_module.pwm_2--;
+			}
+		if(mb_power_module.pwm_1 >8000) mb_power_module.pwm_1 = 8000;
+		else if(mb_power_module.pwm_1 <1000) mb_power_module.pwm_1 = 1000;
+		if(mb_power_module.pwm_2 >8000) mb_power_module.pwm_2 = 8000;
+		else if(mb_power_module.pwm_2 <1000) mb_power_module.pwm_2 = 1000;
+		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, mb_power_module.pwm_1); //
+		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, mb_power_module.pwm_2); //
+		
 	}
+		
+}
 
 	
 	
