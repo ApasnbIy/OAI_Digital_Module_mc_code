@@ -125,6 +125,7 @@ uint8_t power_module_init(type_power_module* pwr_module_ptr){
 	
 	power_module_gpio_init();
 	MY_TIM3_Init();
+
 	
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
@@ -134,12 +135,21 @@ uint8_t power_module_init(type_power_module* pwr_module_ptr){
 	
 	HAL_TIM_Base_Start_IT(&htim9);	
 	pwr_module_ptr ->it_is_power_module = 1;
+	if(pwr_module_ptr ->overcurrent == 0 || pwr_module_ptr ->overcurrent >= 1500){
+		pwr_module_ptr ->overcurrent = 1500; // задаем ограничение по току по умолчанию. если нужно поменять, для этого есть функционал
+	}
 	return 0;
 }
 
-void power_module_voltage_on_off(type_power_module_settings* pwr_mdl_ptr){
-	if(pwr_mdl_ptr->on_off == 1){HAL_GPIO_WritePin (GPIOC,GPIO1 ,GPIO_PIN_SET);}
-	else{HAL_GPIO_WritePin (GPIOC,GPIO1, GPIO_PIN_RESET);}
+void power_module_voltage_on_off(type_power_module* pwr_mdl_ptr){
+	if(pwr_mdl_ptr->on_off == 1){
+		HAL_GPIO_WritePin (GPIOC,GPIO1 ,GPIO_PIN_SET);
+		
+	}
+	else{
+		HAL_GPIO_WritePin (GPIOC,GPIO1, GPIO_PIN_RESET);
+		
+	}
 }
 
 
@@ -158,7 +168,7 @@ void power_module_pwm_calculate(type_power_module* pwr_mdl_ptr){
 void power_module_gpio_init(void){
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Pin = GPIO1;
+	GPIO_InitStruct.Pin = GPIO1|GPIO3;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -193,7 +203,7 @@ void MY_TIM3_Init(void)
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
   
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 41;
+  htim3.Init.Prescaler = 5;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 8000;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;

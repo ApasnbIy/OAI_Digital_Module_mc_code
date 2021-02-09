@@ -67,6 +67,7 @@
 typedef struct{												
 	uint16_t it_is_power_module;	//1		
 	uint16_t voltage_aligned;			// приведенное к ацп 1lsb - 12.5 mV
+	uint16_t voltage_aligned_temp;
 	uint16_t over_voltage_aligned;
 	uint16_t overvoltage;				// в мВ
 	uint16_t overcurrent;
@@ -76,15 +77,19 @@ typedef struct{
 	uint16_t voltage_2;
 	int16_t delta_1;
 	int16_t delta_2;
+	int16_t summ_1;
+	int16_t summ_2;
+	uint16_t power_on_delay;
 	uint16_t constrain_avalible;
+	uint16_t on_off;
 }
 type_power_module;
 
 
 typedef struct{
-	uint16_t scaler;							//0
-	uint16_t voltage;							// мВ						//2	 in mV
-	uint16_t on_off;								// 1/0				// 0/1
+	uint16_t scaler;						//0
+	uint16_t voltage;						// мВ						//2	 in mV
+	uint16_t on_off;						// 1/0				// 0/1
 	uint16_t overvoltage;					// мВ				//5	 in mV 			
 	uint16_t overcurent;					// мА				//6	 in mA
 	int16_t delta_1;							// мВ				// in mV					
@@ -93,6 +98,8 @@ typedef struct{
 	uint16_t new_constant;				// показывает что обновились калибровки
 	uint16_t it_is_power_module;	//
 	uint16_t ina_error_reset;			//
+	uint16_t power_on_delay;
+
 }
 type_power_module_settings;
 
@@ -100,10 +107,14 @@ type_power_module_settings;
 
 typedef struct
 {
-	uint16_t voltage;								// in mV	
-	uint16_t current;								// in mA			
-	uint16_t allert;								// 0/1
-	uint16_t ina_error;
+	uint16_t voltage;								// in mV	+2141
+	uint16_t current;								// in mA	+2142
+	uint16_t allert;								// 0/1		+2143
+	uint16_t ina_error;								//			+2144	
+	uint16_t voltage_control;						// in mV	+2145
+	uint16_t voltage_module_1;					// in mV  +2146
+	uint16_t voltage_module_2;					// in mV +2147
+	uint16_t ina_aligned_voltage;
 }
 type_power_module_output_data;
 
@@ -116,6 +127,6 @@ void power_on(type_power_module* pwr_mdl_ptr);
 void power_module_pwm_calculate(type_power_module* pwr_mdl_ptr);
 void power_module_gpio_init(void);
 void power_module_voltage_set(type_power_module* pwr_mdl_ptr);
-void power_module_voltage_on_off(type_power_module_settings* pwr_mdl_ptr);
+void power_module_voltage_on_off(type_power_module* pwr_mdl_ptr);
 uint8_t ina226_power_allert_set(type_INA226_DEVICE* ina226_ptr, uint16_t voltage_lim_v);
 #endif

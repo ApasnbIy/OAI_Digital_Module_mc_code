@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -230,7 +230,7 @@ void MX_TIM9_Init(void)
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
 
   htim9.Instance = TIM9;
-  htim9.Init.Prescaler = 41;
+  htim9.Init.Prescaler = 5;
   htim9.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim9.Init.Period = 1000;
   htim9.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;

@@ -30,6 +30,7 @@
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
+#include "my_MKO.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -61,7 +62,6 @@
 /* USER CODE BEGIN PM */
 
 /* USER CODE END PM */
-extern TIM_HandleTypeDef htim3;
 
 /* Private variables ---------------------------------------------------------*/
 
@@ -70,7 +70,7 @@ extern TIM_HandleTypeDef htim3;
 
 #define ADC_DATA_LAST_ADDRESS 0
 #define DAC_DATA_LAST_ADDRESS 1
-
+extern TIM_HandleTypeDef htim3;
 
 
 
@@ -292,15 +292,66 @@ int main(void)
 					memcpy(&mb_data_union.mb_data_named.mb_power_module_output_data, &power_module_ina.INA_226[0].voltage, 4);
 					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.mb_power_module_output_data.voltage);	
 					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.mb_power_module_output_data.current);
-					power_module_ina.ch_read_queue = 2;	
-					ina226_snake(&power_module_ina);
-					if(mb_power_module.constrain_avalible == 1){
+					mb_data_union.mb_data_named.mb_power_module_output_data.ina_aligned_voltage = mb_data_union.mb_data_named.mb_power_module_output_data.voltage*0.1;
+					//переписываю ограничения по напряжению и току дефолтное ограничение по току 1.2 ампера
+					//так же теперь смотрит за тем чтобы выходное напряжение не превышало заданное на 100мВ
+					mb_data_union.mb_data_named.mb_power_module_output_data.voltage_module_1 = mb_adc.data[0];
+					mb_data_union.mb_data_named.mb_power_module_output_data.voltage_module_2 = mb_adc.data[1];
+					mb_data_union.mb_data_named.mb_power_module_output_data.voltage_control = mb_adc.data[2];
+					//проверка на превышение по току и превышение выходного напряжения после ключа
+					
+					
+					
+					if(mb_power_module.power_on_delay >0){
+						mb_power_module.power_on_delay--;
+					}
+					else{
+						//HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_2);
+						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, 0);
+						if(mb_power_module.overcurrent <= mb_data_union.mb_data_named.mb_power_module_output_data.current || mb_power_module.voltage_aligned + 100 <= mb_data_union.mb_data_named.mb_power_module_output_data.ina_aligned_voltage){
+							mb_data_union.mb_data_named.mb_power_module_settings.on_off = 0;
+							mb_power_module.on_off = 0;	
+							power_module_voltage_on_off(&mb_power_module);
+							mb_data_union.mb_data_named.mb_power_module_output_data.allert = 1;
+							}
+					}
+					
+						/*
+					// проверка напряжения перед ключом 
+											
+					if(mb_data_union.mb_data_named.mb_power_module_output_data.voltage_control >= mb_power_module.voltage_aligned + 300 || mb_data_union.mb_data_named.mb_power_module_output_data.voltage_control <= mb_power_module.voltage_aligned - 300){	
+						mb_data_union.mb_data_named.mb_power_module_settings.on_off = 0;
+						power_module_voltage_on_off(&mb_data_union.mb_data_named.mb_power_module_settings);
+						mb_data_union.mb_data_named.mb_power_module_output_data.allert = 1;
+					}
+					
+					// проверка сбалансированности источников питания
+					if(mb_data_union.mb_data_named.mb_power_module_output_data.voltage_module_1 >= mb_data_union.mb_data_named.mb_power_module_output_data.voltage_module_2 ){
+						if(mb_data_union.mb_data_named.mb_power_module_output_data.voltage_module_1 - mb_data_union.mb_data_named.mb_power_module_output_data.voltage_module_2 >=120){
+							mb_data_union.mb_data_named.mb_power_module_settings.on_off = 0;
+							power_module_voltage_on_off(&mb_data_union.mb_data_named.mb_power_module_settings);
+							mb_data_union.mb_data_named.mb_power_module_output_data.allert = 1;
+						}
+					}
+					else{
+						if(mb_data_union.mb_data_named.mb_power_module_output_data.voltage_module_2 - mb_data_union.mb_data_named.mb_power_module_output_data.voltage_module_1 >=120){
+							mb_data_union.mb_data_named.mb_power_module_settings.on_off = 0;
+							power_module_voltage_on_off(&mb_data_union.mb_data_named.mb_power_module_settings);
+							mb_data_union.mb_data_named.mb_power_module_output_data.allert = 1;
+						}
+					}
+					*/
+					/*
+					if(mb_power_module.constrain_avalible == 1){ 
 						if(mb_power_module.overcurrent <= mb_data_union.mb_data_named.mb_power_module_output_data.current || mb_power_module.over_voltage_aligned+50 <= mb_data_union.mb_data_named.mb_power_module_output_data.voltage){
 							mb_data_union.mb_data_named.mb_power_module_settings.on_off = 0;
 							power_module_voltage_on_off(&mb_data_union.mb_data_named.mb_power_module_settings);
 							mb_data_union.mb_data_named.mb_power_module_output_data.allert = 1;
 						}	
 					}
+					*/
+					power_module_ina.ch_read_queue = 2;	
+					ina226_snake(&power_module_ina);
 				}
 				
 				ina226_snake(&ina_226); 
@@ -308,15 +359,14 @@ int main(void)
 		}
 		
 		if((current_time - previous_time_2)>=800){	// обновление состояния GPIO 
-      if(mb_gpio_config.conf_named.on_of_mask.init_flag){
-        my_gpio_get(&mb_gpio_inputs);
-        memcpy(&mb_data_union.mb_data_named.mb_gpio_in_union, &mb_gpio_inputs, sizeof(mb_gpio_inputs));
-      }
-			
-      previous_time_2 = 0;
-      previous_time_1 = 0;
-			current_time = 0;
-			TIM5->CNT = 0;
+			if(mb_gpio_config.conf_named.on_of_mask.init_flag){
+				my_gpio_get(&mb_gpio_inputs);
+				memcpy(&mb_data_union.mb_data_named.mb_gpio_in_union, &mb_gpio_inputs, sizeof(mb_gpio_inputs));
+			}
+		previous_time_2 = 0;
+		previous_time_1 = 0;
+		current_time = 0;
+		TIM5->CNT = 0;
     }
   
 		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler == 1){ // dac1 start/stop/config
@@ -533,24 +583,23 @@ int main(void)
 					power_module_init(&mb_power_module);
 					ina226_power_module_init(&power_module_ina.INA_226[0], &hi2c2, 0x40,mb_power_module.over_voltage_aligned );
 			}			
-			mb_power_module.voltage_aligned = mb_data_union.mb_data_named.mb_power_module_settings.voltage *0.08; // lsb 12.5 мВ
-			
-			mb_data_union.mb_data_named.mb_power_module_settings.on_off = mb_data_union.mb_data_named.mb_power_module_settings.on_off;
-			
-			
-					
+			mb_power_module.voltage_aligned_temp = mb_data_union.mb_data_named.mb_power_module_settings.voltage *0.08; // lsb 12.5 мВ
+			if(mb_power_module.voltage_aligned != mb_power_module.voltage_aligned_temp){
+				mb_power_module.voltage_aligned = mb_power_module.voltage_aligned_temp;
+				mb_power_module.summ_1 = 0;
+				mb_power_module.summ_2 = 0;
+				power_module_voltage_set(&mb_power_module);
+			}
+						
 			
 			//проверка на обновление ограничений
 			if(mb_data_union.mb_data_named.mb_power_module_settings.new_constrain == 0x01){
 				mb_power_module.overcurrent = mb_data_union.mb_data_named.mb_power_module_settings.overcurent;
 				mb_power_module.over_voltage_aligned = (mb_data_union.mb_data_named.mb_power_module_settings.overvoltage) *0.8; // lsb - 1.25 мВ
-				HAL_I2C_AbortCpltCallback(&hi2c2);
-				ina226_power_allert_set(&power_module_ina.INA_226[0], mb_power_module.over_voltage_aligned);
-					
-				
-				
-				power_module_ina.INA_226[0].queue_state = 1;
-				ina226_snake(&power_module_ina);
+				//HAL_I2C_AbortCpltCallback(&hi2c2);
+				//ina226_power_allert_set(&power_module_ina.INA_226[0], mb_power_module.over_voltage_aligned);				
+				//power_module_ina.INA_226[0].queue_state = 1;
+				//ina226_snake(&power_module_ina);
 				mb_power_module.constrain_avalible = 1;
 				mb_data_union.mb_data_named.mb_power_module_settings.new_constrain = 0;
 			}
@@ -563,7 +612,13 @@ int main(void)
 				mb_data_union.mb_data_named.mb_power_module_settings.new_constant = 0x00;
 			}
 			
-			power_module_voltage_on_off(&mb_data_union.mb_data_named.mb_power_module_settings);
+			mb_power_module.on_off = mb_data_union.mb_data_named.mb_power_module_settings.on_off;		
+			power_module_voltage_on_off(&mb_power_module);
+			if(mb_power_module.on_off){
+				mb_power_module.power_on_delay = 1000;
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, 1);
+				
+			}
 			mb_data_union.mb_data_named.mb_power_module_settings.scaler = 0;
 		}
 			
@@ -741,7 +796,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			}
 		}
 	if(htim == &htim9){ // voltage tuning 
+		/*
+		int16_t delta_1;
+		int16_t delta_2;
+		volatile float a = 0;
+		volatile float b = 0.3;
+		volatile float a_1 = 0;
+		volatile float a_2 = 0;
+		delta_1 = mb_power_module.voltage_aligned + mb_power_module.delta_1 - mb_adc.data[0];
+		delta_2 = mb_power_module.voltage_aligned + mb_power_module.delta_2 - mb_adc.data[1];
 		
+		mb_power_module.summ_1 += a*delta_1;
+		mb_power_module.summ_2 += a*delta_2;
+		
+		a_1 =  b*delta_1;
+		a_2 =  b*delta_2;
+		mb_power_module.pwm_1 += a_1;
+		mb_power_module.pwm_2 += a_2;
+		*/
+		 
+		
+		
+			
 			if((mb_power_module.voltage_aligned + mb_power_module.delta_1)< (mb_adc.data[0] - VOLTAGE_DEVIATION)){
 				mb_power_module.pwm_1++;
 			}
@@ -754,6 +830,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			else if((mb_power_module.voltage_aligned + mb_power_module.delta_2) > (mb_adc.data[1] + VOLTAGE_DEVIATION)) {
 				mb_power_module.pwm_2--;
 			}
+		
 		if(mb_power_module.pwm_1 >8000) mb_power_module.pwm_1 = 8000;
 		else if(mb_power_module.pwm_1 <1000) mb_power_module.pwm_1 = 1000;
 		if(mb_power_module.pwm_2 >8000) mb_power_module.pwm_2 = 8000;
