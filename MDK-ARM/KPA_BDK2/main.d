@@ -57,7 +57,6 @@ kpa_bdk2\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 kpa_bdk2\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 kpa_bdk2\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 kpa_bdk2\main.o: ../Inc/gpio.h
-kpa_bdk2\main.o: ..\my_lib\my_MKO.h
 kpa_bdk2\main.o: ..\my_lib\vcp_time_segmentation.h
 kpa_bdk2\main.o: ../Inc/usbd_cdc_if.h
 kpa_bdk2\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h
@@ -68,10 +67,11 @@ kpa_bdk2\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq
 kpa_bdk2\main.o: ..\my_lib\modbus_rtu.h
 kpa_bdk2\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 kpa_bdk2\main.o: ..\my_lib\modbus_data_formater.h
-kpa_bdk2\main.o: ..\my_lib\INA226.h
+kpa_bdk2\main.o: ..\my_lib\my_MKO.h
+kpa_bdk2\main.o: ..\my_lib\led.h
 kpa_bdk2\main.o: ..\my_lib\my_GPIO.h
+kpa_bdk2\main.o: ..\my_lib\INA226.h
 kpa_bdk2\main.o: ..\my_lib\my_UART.h
 kpa_bdk2\main.o: ..\my_lib\my_spi.h
 kpa_bdk2\main.o: ..\my_lib\analog_data.h
 kpa_bdk2\main.o: ..\my_lib\power_module.h
-kpa_bdk2\main.o: ..\my_lib\led.h

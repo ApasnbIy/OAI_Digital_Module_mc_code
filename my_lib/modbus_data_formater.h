@@ -1,10 +1,11 @@
 #ifndef _MODBUS_DATA_FORMATER_H
 #define _MODBUS_DATA_FORMATER_H
 
+#include "main.h"
+#include "my_MKO.h"
 
 #include "modbus_rtu.h"
 #include "INA226.h"
-
 #include "my_GPIO.h"
 #include "my_UART.h"
 #include "my_spi.h"
@@ -47,14 +48,23 @@ typedef struct
 	type_spi_receive_struct						mb_spi_receive;							//  +2616 bytes // +1308 regs
 	type_spi_chipselect_settings			mb_spi_cs_settings;					//  +						// +1318 regs
 	type_power_module_settings				mb_power_module_settings;		//	+						// +1337 regs
-																																//	+						// +1348 regs		
-	uint16_t								dummy2[MB_DATA_SIZE - (sizeof(type_uart_setting_union)/2) - (sizeof(type_dac_data_struct)) - \
+	type_MKO_Struct			 							mb_MKO_Struct; 							//	+						// +1348 regs		
+	uint16_t										dummy2[MB_DATA_SIZE - (sizeof(type_uart_setting_union)/2) - (sizeof(type_dac_data_struct)) - \
 		(sizeof(type_adc_settings)/2)-(sizeof(type_gpio_config_union)/2) - (sizeof(type_gpio_out_union)/2) - (sizeof(type_gpio_in_union)/2) - \
 		(sizeof(type_uart_transmit_struct)) - (sizeof(type_alternative_gpio_out_struct)/2) - (sizeof(type_spi_settings_struct)/2) - \
-		(sizeof(type_spi_transmit_struct)/2)]; // sizeof in bytes, uint8, massive is uint16
+		(sizeof(type_spi_transmit_struct)/2) - (sizeof(type_MKO_Struct)/2)]; // sizeof in bytes, uint8, massive is uint16
 	uint16_t								dummy3[MB_DATA_SIZE];
 	uint16_t								dummy4[MB_DATA_SIZE];
 }type_modbus_data_named;
+
+
+typedef union{
+type_modbus_data mb_data;
+type_modbus_data_named mb_data_named;
+}type_mb_data_union;
+
+
+
 
 #pragma pack(pop)
 
