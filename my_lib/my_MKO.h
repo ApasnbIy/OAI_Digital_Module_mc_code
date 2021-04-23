@@ -7,6 +7,7 @@
 #include "tim.h"
 #include "my_GPIO.h"
 #include <string.h>
+
 extern type_LED_INDICATOR mcu_state_led;
 /*
 GPIO29 MKO_ENABLE
@@ -35,6 +36,7 @@ typedef struct{
 	uint16_t Word_clk;//1385	
 	uint16_t Len;			//1386
   uint16_t TimeOutFlag;
+	uint16_t MKO_initFlag;
 } type_MKO_Cntrl;
 
 typedef struct{

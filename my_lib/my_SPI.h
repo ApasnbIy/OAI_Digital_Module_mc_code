@@ -21,16 +21,16 @@ ti_mode				0 - disable, 1 - enable
 
 typedef struct
 {
-	uint16_t	scaler; 			//+0 	1246
-	uint16_t	mode; 				//+1 	1247
-	uint16_t  direction; 		//+2 	1248
-	uint16_t  data_size;		//+3 	1249
-	uint16_t  polarity; 		//+4 	1250
-	uint16_t  phase;				//+5	1251
-	uint16_t  slave;				//+6	1252	
-	uint16_t  baud;					//+7	1253
-	uint16_t  firs_bit;			//+8	1254	
-	uint16_t	ti_mode;			//+9	1255
+	uint16_t	scaler; 			//+0 	1246   	//1
+	uint16_t	mode; 				//+1 	1247		//0
+	uint16_t  direction; 		//+2 	1248		//0
+	uint16_t  data_size;		//+3 	1249		//1
+	uint16_t  polarity; 		//+4 	1250		//0
+	uint16_t  phase;				//+5	1251		//1
+	uint16_t  slave;				//+6	1252		//0
+	uint16_t  baud;					//+7	1253		//5
+	uint16_t  firs_bit;			//+8	1254		//0	
+	uint16_t	ti_mode;			//+9	1255		//0
 	uint16_t	init_flag;		//+10	1256
 	uint16_t  set_default;	//+10	1257
 	uint16_t  reserved[8];	//+11	1258

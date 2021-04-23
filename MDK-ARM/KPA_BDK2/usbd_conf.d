@@ -16,13 +16,14 @@ kpa_bdk2\usbd_conf.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
 kpa_bdk2\usbd_conf.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
-kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
+kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h
+kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h
 kpa_bdk2\usbd_conf.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dac.h
@@ -51,3 +52,4 @@ kpa_bdk2\usbd_conf.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_c
 kpa_bdk2\usbd_conf.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 kpa_bdk2\usbd_conf.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 kpa_bdk2\usbd_conf.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
+kpa_bdk2\usbd_conf.o: ../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h

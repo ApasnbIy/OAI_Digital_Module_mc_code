@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cortex-debug",
+            "name": "APP",
+            "cwd": "${workspaceRoot}",
+            "device": "Cortex-M0",
+            "executable": "./build/smart_relay.elf",
+            "servertype": "jlink",
+            "interface": "swd",
+            "request": "launch",
+            "rtos": "FreeRTOS",
+            "svdFile": "./JLink/STM32F05xx.svd",
+        }
+    ]
+}

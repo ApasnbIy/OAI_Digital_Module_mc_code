@@ -1,24 +1,41 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "cppbuild",
-			"label": "C/C++: armclang.exe build active file",
-			"command": "C:/Keil_v5/ARM/ARMCLANG/bin/armclang.exe",
-			"args": [
-				"-g",
-				"${file}",
-				"-o",
-				"${fileDirname}\\${fileBasenameNoExtension}.exe"
-			],
-			"options": {
-				"cwd": "C:/Keil_v5/ARM/ARMCLANG/bin"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": "build",
-			"detail": "compiler: C:/Keil_v5/ARM/ARMCLANG/bin/armclang.exe"
-		}
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "make -s -j 8 app",
+            "options": {
+                "cwd": "${workspaceRoot}",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": [ "/C" ]
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$go"
+            ]
+        },
+        {
+            "label": "Download",
+            "type": "shell",
+            "command": "JLink.exe -Device STM32F042K6 -If SWD -Speed 4000 JLink\\FlashMCU.jlink",
+            "options": {
+                "cwd": "${workspaceRoot}",
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": [ "/C" ]
+                }
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
 }

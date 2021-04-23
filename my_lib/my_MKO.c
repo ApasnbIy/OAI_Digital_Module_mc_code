@@ -53,9 +53,9 @@ void MKO_Init(void){
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-  			{
-   				 Error_Handler();
-  			}
+		{
+			Error_Handler();
+		}
 	MKO_Reset();
 }
 

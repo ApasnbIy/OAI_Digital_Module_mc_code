@@ -120,10 +120,10 @@ void MY_SPI2_Init(type_spi_settings_struct* spi_settings)
 void my_spi_default_settings(type_spi_settings_struct* spi_settings){
 	spi_settings->mode 		  	= SPI_MODE_MASTER;
 	spi_settings->direction 	= SPI_DIRECTION_2LINES;
-	spi_settings->data_size	 	= SPI_DATASIZE_8BIT;
+	spi_settings->data_size	 	= SPI_DATASIZE_16BIT;
 	spi_settings->polarity 		= SPI_POLARITY_LOW;
-	spi_settings->phase				= SPI_PHASE_1EDGE;
-	spi_settings->baud			  = SPI_BAUDRATEPRESCALER_256;
+	spi_settings->phase				= SPI_PHASE_2EDGE;
+	spi_settings->baud			  = SPI_BAUDRATEPRESCALER_64;
 	spi_settings->firs_bit		= SPI_FIRSTBIT_MSB;
 	spi_settings->ti_mode			= SPI_TIMODE_DISABLE;
 }

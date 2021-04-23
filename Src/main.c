@@ -17,7 +17,6 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
@@ -160,7 +159,6 @@ int main(void)
 
 	 
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -221,10 +219,12 @@ int main(void)
 	MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart2_setting_struct);
 	my_spi_default_settings(&mb_spi_settings);
 	my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
-	MY_SPI2_Init(&mb_spi_settings);
+	//MY_SPI2_Init(&mb_spi_settings);
+	
 	volatile uint16_t current_time ;
 	volatile uint16_t previous_time_1;
 	volatile uint16_t previous_time_2;
+	
 	led_init(&mcu_state_led, 0);
 	led_init(&con_state_led, 1);
 	led_setup(&con_state_led, LED_ON, 0, 0);
@@ -237,7 +237,7 @@ int main(void)
 	timer_slot_5ms_counter = 0;
 	uint32_t temp;
 
-	MKO_Init();
+	
 	//MKO_Reset();
 
 	
@@ -256,7 +256,9 @@ int main(void)
 		
 		current_time = (uint16_t)TIM5->CNT;
 		
-		if((current_time - previous_time_1)>= 400){ // запуск опроса ina226 . копирование данных ацп
+			
+				
+		if((current_time - previous_time_1)>= 1000){ // запуск опроса ina226 . копирование данных ацп
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
 				memcpy(&mb_power_module.voltage_1, &mb_adc.data, 4);
 			  if(mb_gpio_alternative_outputs.start == 1 && mb_gpio_alternative_outputs.end_flag == 0){ // if alt started
@@ -311,15 +313,15 @@ int main(void)
 				previous_time_1 = current_time;				
 		}
 		
-		if((current_time - previous_time_2)>=800){	// обновление состояния GPIO 
+		if((current_time - previous_time_2)>=2000){	// обновление состояния GPIO 
 			if(mb_gpio_config.conf_named.on_of_mask.init_flag){
 				my_gpio_get(&mb_gpio_inputs);
 				memcpy(&mb_data_union.mb_data_named.mb_gpio_in_union, &mb_gpio_inputs, sizeof(mb_gpio_inputs));
 			}
-		previous_time_2 = 0;
-		previous_time_1 = 0;
-		current_time = 0;
-		TIM5->CNT = 0;
+			previous_time_2 = 0;
+			previous_time_1 = 0;
+			current_time = 0;
+			TIM5->CNT = 0;
     }
   
 		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler == 1){ // dac1 start/stop/config
@@ -333,6 +335,7 @@ int main(void)
 					mb_data_union.mb_data_named.mb_dac1.settings_scaler = 0;
 				}
 		}
+		
 		
 		else if(mb_data_union.mb_data_named.mb_dac2.settings_scaler == 1){// dac2 start/stop/config
 			memcpy(&mb_dac2, &mb_data_union.mb_data_named.mb_dac2,  sizeof(mb_dac2));
@@ -370,10 +373,60 @@ int main(void)
       if(mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater == 1){
         memcpy(&mb_gpio_outputs, &mb_data_union.mb_data_named.mb_gpio_out_union, sizeof(mb_gpio_outputs));
         my_gpio_set(&mb_gpio_outputs);
-				//HAL_Delay(1000);
 				mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater = 0;
       }
     }
+		
+		// spi transmit
+
+		
+		//spi receive
+		else if(mb_data_union.mb_data_named.mb_spi_receive.scaler == 1){
+			memcpy(&mb_spi_receive, &mb_data_union.mb_data_named.mb_spi_receive, 20); // 20 bites are control part of struct
+			if(mb_spi_receive.start == 1){
+				mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 0;
+				my_spi_receive(&mb_spi_receive ,&mb_data_union.mb_data_named.mb_spi_receive_data);
+			}
+			mb_data_union.mb_data_named.mb_spi_receive.scaler = 0;
+		}
+		
+		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
+			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
+			if(mb_spi_transmit.start == 1){
+				if(mb_spi_cs_settings.init_flag == 1){
+					mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 0;
+					my_spi_chip_deselect(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
+					my_spi_chip_select(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
+					if(mb_spi_transmit.rx_tx_flag == 1){
+						my_spi_transmit_recive( &mb_data_union.mb_data_named.mb_spi_receive_data, &mb_spi_transmit);
+					}
+					else if(mb_spi_transmit.rx_tx_flag == 0){
+						my_spi_transmit(&mb_spi_transmit);
+					}
+				}
+			}
+			mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
+		}
+		//spi settings
+		else if(mb_data_union.mb_data_named.mb_spi_settings.scaler == 1){
+			memcpy(&mb_spi_settings, &mb_data_union.mb_data_named.mb_spi_settings, sizeof(type_spi_settings_struct));
+			if(mb_spi_settings.set_default == 0x01){
+				my_spi_default_settings(&mb_spi_settings);
+			}
+			MY_SPI2_Init(&mb_spi_settings);
+			mb_data_union.mb_data_named.mb_spi_settings.scaler = 0;	
+		}
+		
+		//spi ch_s settings
+		if(mb_data_union.mb_data_named.mb_spi_cs_settings.scaler == 1){
+			memcpy(&mb_spi_cs_settings, &mb_data_union.mb_data_named.mb_spi_cs_settings, sizeof(type_spi_chipselect_settings));
+			my_spi_chip_select_init(&mb_spi_cs_settings, &mb_gpio_config);
+			if(mb_spi_cs_settings.init_flag == 1){
+				mb_data_union.mb_data_named.mb_spi_cs_settings.init_flag = 1;
+			}
+			mb_data_union.mb_data_named.mb_spi_cs_settings.scaler = 0;
+		}	
+		
 		
 		//обновление и отправка посылки по uart1
 		else if(mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler == 1){
@@ -478,58 +531,7 @@ int main(void)
 				}
 		}
 		
-		// spi transmit
-		else if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
-			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
-			if(mb_spi_transmit.start == 1){
-				if(mb_spi_cs_settings.init_flag == 1){
-					mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 0;
-					my_spi_chip_deselect(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
-					my_spi_chip_select(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
-					if(mb_spi_transmit.rx_tx_flag == 1){
-						my_spi_transmit_recive( &mb_data_union.mb_data_named.mb_spi_receive_data, &mb_spi_transmit);
-					}
-					else if(mb_spi_transmit.rx_tx_flag == 0){
-						my_spi_transmit(&mb_spi_transmit);
-					}
-				}
-			}
-			mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
-		}
-		
-		//spi receive
-		else if(mb_data_union.mb_data_named.mb_spi_receive.scaler == 1){
-			memcpy(&mb_spi_receive, &mb_data_union.mb_data_named.mb_spi_receive, 20); // 20 bites are control part of struct
-			if(mb_spi_receive.start == 1){
-				mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 0;
-				my_spi_receive(&mb_spi_receive ,&mb_data_union.mb_data_named.mb_spi_receive_data);
-			}
-			mb_data_union.mb_data_named.mb_spi_receive.scaler = 0;
-		}
-		
-		//spi settings
-		else if(mb_data_union.mb_data_named.mb_spi_settings.scaler == 1){
-			memcpy(&mb_spi_settings, &mb_data_union.mb_data_named.mb_spi_settings, sizeof(type_spi_settings_struct));
-			if(mb_spi_settings.set_default == 0x01){
-				my_spi_default_settings(&mb_spi_settings);
-				MY_SPI2_Init(&mb_spi_settings);
-			}
-			else{
-				MY_SPI2_Init(&mb_spi_settings);
-			}
-			mb_data_union.mb_data_named.mb_spi_settings.scaler = 0;	
-		}
-		
-		//spi ch_s settings
-		else if(mb_data_union.mb_data_named.mb_spi_cs_settings.scaler == 1){
-			memcpy(&mb_spi_cs_settings, &mb_data_union.mb_data_named.mb_spi_cs_settings, sizeof(type_spi_chipselect_settings));
-			my_spi_chip_select_init(&mb_spi_cs_settings, &mb_gpio_config);
-			mb_data_union.mb_data_named.mb_spi_cs_settings.scaler = 0;
-			if(mb_spi_cs_settings.init_flag == 1){
-				mb_data_union.mb_data_named.mb_spi_cs_settings.init_flag = 1;
-			}
-			
-		}			
+				
 		//power_module_cnfg
 		else if(mb_data_union.mb_data_named.mb_power_module_settings.scaler == 1){
 			if(mb_power_module.it_is_power_module != 1){
@@ -562,14 +564,17 @@ int main(void)
 			if(mb_power_module.on_off){
 				mb_power_module.power_on_delay = 1500;
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_SET);
-				
 			}
 			mb_data_union.mb_data_named.mb_power_module_settings.scaler = 0;
 		}
+		//MKO
 		else if((mb_data_union.mb_data_named.mb_MKO_Struct.scaler & 0x01)== 0x01){
+			if(mb_data_union.mb_data_named.mb_MKO_Struct.MKO_Cntrl.MKO_initFlag != 1){
+				MKO_Init();
+				mb_data_union.mb_data_named.mb_MKO_Struct.MKO_Cntrl.MKO_initFlag = 1;
+			}
 			MKO_Exchange(&mb_data_union.mb_data_named.mb_MKO_Struct);
 			mb_data_union.mb_data_named.mb_MKO_Struct.scaler &= 0xFFFE;
-
 		}
 		
 			
@@ -592,11 +597,12 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage 
+  /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -610,7 +616,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -851,7 +857,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
