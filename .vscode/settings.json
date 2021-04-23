@@ -1,4 +1,7 @@
 {
+    "cortex-debug.JLinkGDBServerPath": "JLinkGDBServerCL.exe",
+    "cortex-debug.armToolchainPath": "c:\\gcc-arm\\bin",
+    "project_mcu": "STM32F405xx",
     "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": true,
     "C_Cpp.default.cStandard": "c99",
     "files.associations": {

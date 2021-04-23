@@ -130,9 +130,19 @@ void led_alt_setup(type_LED_INDICATOR* led_ptr, uint8_t mode, uint16_t period_ms
 void led_gpio_set(type_LED_INDICATOR* led_ptr, uint8_t state)
 {
 	if(led_ptr->led_num == 0){
-		HAL_GPIO_WritePin (GPIOD,GPIO_PIN_3 ,state);
+		if(state){
+			HAL_GPIO_WritePin (GPIOD,GPIO_PIN_3, GPIO_PIN_SET);
+		}
+		else{
+			HAL_GPIO_WritePin (GPIOD,GPIO_PIN_3 ,GPIO_PIN_RESET);
+		}
 	}
 	else if(led_ptr->led_num == 1){
-		HAL_GPIO_WritePin (GPIOD,GPIO_PIN_4 ,state);
+		if(state){
+			HAL_GPIO_WritePin (GPIOD,GPIO_PIN_4, GPIO_PIN_SET);
+		}
+		else{
+			HAL_GPIO_WritePin (GPIOD,GPIO_PIN_4 ,GPIO_PIN_RESET);
+		}
 	}
 }

@@ -10,8 +10,8 @@
 #include "modbus_rtu.h"
 #include "modbus_data_formater.h"
 #include "led.h"
-uint8_t rx_tx_data_buff[256];
-uint8_t len;
+
+
 extern type_LED_INDICATOR con_state_led;
 
 
@@ -34,106 +34,67 @@ void modbus_struct_init_constant(type_modbus_data* modbus_ptr)
 
 uint8_t modbus_RX_TX_handler(type_modbus_data* modbus_ptr, type_VCP_UART* vcp_ptr){
 	uint16_t addr;
+	uint8_t len;
+		
   if(vcp_ptr->rx_data[0] == DEVICE_ID){
-		if(vcp_ptr->rx_data[1] == 0x03){ //read analog outputs (addr, code (0x03), Hi_addr, Lo_addr, Hi_reg_num), Lo_reg_num, CRC16) 
+		if(vcp_ptr->rx_data[1] == 0x03){ //read analog outputs (addr 0, code (0x03) 1, Hi_addr 2, Lo_addr 3, Hi_reg_num 4, Lo_reg_num5, CRC16) 
 			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){
         addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
-				len = modbus_answ(vcp_ptr->rx_data[1],vcp_ptr->rx_data[5],rx_tx_data_buff, modbus_ptr->analog_outputs, addr);
-        vcp_uart_write(vcp_ptr,rx_tx_data_buff,len);
-        vcp_ptr->rx_position = 0;
+				len = modbus_answ(vcp_ptr->rx_data[1], vcp_ptr->rx_data[5], vcp_ptr->tx_data, modbus_ptr->analog_outputs, addr);
+        vcp_uart_write(vcp_ptr,vcp_ptr->tx_data,len);
 			}
     }
     else if(vcp_ptr->rx_data[1] == 0x04){ //read analog inputs (addr, code (0x04), Hi_addr, Lo_addr, Hi_reg_num, Lo_reg_num, CRC16) 
 			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){
         addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
-				len = modbus_answ(vcp_ptr->rx_data[1],vcp_ptr->rx_data[5],rx_tx_data_buff, modbus_ptr->analog_inputs, addr);
-        vcp_uart_write(vcp_ptr,rx_tx_data_buff,len);
-        vcp_ptr->rx_position = 0;
-			}
-      
+				len = modbus_answ(vcp_ptr->rx_data[1],vcp_ptr->rx_data[5],vcp_ptr->tx_data, modbus_ptr->analog_inputs, addr);
+        vcp_uart_write(vcp_ptr,vcp_ptr->tx_data,len); 
+			} 
     }
     else if(vcp_ptr->rx_data[1] == 0x06){ //write single analog output
       if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){ 
         addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;        
         memcpy(&modbus_ptr->analog_outputs[addr], &vcp_ptr->rx_data[4], 0x02);
-        modbus_answ_shrt(rx_tx_data_buff, vcp_ptr->rx_data);
-        vcp_uart_write(vcp_ptr, rx_tx_data_buff, 0x08);
-        vcp_ptr->rx_position = 0;
-        return 0;
+        modbus_answ_shrt(vcp_ptr->tx_data, vcp_ptr->rx_data);
+        vcp_uart_write(vcp_ptr, vcp_ptr->tx_data, 0x08);      
 			}
     }
     else if(vcp_ptr->rx_data[1] == 0x10){ //write analog outputs
       if(MRTU_CRC(vcp_ptr->rx_data, (0x09 + vcp_ptr->rx_data[0x06])) == 0 ){
-        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
-				    
+        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;   
 				memcpy(&modbus_ptr->analog_outputs[addr], &vcp_ptr->rx_data[7], vcp_ptr->rx_data[0x06]);
-				
-        modbus_answ_shrt(rx_tx_data_buff, vcp_ptr->rx_data);
-        vcp_uart_write(vcp_ptr, rx_tx_data_buff, 0x08);
-        vcp_ptr->rx_position = 0;
-			return 0;
+        modbus_answ_shrt(vcp_ptr->tx_data, vcp_ptr->rx_data);
+        vcp_uart_write(vcp_ptr, vcp_ptr->tx_data, 0x08);
 			}	
     }
-		else{vcp_ptr->rx_position = 0;
-		led_alt_setup(&con_state_led, LED_BLINK, 400, 200, 1600);
+		else{
+		led_alt_setup(&con_state_led, LED_BLINK, 200, 100, 3000);
 		}
-		
-		/*
-		if(vcp_ptr->rx_data[1] == 0x01){ //read discrete outputs (addr, code (0x03), Hi_addr, Lo_addr, Hi_reg_num), Lo_reg_num, CRC16) 
-			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){
-        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
-				len = modbus_answ(vcp_ptr->rx_data[1],vcp_ptr->rx_data[5],rx_tx_data_buff, modbus_ptr->discret_outputs, addr);
-        vcp_uart_write(vcp_ptr,rx_tx_data_buff,len);
-        vcp_ptr->rx_position = 0;
-			}
-    }
-    else if(vcp_ptr->rx_data[1] == 0x02){ //read discret inputs (addr, code (0x04), Hi_addr, Lo_addr, Hi_reg_num, Lo_reg_num, CRC16) 
-			if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){
-        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
-				len = modbus_answ(vcp_ptr->rx_data[1],vcp_ptr->rx_data[5],rx_tx_data_buff, modbus_ptr->discret_inputs, addr);
-        vcp_uart_write(vcp_ptr,rx_tx_data_buff,len);
-        vcp_ptr->rx_position = 0;
-			}
-      
-    }
-    else if(vcp_ptr->rx_data[1] == 0x04){ //write single discret output
-      if(MRTU_CRC(vcp_ptr->rx_data, 0x08) == 0 ){ 
-        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;        
-        memcpy(&modbus_ptr->discret_outputs[addr], &vcp_ptr->rx_data[4], 0x02);
-        modbus_answ_shrt(rx_tx_data_buff, vcp_ptr->rx_data);
-        vcp_uart_write(vcp_ptr, rx_tx_data_buff, 0x08);
-        vcp_ptr->rx_position = 0;
-        return 0;
-			}
-    }
-    else if(vcp_ptr->rx_data[1] == 0x15){ //write discret outputs
-      if(MRTU_CRC(vcp_ptr->rx_data, (0x09 + vcp_ptr->rx_data[0x06])) == 0 ){
-        addr = ((vcp_ptr->rx_data[2]<<8) | vcp_ptr->rx_data[3]) & 0xFFFF;
-				    
-				memcpy(&modbus_ptr->discret_outputs[addr], &vcp_ptr->rx_data[7], vcp_ptr->rx_data[0x06]);
-				
-        modbus_answ_shrt(rx_tx_data_buff, vcp_ptr->rx_data);
-        vcp_uart_write(vcp_ptr, rx_tx_data_buff, 0x08);
-        vcp_ptr->rx_position = 0;
-			return 0;
-			}	
-    }
-		
-		*/
-		
-		
+			
 	}
   else{
-    vcp_ptr->rx_position = 0;
-		led_alt_setup(&con_state_led, LED_BLINK, 400, 200, 1600);
+		led_alt_setup(&con_state_led, LED_BLINK, 200, 100, 1600);
   }
+	vcp_ptr->rx_position = 0;
+	vcp_ptr->rx_size = 0;
 	return 0;
 }
 
+/**
+  * @brief  ansver for read data
+  * @param  f_code - functional code
+  * @param  leng - registers count
+  * @param  tx_data - pointer to tx_data_buff
+	* @param  data - pointer to data to transmitt
+	* @param  reg_addres - offset
+  
+  * @retval ?????????? ???????????? ??????
+  */
 uint8_t modbus_answ(uint8_t f_code, uint8_t leng, uint8_t* tx_data, uint16_t* data, uint16_t reg_addr)
 {	
 	uint16_t crc = 0;
 	uint8_t data_len = 0;
+	
 	tx_data[0] = DEVICE_ID;
   tx_data[1] = f_code & 0xFF;
   tx_data[2] = (leng*2) & 0xFF;

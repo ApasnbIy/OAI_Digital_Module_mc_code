@@ -28,7 +28,7 @@
   * @param  vcp_uart_ptr: указатель на структуру управления vcp_uart
   * @param  timeout_us: таймаут для отделения пакетов в мкс (по умолчанию 1 мс)
   * @param  htim: таймер для работы с задержкой
-	* @param  htim: USB-device, created by cube (offen is hUsbDeviceFS)
+	* @param  hUsbDeviceFS_ptr: USB-device, created by cube (offen is hUsbDeviceFS)
   * @retval статус ошибки
   */
 int vcp_uart_init(type_VCP_UART* vcp_uart_ptr, uint32_t timeout_us, TIM_HandleTypeDef* htim, USBD_HandleTypeDef *hUsbDeviceFS_ptr)

@@ -5,7 +5,7 @@
 #include "string.h"
 //#include "debug.h"
 
-
+#define INA_226_NUM 3
 // Параметры усреднения
 #define AVERAGES_NUM_1 0x00
 #define AVERAGES_NUM_4 0x01
@@ -77,7 +77,7 @@ typedef struct
 typedef struct
 { 
 	uint16_t ch_read_queue;	
-	type_INA226_DEVICE INA_226[2];
+	type_INA226_DEVICE INA_226[INA_226_NUM];
 }type_INA226_Snake;
 
 //#pragma pack(pop)

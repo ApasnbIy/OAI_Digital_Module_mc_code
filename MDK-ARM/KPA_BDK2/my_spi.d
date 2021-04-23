@@ -18,13 +18,14 @@ kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
 kpa_bdk2\my_spi.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
-kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
+kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h
+kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dac.h
@@ -43,4 +44,5 @@ kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
+kpa_bdk2\my_spi.o: ..\my_lib\my_GPIO.h
 kpa_bdk2\my_spi.o: ../Inc/spi.h

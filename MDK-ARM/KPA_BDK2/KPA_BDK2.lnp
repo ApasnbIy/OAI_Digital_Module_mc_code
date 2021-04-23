@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp
+--cpu=Cortex-M4.fp.sp
 "kpa_bdk2\startup_stm32f405xx.o"
 "kpa_bdk2\main.o"
 "kpa_bdk2\gpio.o"
@@ -8,7 +8,6 @@
 "kpa_bdk2\dma.o"
 "kpa_bdk2\i2c.o"
 "kpa_bdk2\spi.o"
-"kpa_bdk2\sys.o"
 "kpa_bdk2\tim.o"
 "kpa_bdk2\usart.o"
 "kpa_bdk2\usb_device.o"
@@ -35,6 +34,7 @@
 "kpa_bdk2\stm32f4xx_hal_exti.o"
 "kpa_bdk2\stm32f4xx_hal_adc.o"
 "kpa_bdk2\stm32f4xx_hal_adc_ex.o"
+"kpa_bdk2\stm32f4xx_ll_adc.o"
 "kpa_bdk2\stm32f4xx_hal_can.o"
 "kpa_bdk2\stm32f4xx_hal_dac.o"
 "kpa_bdk2\stm32f4xx_hal_dac_ex.o"
@@ -57,6 +57,8 @@
 "kpa_bdk2\my_uart.o"
 "kpa_bdk2\led.o"
 "kpa_bdk2\my_spi.o"
+"kpa_bdk2\power_module.o"
+"kpa_bdk2\my_mko.o"
 --library_type=microlib --strict --scatter "KPA_BDK2\KPA_BDK2.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

@@ -8,11 +8,19 @@
 extern TIM_HandleTypeDef htim2; //32 bit timer
 
 void my_gpio_init(type_gpio_config_union* gpio_conf){
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
+  
+	
 	gpio_conf->conf_named.on_of_mask.init_flag = 0;
 	volatile int PIN_IN = 0;
 	volatile int PIN_OUT = 0;
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+	
 	
 		(gpio_conf->conf_named.mask_config_named.gpio55 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO55) : (PIN_IN = PIN_IN|GPIO55);
 		(gpio_conf->conf_named.mask_config_named.gpio56 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO56) : (PIN_IN = PIN_IN|GPIO56);
@@ -25,8 +33,8 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 		}		
 		if(PIN_IN!=0){
-			memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-			GPIO_InitStruct.Pin = PIN_OUT;
+			//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+			GPIO_InitStruct.Pin = PIN_IN;
 			GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 			GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -36,7 +44,7 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 	
 	PIN_IN = 0;
 	PIN_OUT = 0;
-	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+	//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
 	
 		(gpio_conf->conf_named.mask_config_named.gpio1 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO1) : (PIN_IN = PIN_IN|GPIO1);
 		(gpio_conf->conf_named.mask_config_named.gpio2 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO2) : (PIN_IN = PIN_IN|GPIO2);
@@ -46,16 +54,16 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 		(gpio_conf->conf_named.mask_config_named.gpio6 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO6) : (PIN_IN = PIN_IN|GPIO6);
 		(gpio_conf->conf_named.mask_config_named.gpio7 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO7) : (PIN_IN = PIN_IN|GPIO7);
 		(gpio_conf->conf_named.mask_config_named.gpio8 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO8) : (PIN_IN = PIN_IN|GPIO8);
-		if(PIN_OUT!=0){                                                
+		 if(PIN_OUT!=0){                                             
 			GPIO_InitStruct.Pin = PIN_OUT;
 			GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 			GPIO_InitStruct.Pull = GPIO_NOPULL;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 			HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-		}		
+		 }
 		if(PIN_IN!=0){
-			memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-			GPIO_InitStruct.Pin = PIN_OUT;
+			//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+			GPIO_InitStruct.Pin = PIN_IN;
 			GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 			GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -64,7 +72,7 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 	
 	PIN_IN = 0;
 	PIN_OUT = 0;
-	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+	//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
 	
 		(gpio_conf->conf_named.mask_config_named.gpio41 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO41) : (PIN_IN = PIN_IN|GPIO41);
 		(gpio_conf->conf_named.mask_config_named.gpio42 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO42) : (PIN_IN = PIN_IN|GPIO42);
@@ -82,8 +90,8 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 		}		
 		if(PIN_IN!=0){
-			memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-			GPIO_InitStruct.Pin = PIN_OUT;
+			//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+			GPIO_InitStruct.Pin = PIN_IN;
 			GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 			GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -92,7 +100,7 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			
 	PIN_IN = 0;
 	PIN_OUT = 0;
-	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+	//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
 	
 		(gpio_conf->conf_named.mask_config_named.gpio9  && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO9 ) :  (PIN_IN = PIN_IN|GPIO9);
 		(gpio_conf->conf_named.mask_config_named.gpio10 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO10) : (PIN_IN = PIN_IN|GPIO10);
@@ -118,8 +126,8 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 		}		
 		if(PIN_IN!=0){
-			memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-			GPIO_InitStruct.Pin = PIN_OUT;
+			//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+			GPIO_InitStruct.Pin = PIN_IN;
 			GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 			GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -128,7 +136,7 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 	
 	PIN_IN = 0;
 	PIN_OUT = 0;
-	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+	//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
 	
 		(gpio_conf->conf_named.mask_config_named.gpio49 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO49) : (PIN_IN = PIN_IN|GPIO49);
 		(gpio_conf->conf_named.mask_config_named.gpio50 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO50) : (PIN_IN = PIN_IN|GPIO50);
@@ -147,8 +155,8 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 		}		
 		if(PIN_IN!=0){
-			memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-			GPIO_InitStruct.Pin = PIN_OUT;
+			//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+			GPIO_InitStruct.Pin = PIN_IN;
 			GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 			GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -158,7 +166,7 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 	
 	PIN_IN = 0;
 	PIN_OUT = 0;
-	memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+	//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
 	
 		(gpio_conf->conf_named.mask_config_named.gpio25 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO25) : (PIN_IN = PIN_IN|GPIO25);
 		(gpio_conf->conf_named.mask_config_named.gpio26 && 0x01 ) ? (PIN_OUT = PIN_OUT|GPIO26) : (PIN_IN = PIN_IN|GPIO26);
@@ -184,8 +192,8 @@ void my_gpio_init(type_gpio_config_union* gpio_conf){
 			HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 		}		
 		if(PIN_IN!=0){
-			memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
-			GPIO_InitStruct.Pin = PIN_OUT;
+			//memset(&GPIO_InitStruct, 0, sizeof(GPIO_InitStruct));
+			GPIO_InitStruct.Pin = PIN_IN;
 			GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 			GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -207,8 +215,8 @@ void my_gpio_set(type_gpio_out_union* gpio_out)
 	(gpio_out->gpio_out_named.gpio6 && 0x01 ) ? (PIN_HIGH = PIN_HIGH|GPIO6) : (PIN_LOW = PIN_LOW|GPIO6);
 	(gpio_out->gpio_out_named.gpio7 && 0x01 ) ? (PIN_HIGH = PIN_HIGH|GPIO7) : (PIN_LOW = PIN_LOW|GPIO7);
 	(gpio_out->gpio_out_named.gpio8 && 0x01 ) ? (PIN_HIGH = PIN_HIGH|GPIO8) : (PIN_LOW = PIN_LOW|GPIO8);
-	HAL_GPIO_WritePin (GPIOC,PIN_LOW ,GPIO_PIN_RESET);
-	HAL_GPIO_WritePin (GPIOC,PIN_HIGH ,GPIO_PIN_SET);
+	HAL_GPIO_WritePin (GPIOC, PIN_LOW ,GPIO_PIN_RESET);
+	HAL_GPIO_WritePin (GPIOC, PIN_HIGH ,GPIO_PIN_SET);
 	
 	PIN_HIGH = 0;
 	PIN_LOW = 0;
