@@ -814,6 +814,16 @@
               <FileType>5</FileType>
               <FilePath>..\my_lib\my_MKO.h</FilePath>
             </File>
+            <File>
+              <FileName>AD7490.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\my_lib\AD7490.c</FilePath>
+            </File>
+            <File>
+              <FileName>AD7490.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\my_lib\AD7490.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

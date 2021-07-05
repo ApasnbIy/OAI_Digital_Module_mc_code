@@ -35,8 +35,8 @@ typedef struct{
 	uint16_t Data;		//1384
 	uint16_t Word_clk;//1385	
 	uint16_t Len;			//1386
-  uint16_t TimeOutFlag;
-	uint16_t MKO_initFlag;
+  uint16_t TimeOutFlag;//1387
+	uint16_t MKO_initFlag;//1388
 } type_MKO_Cntrl;
 
 typedef struct{

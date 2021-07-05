@@ -59,6 +59,7 @@
 "kpa_bdk2\my_spi.o"
 "kpa_bdk2\power_module.o"
 "kpa_bdk2\my_mko.o"
+"kpa_bdk2\ad7490.o"
 --library_type=microlib --strict --scatter "KPA_BDK2\KPA_BDK2.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

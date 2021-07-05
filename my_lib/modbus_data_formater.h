@@ -11,6 +11,7 @@
 #include "my_spi.h"
 #include "analog_data.h"
 #include "power_module.h"
+#include "AD7490.h"
 
 #pragma pack(push, 2)
 
@@ -27,9 +28,12 @@ typedef struct
 	type_gpio_in_union								mb_gpio_in_union;						//+4140		bytes			//+2070 regs				len bytes 8					4
 	type_spi_receive_data							mb_spi_receive_data;				//+4148		bytes			//+2074 regs				len bytes 128				64
 	type_ina_226_data									ina226_mother_board;				//+4276		bytes			//+2138 regs				len bytes 6					3
-	type_power_module_output_data			mb_power_module_output_data;//+4282		bytes			//+2141	regs				len bytes 6					3
-	uint16_t 													dummy1[MB_DATA_SIZE  - (sizeof(type_adc_data_struct)/2) -(sizeof(type_uart_receive_struct)) - (sizeof(type_ina_226_data)) - \
-																		 (sizeof(type_gpio_in_union)/2) - (sizeof(type_spi_receive_data)/2) - (sizeof(type_ina_226_data)/2) - (sizeof(type_power_module_output_data)/2) ]; // +0x10
+	type_power_module_output_data			mb_power_module_output_data;//+4282		bytes			//+2141	regs				len bytes 16				8
+	type_AD7490_data									mb_AD7490;									//+42   bytes			//+2149 regs				len bytes 100				50
+	uint16_t 													dummy1[MB_DATA_SIZE  - (sizeof(type_adc_data_struct)/2) -(sizeof(type_uart_receive_struct)) -\
+																		 (sizeof(type_ina_226_data)) - \
+																		 (sizeof(type_gpio_in_union)/2) - (sizeof(type_spi_receive_data)/2) - (sizeof(type_ina_226_data)/2) -\
+																		 (sizeof(type_power_module_output_data)/2) - (sizeof(type_AD7490_data)/2)]; // +0x10
 	
 	//analog_out			
 	type_dac_data_struct							mb_dac1; 										//	+0
@@ -49,10 +53,11 @@ typedef struct
 	type_spi_chipselect_settings			mb_spi_cs_settings;					//  +						// +1318 regs
 	type_power_module_settings				mb_power_module_settings;		//	+						// +1337 regs
 	type_MKO_Struct			 							mb_MKO_Struct; 							//	+						// +1348 regs		
+	type_stm_kpa_module								mb_STM_command_struct;			//	+						// +1389 regs	
 	uint16_t										dummy2[MB_DATA_SIZE - (sizeof(type_uart_setting_union)/2) - (sizeof(type_dac_data_struct)) - \
 		(sizeof(type_adc_settings)/2)-(sizeof(type_gpio_config_union)/2) - (sizeof(type_gpio_out_union)/2) - (sizeof(type_gpio_in_union)/2) - \
 		(sizeof(type_uart_transmit_struct)) - (sizeof(type_alternative_gpio_out_struct)/2) - (sizeof(type_spi_settings_struct)/2) - \
-		(sizeof(type_spi_transmit_struct)/2) - (sizeof(type_MKO_Struct)/2)]; // sizeof in bytes, uint8, massive is uint16
+		(sizeof(type_spi_transmit_struct)/2) - (sizeof(type_MKO_Struct)/2)-(sizeof(type_stm_kpa_module)/2)]; // sizeof in bytes, uint8, massive is uint16
 	uint16_t								dummy3[MB_DATA_SIZE];
 	uint16_t								dummy4[MB_DATA_SIZE];
 }type_modbus_data_named;

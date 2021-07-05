@@ -160,6 +160,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>htim5</ItemText>
         </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>hspi2</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>last_read_ch</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -170,37 +180,17 @@
         <Ww>
           <count>1</count>
           <WinNumber>2</WinNumber>
-          <ItemText>temp2</ItemText>
+          <ItemText>\\KPA_BDK2\../Src/main.c\mb_data_union.mb_data_named.mb_AD7490</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x1000UL))-&gt;ODR</ItemText>
+          <ItemText>hspi2</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x1000UL))-&gt;IDR</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x1000UL))</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>ODR</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>((GPIO_TypeDef *) ((0x40000000UL + 0x00020000UL) + 0x1000UL))-&gt;ODR</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>mb_stm_command_struct</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>
@@ -1150,6 +1140,30 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\my_lib\my_MKO.h</PathWithFileName>
       <FilenameWithoutPath>my_MKO.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>72</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\my_lib\AD7490.c</PathWithFileName>
+      <FilenameWithoutPath>AD7490.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>6</GroupNumber>
+      <FileNumber>73</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\my_lib\AD7490.h</PathWithFileName>
+      <FilenameWithoutPath>AD7490.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

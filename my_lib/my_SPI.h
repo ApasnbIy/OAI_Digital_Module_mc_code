@@ -86,9 +86,19 @@ typedef struct
 	uint16_t start;						//+3		1311
 	uint16_t transaction_end;	//+4		1312
 	uint16_t reserved[5];			//+5	len =10
-	
 }
 type_spi_receive_struct;
+
+
+typedef struct
+{
+	uint16_t scaler; //
+	uint16_t len;	
+	uint16_t end_flag;
+	uint16_t error_code;
+	uint16_t copy_data_to_onebuff_flag;
+}
+type_spi_command_bank_control;
 
 #pragma pack(pop, 2)
 
@@ -104,8 +114,8 @@ void my_spi_transmit(type_spi_transmit_struct* spi_transmit);
 void my_spi_receive(type_spi_receive_struct* spi_receive, type_spi_receive_data* spi_receive_data);
 void my_spi_default_settings(type_spi_settings_struct* spi_settings);
 void my_spi_transmit_recive(type_spi_receive_data* spi_receive_data, type_spi_transmit_struct* spi_transmit_str);
-void my_spi_chip_select(type_spi_transmit_struct* spi_transmit, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out);
-void my_spi_chip_deselect(type_spi_transmit_struct* spi_transmit, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out);
+void my_spi_chip_select(uint16_t* chip_mask, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out);
+void my_spi_chip_deselect(uint16_t* chip_mask, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out);
 void my_spi_chip_select_init(type_spi_chipselect_settings* chip_select_init, type_gpio_config_union* gpio_union);
-#endif
 
+#endif

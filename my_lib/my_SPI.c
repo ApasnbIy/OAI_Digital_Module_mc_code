@@ -8,7 +8,7 @@
 void MY_SPI2_Init(type_spi_settings_struct* spi_settings)
 {
 	HAL_SPI_DeInit(&hspi2);
-  hspi2.Instance = SPI2;
+ 	hspi2.Instance = SPI2;
 	switch (spi_settings->mode){
 		case 0:
 			hspi2.Init.Mode = SPI_MODE_MASTER;
@@ -118,14 +118,14 @@ void MY_SPI2_Init(type_spi_settings_struct* spi_settings)
 }
 
 void my_spi_default_settings(type_spi_settings_struct* spi_settings){
-	spi_settings->mode 		  	= SPI_MODE_MASTER;
-	spi_settings->direction 	= SPI_DIRECTION_2LINES;
-	spi_settings->data_size	 	= SPI_DATASIZE_16BIT;
-	spi_settings->polarity 		= SPI_POLARITY_LOW;
-	spi_settings->phase				= SPI_PHASE_2EDGE;
-	spi_settings->baud			  = SPI_BAUDRATEPRESCALER_64;
-	spi_settings->firs_bit		= SPI_FIRSTBIT_MSB;
-	spi_settings->ti_mode			= SPI_TIMODE_DISABLE;
+	spi_settings->mode 		  	= 0;//SPI_MODE_MASTER;
+	spi_settings->direction 	= 0;//SPI_DIRECTION_2LINES;
+	spi_settings->data_size	 	= 1;//SPI_DATASIZE_16BIT;
+	spi_settings->polarity 		= 0;//SPI_POLARITY_LOW;
+	spi_settings->phase				= 1;//SPI_PHASE_2EDGE;
+	spi_settings->baud			  = 4;//SPI_BAUDRATEPRESCALER_64;
+	spi_settings->firs_bit		= 0;//SPI_FIRSTBIT_MSB;
+	spi_settings->ti_mode			= 0;//SPI_TIMODE_DISABLE;
 }
 		
 
@@ -162,83 +162,94 @@ void my_spi_chip_select_init(type_spi_chipselect_settings* chip_select_init, typ
 	chip_select_init->init_flag = 1;
 }
 
-void my_spi_chip_deselect(type_spi_transmit_struct* spi_transmit, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out)
+
+
+
+
+
+
+
+
+
+
+void my_spi_chip_deselect(uint16_t* chip_mask, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out)
 {
 	//volatile uint16_t temp_chip_mask = spi_transmit->chip_mask;
-	if(spi_transmit->chip_mask  & 0x01) {
+	if(*chip_mask  & 0x01) {
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_1);
 	}
-	 if((spi_transmit->chip_mask>>1) & 0x01) {
+	 if((*chip_mask>>1) & 0x01) {
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_2);
 	}
-	 if((spi_transmit->chip_mask>>2) & 0x01){
+	 if((*chip_mask>>2) & 0x01){
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_3);
 	}
-	 if((spi_transmit->chip_mask>>3) & 0x01) {
+	 if((*chip_mask>>3) & 0x01) {
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_4);
 	}
-	 if((spi_transmit->chip_mask>>4) & 0x01){
+	 if((*chip_mask>>4) & 0x01){
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_5);
 	}
-	 if((spi_transmit->chip_mask>>5) & 0x01) {
+	 if((*chip_mask>>5) & 0x01) {
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_6);
 	}
-	 if((spi_transmit->chip_mask>>6) & 0x01) {
+	 if((*chip_mask>>6) & 0x01) {
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_7);
 	}
-	 if((spi_transmit->chip_mask>>7) & 0x01) {
+	 if((*chip_mask>>7) & 0x01) {
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_8);
 	}
-	 if((spi_transmit->chip_mask>>8) & 0x01) {
+	 if((*chip_mask>>8) & 0x01) {
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_9);
 	}
-	 if((spi_transmit->chip_mask>>9) & 0x01) {
+	 if((*chip_mask>>9) & 0x01) {
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_10);
 	}
-	 if((spi_transmit->chip_mask>>10) & 0x01){
+	 if((*chip_mask>>10) & 0x01){
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_11);
 	}
-	 if((spi_transmit->chip_mask>>11) & 0x01){
+	 if((*chip_mask>>11) & 0x01){
 		gpio_out->gpio |= 1 << (12 - chip_select_init->cs_12);
 	}
 	my_gpio_set(gpio_out);
 }
-void my_spi_chip_select(type_spi_transmit_struct* spi_transmit, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out)
+
+void my_spi_chip_select(uint16_t* chip_mask, type_spi_chipselect_settings* chip_select_init, type_gpio_out_union* gpio_out)
 {
-	if((spi_transmit->chip_mask>>0) & 0x01){
+	if((*chip_mask>>0) & 0x01){
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_1));
 	}
-	 if((spi_transmit->chip_mask>>1) & 0x01) {
+	 if((*chip_mask>>1) & 0x01) {
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_2));
 	}
-	 if((spi_transmit->chip_mask>>2) & 0x01) {
+	 if((*chip_mask>>2) & 0x01) {
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_3));
 	}
-	 if((spi_transmit->chip_mask>>3) & 0x01) {
+	 if((*chip_mask>>3) & 0x01) {
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_4));
 	}
-	 if((spi_transmit->chip_mask>>4) & 0x01){
+	 if((*chip_mask>>4) & 0x01){
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_5));
 	}
-	 if((spi_transmit->chip_mask>>5) & 0x01) {
+	 if((*chip_mask>>5) & 0x01) {
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_6));
 	}
-	 if((spi_transmit->chip_mask>>6) & 0x01) {
+	 if((*chip_mask>>6) & 0x01) {
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_7));
 	}
-	 if((spi_transmit->chip_mask>>7) & 0x01){
+	 if((*chip_mask>>7) & 0x01){
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_8));
 	}
-	 if((spi_transmit->chip_mask>>8) & 0x01){
+	 if((*chip_mask>>8) & 0x01){
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_9));
 	}
-	 if((spi_transmit->chip_mask>>9) & 0x01){
+	 if((*chip_mask>>9) & 0x01){
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_10));
 	}
-	 if((spi_transmit->chip_mask>>10) & 0x01){
+	 if((*chip_mask>>10) & 0x01){
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_11));
 	}
-	 if((spi_transmit->chip_mask>>11) & 0x01){
+	 if((*chip_mask>>11) & 0x01){
 		gpio_out->gpio &= ~(1 << (12 - chip_select_init->cs_12));
 	}
 	my_gpio_set(gpio_out);

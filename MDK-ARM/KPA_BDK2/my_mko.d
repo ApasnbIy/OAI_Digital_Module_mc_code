@@ -69,3 +69,4 @@ kpa_bdk2\my_mko.o: ../Inc/usart.h
 kpa_bdk2\my_mko.o: ..\my_lib\my_spi.h
 kpa_bdk2\my_mko.o: ..\my_lib\analog_data.h
 kpa_bdk2\my_mko.o: ..\my_lib\power_module.h
+kpa_bdk2\my_mko.o: ..\my_lib\AD7490.h

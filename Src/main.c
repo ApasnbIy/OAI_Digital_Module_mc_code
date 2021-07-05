@@ -91,12 +91,6 @@ type_MKO_Cntrl mb_MKO_cntrl;
 
 
 type_spi_chipselect_settings	mb_spi_cs_settings;
-/*
-union{
-type_modbus_data mb_data;
-type_modbus_data_named mb_data_named;
-}mb_data_union;
-*/
 
 type_mb_data_union mb_data_union;
 
@@ -108,7 +102,7 @@ type_uart_setting_union 	UART_settings_default;
 type_spi_settings_struct					mb_spi_settings;
 type_spi_transmit_struct					mb_spi_transmit;
 type_spi_receive_struct						mb_spi_receive;
-
+type_stm_kpa_module								mb_stm_command_struct;
 #pragma pack(pop)
 type_LED_INDICATOR mcu_state_led;
 type_LED_INDICATOR con_state_led;
@@ -219,7 +213,7 @@ int main(void)
 	MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart2_setting_struct);
 	my_spi_default_settings(&mb_spi_settings);
 	my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
-	//MY_SPI2_Init(&mb_spi_settings);
+	MY_SPI2_Init(&mb_spi_settings);
 	
 	volatile uint16_t current_time ;
 	volatile uint16_t previous_time_1;
@@ -240,7 +234,8 @@ int main(void)
 	
 	//MKO_Reset();
 
-	
+	//mb_data_union.mb_data_named.mb_STM_command_struct.scaler = 1;
+	//mb_data_union.mb_data_named.mb_STM_command_struct.stm_module_flag = 1;
 	
 		
   /* USER CODE END 2 */
@@ -377,7 +372,7 @@ int main(void)
       }
     }
 		
-		// spi transmit
+		
 
 		
 		//spi receive
@@ -389,14 +384,14 @@ int main(void)
 			}
 			mb_data_union.mb_data_named.mb_spi_receive.scaler = 0;
 		}
-		
-		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
+		// spi transmit
+		else if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
 			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
 			if(mb_spi_transmit.start == 1){
 				if(mb_spi_cs_settings.init_flag == 1){
 					mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 0;
-					my_spi_chip_deselect(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
-					my_spi_chip_select(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
+					my_spi_chip_deselect(&mb_spi_transmit.chip_mask, &mb_spi_cs_settings, &mb_gpio_outputs);
+					my_spi_chip_select(&mb_spi_transmit.chip_mask, &mb_spi_cs_settings, &mb_gpio_outputs);
 					if(mb_spi_transmit.rx_tx_flag == 1){
 						my_spi_transmit_recive( &mb_data_union.mb_data_named.mb_spi_receive_data, &mb_spi_transmit);
 					}
@@ -407,6 +402,11 @@ int main(void)
 			}
 			mb_data_union.mb_data_named.mb_spi_transmit.scaler = 0;
 		}
+		
+		
+		
+		
+		
 		//spi settings
 		else if(mb_data_union.mb_data_named.mb_spi_settings.scaler == 1){
 			memcpy(&mb_spi_settings, &mb_data_union.mb_data_named.mb_spi_settings, sizeof(type_spi_settings_struct));
@@ -577,7 +577,19 @@ int main(void)
 			mb_data_union.mb_data_named.mb_MKO_Struct.scaler &= 0xFFFE;
 		}
 		
+		// it is STM module
+		else if((mb_data_union.mb_data_named.mb_STM_command_struct.scaler & 0x01)== 0x01){
+			memcpy( &mb_stm_command_struct,&mb_data_union.mb_data_named.mb_STM_command_struct, sizeof(mb_stm_command_struct));
+			mb_data_union.mb_data_named.mb_STM_command_struct.scaler = 0;
+			if(mb_stm_command_struct.stm_module_flag){
+				AD_7490_init();
+				AD7490_body_read_queue(&mb_data_union.mb_data_named.mb_AD7490);
+			}
+			else{
+				HAL_SPI_Abort_IT(&hspi2);
+			}
 			
+		}
 		//vcp read
 		if(vcp.rx_position>4){
 			led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 200);
@@ -792,7 +804,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
       HAL_SPI_Abort_IT(&hspi2);
 			mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 1;
 			mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
-			my_spi_chip_deselect(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
+			my_spi_chip_deselect(&mb_spi_transmit.chip_mask, &mb_spi_cs_settings, &mb_gpio_outputs);
     }
   }
 }
@@ -803,12 +815,19 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
   {
     if(hspi2.TxXferCount==0 && hspi2.TxXferCount==0)
     {
-      HAL_SPI_Abort_IT(&hspi2);
+
+		HAL_SPI_Abort_IT(&hspi2);
+		if(mb_stm_command_struct.stm_module_flag){
+			AD7490_body_read_queue(&mb_data_union.mb_data_named.mb_AD7490);
+		}
+		else{
+			// часть относящаяся просто к SPI
 			mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 1;
 			mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
 			mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 1;
 			mb_data_union.mb_data_named.mb_spi_receive.start = 0;
-			my_spi_chip_deselect(&mb_spi_transmit, &mb_spi_cs_settings, &mb_gpio_outputs);
+			my_spi_chip_deselect(&mb_spi_transmit.chip_mask, &mb_spi_cs_settings, &mb_gpio_outputs);
+		}
     }
   }
 }
