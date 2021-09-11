@@ -132,9 +132,6 @@ void HardResetUSB(void);
 void Reverse_Bytes_Order_16(uint16_t* word);
 
 
-
-
-
 uint8_t test_flag;
 /* USER CODE END PFP */
 
@@ -201,8 +198,7 @@ int main(void)
 								//timer 8 - usb
 	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды	
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
-	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
-	HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
+	
 	ina226_init(&ina_226.INA_226[0], &hi2c1,0x40,5); // 5 volt
 	ina226_init(&ina_226.INA_226[1],&hi2c1,0x41,5); // 3.3 volt
 	ina226_init(&ina_226.INA_226[2],&hi2c1,0x44,5); // mother_board
@@ -211,6 +207,8 @@ int main(void)
 	MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart1_setting_struct);
 	MY_USART_UART_struct_default_init(&mb_uart2_setting);
 	MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart2_setting_struct);
+	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
+	HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
 	my_spi_default_settings(&mb_spi_settings);
 	my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
 	MY_SPI2_Init(&mb_spi_settings);

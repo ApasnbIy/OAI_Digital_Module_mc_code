@@ -170,6 +170,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>last_read_ch</ItemText>
         </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>vcp</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
