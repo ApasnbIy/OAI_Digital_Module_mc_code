@@ -383,7 +383,8 @@ int main(void)
 			mb_data_union.mb_data_named.mb_spi_receive.scaler = 0;
 		}
 		// spi transmit
-		else if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
+		
+		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
 			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
 			if(mb_spi_transmit.start == 1){
 				if(mb_spi_cs_settings.init_flag == 1){

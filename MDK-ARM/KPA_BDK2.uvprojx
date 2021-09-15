@@ -824,6 +824,16 @@
               <FileType>5</FileType>
               <FilePath>..\my_lib\AD7490.h</FilePath>
             </File>
+            <File>
+              <FileName>MPP_Module.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\my_lib\MPP_Module.h</FilePath>
+            </File>
+            <File>
+              <FileName>MPP_Module.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\my_lib\MPP_Module.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
