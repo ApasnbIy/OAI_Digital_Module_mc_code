@@ -1,13 +1,6 @@
 #ifndef _ANALOG_DATA_H
 #define _ANALOG_DATA_H
-
-
-
-
-
-
-
-
+#include "main.h"
 #pragma pack(push, 2)
 typedef struct
 {	
@@ -20,6 +13,12 @@ typedef struct
 	uint16_t start;
 	uint16_t stop;
 }type_adc_settings;
+
+typedef struct
+{
+	uint16_t temperature;
+}
+type_temperature_data;
 
 
 typedef struct

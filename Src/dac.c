@@ -99,8 +99,8 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef* dacHandle)
     hdma_dac1.Init.MemInc = DMA_MINC_ENABLE;
     hdma_dac1.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_dac1.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_dac1.Init.Mode = DMA_CIRCULAR;
-    hdma_dac1.Init.Priority = DMA_PRIORITY_MEDIUM;
+    hdma_dac1.Init.Mode = DMA_NORMAL;
+    hdma_dac1.Init.Priority = DMA_PRIORITY_LOW;
     hdma_dac1.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_dac1) != HAL_OK)
     {
@@ -117,8 +117,8 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef* dacHandle)
     hdma_dac2.Init.MemInc = DMA_MINC_ENABLE;
     hdma_dac2.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
     hdma_dac2.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-    hdma_dac2.Init.Mode = DMA_CIRCULAR;
-    hdma_dac2.Init.Priority = DMA_PRIORITY_MEDIUM;
+    hdma_dac2.Init.Mode = DMA_NORMAL;
+    hdma_dac2.Init.Priority = DMA_PRIORITY_LOW;
     hdma_dac2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
     if (HAL_DMA_Init(&hdma_dac2) != HAL_OK)
     {

@@ -176,10 +176,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_DMA_Init();
   MX_CAN2_Init();
-  MX_TIM4_Init();
   MX_USB_DEVICE_Init();
-  MX_TIM6_Init();
-  MX_TIM1_Init();
   MX_TIM5_Init();
   MX_USART1_UART_Init();
   MX_TIM7_Init();
@@ -188,6 +185,8 @@ int main(void)
   MX_I2C2_Init();
   MX_TIM8_Init();
   MX_TIM9_Init();
+  MX_ADC1_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 	//volatile uint16_t len_massive[] = {sizeof(mb_spi_cs_settings), sizeof(type_power_module_settings ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
 	memset(&mb_data_union, 0, sizeof(mb_data_union));
@@ -214,8 +213,8 @@ int main(void)
 	MY_SPI2_Init(&mb_spi_settings);
 	
 	volatile uint16_t current_time ;
-	volatile uint16_t previous_time_1;
-	volatile uint16_t previous_time_2;
+	volatile uint16_t previous_time_1, previous_time_2, previous_time_3;
+	
 	
 	led_init(&mcu_state_led, 0);
 	led_init(&con_state_led, 1);
@@ -248,12 +247,16 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		
 		current_time = (uint16_t)TIM5->CNT;
-		
+		if(mb_data_union.mb_data_named.mb_power_module_settings.it_is_power_module && ((current_time - previous_time_3)>10)){
+			memcpy(&mb_power_module.voltage_1, &mb_adc.data, 4);
+			previous_time_3 = current_time;
+		}
 			
 				
 		if((current_time - previous_time_1)>= 1000){ // запуск опроса ina226 . копирование данных ацп
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
-				memcpy(&mb_power_module.voltage_1, &mb_adc.data, 4);
+				mb_data_union.mb_data_named.mb_temperature.temperature = HAL_ADC_GetValue(&hadc1);
+				HAL_ADC_Start(&hadc1);
 			  if(mb_gpio_alternative_outputs.start == 1 && mb_gpio_alternative_outputs.end_flag == 0){ // if alt started
 					temp = ((uint32_t)(TIM2->ARR)) - ((uint32_t) TIM2->CNT);
 					memcpy(&mb_data_union.mb_data_named.mb_gpio_alternative_out.LOW_time_left, &temp, 4); // update the time in alt_gpio

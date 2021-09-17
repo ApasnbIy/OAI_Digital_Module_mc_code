@@ -30,6 +30,7 @@ typedef struct
 	type_ina_226_data									ina226_mother_board;				//+4276		bytes			//+2138 regs				len bytes 6					3
 	type_power_module_output_data			mb_power_module_output_data;//+4282		bytes			//+2141	regs				len bytes 16				8
 	type_AD7490_data									mb_AD7490;									//+42   bytes			//+2149 regs				len bytes 100				50
+	type_temperature_data							mb_temperature;							//+			bytes			//+2150 regs				len bytes 2					1
 	uint16_t 													dummy1[MB_DATA_SIZE  - (sizeof(type_adc_data_struct)/2) -(sizeof(type_uart_receive_struct)) -\
 																		 (sizeof(type_ina_226_data)) - \
 																		 (sizeof(type_gpio_in_union)/2) - (sizeof(type_spi_receive_data)/2) - (sizeof(type_ina_226_data)/2) -\
