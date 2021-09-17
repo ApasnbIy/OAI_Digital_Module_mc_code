@@ -249,7 +249,7 @@ int main(void)
 		current_time = (uint16_t)TIM5->CNT;
 		if(mb_data_union.mb_data_named.mb_power_module_settings.it_is_power_module && ((current_time - previous_time_3)>10)){
 			memcpy(&mb_power_module.voltage_1, &mb_adc.data, 4);
-			previous_time_3 = current_time;
+			previous_time_3 = current_time ;
 		}
 			
 				
