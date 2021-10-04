@@ -187,14 +187,23 @@ int main(void)
   MX_TIM9_Init();
   MX_ADC1_Init();
   MX_TIM4_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 	//volatile uint16_t len_massive[] = {sizeof(mb_spi_cs_settings), sizeof(type_power_module_settings ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
 	memset(&mb_data_union, 0, sizeof(mb_data_union));
-	HAL_TIM_Base_Start(&htim8);	// таймер ModBus	
+	HAL_TIM_Base_Start(&htim8);	// таймер ModBus
+	
+	
+	
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
-	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
-	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA, GPIO	
+	MX_DAC_Init();	// переинициализация цап для работы с ДМА инициализацию выше нужно закомментировать
+	HAL_TIM_Base_Start(&htim5);
 								//timer 8 - usb
+								//timer 5 - АЦП, INA, GPIO	
+								//timer 8 - usb
+								//timer 3,9 - power module 
+								//timer 7 - светодиоды
+								//timer 2 - gpio alternative set
 	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды	
 	HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8); 
 	
@@ -227,10 +236,76 @@ int main(void)
 	previous_time_2 = 0;
 	timer_slot_5ms_counter = 0;
 	uint32_t temp;
+	uint32_t temp2 = 0;
+	
+	
+	
+	//HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
+	HAL_DAC_Start(&hdac,DAC_CHANNEL_2);
+	while(1){
+  
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,0);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,0);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,200);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,200);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,300);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,300);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,4095);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,1000);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,4095);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,2048);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,4095);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,2248);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,4095);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,3000);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,4095);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,3500);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R,4095);
+		HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R,4095);
+		while(temp2<3000){	
+			temp2++;
+		}
+		temp2 = 0;
+		
+	}
+	
 
 	
+	
+	
 	//MKO_Reset();
-
 	//mb_data_union.mb_data_named.mb_STM_command_struct.scaler = 1;
 	//mb_data_union.mb_data_named.mb_STM_command_struct.stm_module_flag = 1;
 	
@@ -245,14 +320,19 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		
+		if(temp2 == 10){
+		//mb_data_union.mb_data_named.mb_dac1.settings_scaler = 1;
+		//mb_data_union.mb_data_named.mb_dac1.start = 1;
+		}
+		else if(temp2 <10){
+			temp2++;
+		}
 		current_time = (uint16_t)TIM5->CNT;
 		if(mb_data_union.mb_data_named.mb_power_module_settings.it_is_power_module && ((current_time - previous_time_3)>10)){
 			memcpy(&mb_power_module.voltage_1, &mb_adc.data, 4);
 			previous_time_3 = current_time ;
 		}
-			
-				
+						
 		if((current_time - previous_time_1)>= 1000){ // запуск опроса ina226 . копирование данных ацп
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
 				mb_data_union.mb_data_named.mb_temperature.temperature = HAL_ADC_GetValue(&hadc1);
@@ -292,7 +372,6 @@ int main(void)
 						mb_power_module.power_on_delay--;
 					}
 					else{
-						//HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_2);
 						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
 						if(mb_power_module.overcurrent <= mb_data_union.mb_data_named.mb_power_module_output_data.current || mb_power_module.voltage_aligned + 100 <= mb_data_union.mb_data_named.mb_power_module_output_data.ina_aligned_voltage){
 							mb_data_union.mb_data_named.mb_power_module_settings.on_off = 0;
@@ -308,8 +387,8 @@ int main(void)
 				ina226_snake(&ina_226); 
 				previous_time_1 = current_time;				
 		}
-		
-		if((current_time - previous_time_2)>=2000){	// обновление состояния GPIO 
+		// обновление состояния GPIO 
+		if((current_time - previous_time_2)>=2000){	
 			if(mb_gpio_config.conf_named.on_of_mask.init_flag){
 				my_gpio_get(&mb_gpio_inputs);
 				memcpy(&mb_data_union.mb_data_named.mb_gpio_in_union, &mb_gpio_inputs, sizeof(mb_gpio_inputs));
@@ -319,8 +398,8 @@ int main(void)
 			current_time = 0;
 			TIM5->CNT = 0;
     }
-  
-		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler == 1){ // dac1 start/stop/config
+		// dac1 start/stop/config
+		if(mb_data_union.mb_data_named.mb_dac1.settings_scaler == 1){ 
 				memcpy(&mb_dac1.settings_scaler, &mb_data_union.mb_data_named.mb_dac1, sizeof(mb_dac1));
 				if(mb_dac1.start == 1){					
 					HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)mb_dac1.data, (sizeof(mb_dac1.data)/2), DAC_ALIGN_12B_R);  
@@ -332,8 +411,8 @@ int main(void)
 				}
 		}
 		
-		
-		else if(mb_data_union.mb_data_named.mb_dac2.settings_scaler == 1){// dac2 start/stop/config
+		// dac2 start/stop/config
+		else if(mb_data_union.mb_data_named.mb_dac2.settings_scaler == 1){
 			memcpy(&mb_dac2, &mb_data_union.mb_data_named.mb_dac2,  sizeof(mb_dac2));
 			if(mb_dac2.start == 1){
 					HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)mb_dac2.data, (sizeof(mb_dac2.data)/2), DAC_ALIGN_12B_R);  
@@ -344,8 +423,8 @@ int main(void)
 					mb_data_union.mb_data_named.mb_dac2.settings_scaler = 0;
 				}	
 		}
-		
-		else if(mb_data_union.mb_data_named.mb_adc_settings.settings_scaler == 1){ // adc start/stop
+		// adc start/stop
+		else if(mb_data_union.mb_data_named.mb_adc_settings.settings_scaler == 1){ 
 			memcpy(&mb_adc_settings.settings_scaler, &mb_data_union.mb_data_named.mb_adc_settings, sizeof(mb_adc_settings));
 			if(mb_adc_settings.start == 1){
 					HAL_ADC_Start_DMA(&hadc3, (uint32_t*)&mb_adc.data, 8);
@@ -386,7 +465,6 @@ int main(void)
 			mb_data_union.mb_data_named.mb_spi_receive.scaler = 0;
 		}
 		// spi transmit
-		
 		if(mb_data_union.mb_data_named.mb_spi_transmit.scaler == 1){
 			memcpy(&mb_spi_transmit, &mb_data_union.mb_data_named.mb_spi_transmit, sizeof(type_spi_settings_struct));
 			if(mb_spi_transmit.start == 1){

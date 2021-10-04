@@ -14,9 +14,9 @@ typedef struct{
 }
 type_MPP_module;
 
+//
 
-
-
+void MX_MPP_Module_DMA_Init(void);
 
 
 

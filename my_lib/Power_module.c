@@ -162,7 +162,6 @@ void power_module_voltage_set(type_power_module* pwr_mdl_ptr){
 void power_module_pwm_calculate(type_power_module* pwr_mdl_ptr){
 	pwr_mdl_ptr->pwm_1 = 8022 - 0.000005*pwr_mdl_ptr->voltage_aligned*pwr_mdl_ptr->voltage_aligned + 0.0114*pwr_mdl_ptr->voltage_aligned;
 	pwr_mdl_ptr->pwm_2 = pwr_mdl_ptr->pwm_1;
-
 }
 
 void power_module_gpio_init(void){

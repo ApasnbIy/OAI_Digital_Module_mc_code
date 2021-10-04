@@ -12,6 +12,7 @@
 #include "analog_data.h"
 #include "power_module.h"
 #include "AD7490.h"
+#include "MPP_Module.h"
 
 #pragma pack(push, 2)
 

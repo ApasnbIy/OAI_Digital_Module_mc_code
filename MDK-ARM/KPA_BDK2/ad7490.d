@@ -70,3 +70,4 @@ kpa_bdk2\ad7490.o: ..\my_lib\my_UART.h
 kpa_bdk2\ad7490.o: ../Inc/usart.h
 kpa_bdk2\ad7490.o: ..\my_lib\analog_data.h
 kpa_bdk2\ad7490.o: ..\my_lib\power_module.h
+kpa_bdk2\ad7490.o: ..\my_lib\MPP_Module.h
