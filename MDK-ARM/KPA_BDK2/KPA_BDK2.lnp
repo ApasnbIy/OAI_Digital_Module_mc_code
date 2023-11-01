@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp.sp
+--cpu=Cortex-M4.fp
 "kpa_bdk2\startup_stm32f405xx.o"
 "kpa_bdk2\main.o"
 "kpa_bdk2\gpio.o"
@@ -61,7 +61,9 @@
 "kpa_bdk2\my_mko.o"
 "kpa_bdk2\ad7490.o"
 "kpa_bdk2\mpp_module.o"
+"kpa_bdk2\dep_ad.o"
+"kpa_bdk2\lora.o"
 --library_type=microlib --strict --scatter "KPA_BDK2\KPA_BDK2.sct"
---summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "KPA_BDK2.map" -o KPA_BDK2\KPA_BDK2.axf

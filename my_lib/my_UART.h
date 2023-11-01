@@ -12,7 +12,7 @@
 typedef struct
 {																											//UART1
 	uint16_t scaler;															//+0		+1072		+1150
-	uint16_t start;																//+1		+1073		+1151
+	uint16_t start;																//+1		+1073		+1151 
 	uint16_t transmit_flag;												//+2		+1074		+1152
 	uint16_t len;																	//+3		+1075		+1153
 	uint16_t data[UART_TRANSMIT_DATA_BUFF/2];			//+4		+1076		+1154
@@ -25,7 +25,7 @@ typedef struct
 	uint16_t start;												//+1   	+15 				+1043
 	uint16_t len;													//+2 	 	+16  				+1044
 	uint16_t write_ptr;										//+3	 	+17 				+1045
-	uint8_t	 data[UART_RECIVE_DATA_BUFF]; //+4 		+18					+1046
+	uint8_t data[UART_RECIVE_DATA_BUFF]; //+4 		+18					+1046
 }
 type_uart_receive_struct;
 

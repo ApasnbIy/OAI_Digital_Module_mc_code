@@ -65,7 +65,7 @@
 
 // backside struct
 typedef struct{												
-	uint16_t it_is_power_module;	//1		
+	uint16_t it_is_power_module;	//1 - модуль питания, 2 - модуль контроля питания (без регулировки)	
 	uint16_t voltage_aligned;			// приведенное к ацп 1lsb - 12.5 mV
 	uint16_t voltage_aligned_temp;
 	uint16_t over_voltage_aligned;

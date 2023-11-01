@@ -57,7 +57,9 @@ void MY_USART1_UART_Init(type_uart_setting_union* uart_settings)
 }
 
 void MY_USART2_UART_Init(type_uart_setting_union* uart_settings)
-{
+{	
+
+	
   huart2.Instance = 					USART2;
   huart2.Init.BaudRate = 			uart_settings->settings_named.BAUD;
 	switch(uart_settings->settings_named.UART_WORD_LENGH){
@@ -95,16 +97,17 @@ void MY_USART2_UART_Init(type_uart_setting_union* uart_settings)
   huart2.Init.Mode = 					UART_MODE_TX_RX;
   huart2.Init.HwFlowCtl = 		UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = 	UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
+  if (HAL_UART_Init(&huart2) != HAL_OK)
   {
     Error_Handler();
   }
+	
 }
 
 
 void MY_USART_UART_struct_default_init(type_uart_setting_union* uart_settings)
 {
-  uart_settings->settings_named.BAUD = 115200;
+  uart_settings->settings_named.BAUD = 250000;
   uart_settings->settings_named.UART_WORD_LENGH = UART_WORDLENGTH_8B;
   uart_settings->settings_named.UART_STOP_BITS = UART_STOPBITS_1;
   uart_settings->settings_named.UART_PARITY = UART_PARITY_NONE;

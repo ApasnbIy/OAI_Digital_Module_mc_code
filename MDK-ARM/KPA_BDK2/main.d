@@ -77,3 +77,5 @@ kpa_bdk2\main.o: ..\my_lib\my_spi.h
 kpa_bdk2\main.o: ..\my_lib\analog_data.h
 kpa_bdk2\main.o: ..\my_lib\power_module.h
 kpa_bdk2\main.o: ..\my_lib\AD7490.h
+kpa_bdk2\main.o: ..\my_lib\MPP_Module.h
+kpa_bdk2\main.o: ..\my_lib\LoRa.h

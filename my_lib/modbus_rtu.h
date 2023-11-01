@@ -4,7 +4,8 @@
 #include "main.h"
 #include "vcp_time_segmentation.h"
 
-#define MB_DATA_SIZE 8192
+#define MB_DATA_SIZE 12288
+#define MD_DATA_SIZE_DISKRETE 8192
 
 
 
@@ -22,8 +23,8 @@ typedef struct
 {
 	uint16_t analog_inputs[MB_DATA_SIZE];
 	uint16_t analog_outputs[MB_DATA_SIZE];
-	uint16_t discret_inputs[MB_DATA_SIZE];
-	uint16_t discret_outputs[MB_DATA_SIZE];
+	uint16_t discret_inputs[MD_DATA_SIZE_DISKRETE];
+	uint16_t discret_outputs[MD_DATA_SIZE_DISKRETE];
 } type_modbus_data;
 
 

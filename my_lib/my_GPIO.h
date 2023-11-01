@@ -162,6 +162,7 @@ typedef struct
 {
 	uint16_t							formater;
 	uint32_t 							gpio;
+	uint32_t 							gpio_1;
 }
 gpio_formater;
 

@@ -72,6 +72,7 @@ extern TIM_HandleTypeDef htim3;
 #include "led.h"
 #include "Power_module.h"
 #include "my_MKO.h"
+#include "MPP_Module.h"
 
 type_VCP_UART vcp;
 
@@ -87,8 +88,10 @@ type_INA226_Snake	power_module_ina;
 type_power_module mb_power_module;
 type_MKO_Data mb_MKO_Data;
 type_MKO_Cntrl mb_MKO_cntrl;
-
-
+type_MPP_Parametres mb_MPP_Module_ch1;
+type_MPP_Parametres mb_MPP_Module_ch2;
+uint16_t test_dac[] = {0, 500, 1000, 2000, 3000, 4000};
+uint8_t test_dac_i;
 
 type_spi_chipselect_settings	mb_spi_cs_settings;
 
@@ -110,16 +113,13 @@ type_LED_INDICATOR con_state_led;
 
 type_gpio_in_union 			mb_gpio_inputs;
 type_gpio_out_union 		mb_gpio_outputs;
+
 type_gpio_config_union	mb_gpio_config;
 type_alternative_gpio_out_struct mb_gpio_alternative_outputs;
 uint8_t timer_slot_5ms_counter = 0;
 uint8_t time_slot_flag_5ms = 0;
-
 	
-
-
-
-
+uint8_t DAC_flag;
 
 
 
@@ -187,6 +187,8 @@ int main(void)
   MX_TIM9_Init();
   MX_ADC1_Init();
   MX_TIM4_Init();
+  MX_TIM12_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 	//volatile uint16_t len_massive[] = {sizeof(mb_spi_cs_settings), sizeof(type_power_module_settings ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
 	memset(&mb_data_union, 0, sizeof(mb_data_union));
@@ -206,6 +208,7 @@ int main(void)
 	MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart1_setting_struct);
 	MY_USART_UART_struct_default_init(&mb_uart2_setting);
 	MY_USART_UART_struct_default_init(&mb_data_union.mb_data_named.mb_uart2_setting_struct);
+	
 	HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
 	HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
 	my_spi_default_settings(&mb_spi_settings);
@@ -226,20 +229,20 @@ int main(void)
 	previous_time_1 = 0;
 	previous_time_2 = 0;
 	timer_slot_5ms_counter = 0;
-	uint32_t temp;
-
 	
-	//MKO_Reset();
-
-	//mb_data_union.mb_data_named.mb_STM_command_struct.scaler = 1;
-	//mb_data_union.mb_data_named.mb_STM_command_struct.stm_module_flag = 1;
 	
-		
+	HAL_DAC_Start(&hdac,DAC_CHANNEL_2);
+	HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
+	HAL_TIM_Base_Start_IT(&htim12);
+	                                                    
+	
+	//HAL_UART_Abort_IT(&huart2);
+	//MY_USART2_UART_Init(&mb_uart2_setting);                                                         
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	
+	                                                         
   while (1)
   {
     /* USER CODE END WHILE */
@@ -257,10 +260,12 @@ int main(void)
         memcpy(&mb_data_union.mb_data_named.mb_adc.data, &mb_adc.data, sizeof(mb_adc.data));
 				mb_data_union.mb_data_named.mb_temperature.temperature = HAL_ADC_GetValue(&hadc1);
 				HAL_ADC_Start(&hadc1);
+				/*	
 			  if(mb_gpio_alternative_outputs.start == 1 && mb_gpio_alternative_outputs.end_flag == 0){ // if alt started
 					temp = ((uint32_t)(TIM2->ARR)) - ((uint32_t) TIM2->CNT);
 					memcpy(&mb_data_union.mb_data_named.mb_gpio_alternative_out.LOW_time_left, &temp, 4); // update the time in alt_gpio
 				}
+				*/
 				
 				if(ina_226.ch_read_queue == 0){
 					memcpy(&mb_data_union.mb_data_named.ina226_5v, &ina_226.INA_226[0].voltage, sizeof(type_ina_226_data));
@@ -277,7 +282,7 @@ int main(void)
 					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_mother_board.voltage);
 					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.ina226_mother_board.current);
 				}
-				if(mb_power_module.it_is_power_module == 1){
+				if((mb_power_module.it_is_power_module == 1)||(mb_power_module.it_is_power_module == 2)){
 					memcpy(&mb_data_union.mb_data_named.mb_power_module_output_data, &power_module_ina.INA_226[0].voltage, 4);
 					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.mb_power_module_output_data.voltage);	
 					Reverse_Bytes_Order_16(&mb_data_union.mb_data_named.mb_power_module_output_data.current);
@@ -333,7 +338,7 @@ int main(void)
 		}
 		
 		
-		else if(mb_data_union.mb_data_named.mb_dac2.settings_scaler == 1){// dac2 start/stop/config
+		if(mb_data_union.mb_data_named.mb_dac2.settings_scaler == 1){// dac2 start/stop/config
 			memcpy(&mb_dac2, &mb_data_union.mb_data_named.mb_dac2,  sizeof(mb_dac2));
 			if(mb_dac2.start == 1){
 					HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)mb_dac2.data, (sizeof(mb_dac2.data)/2), DAC_ALIGN_12B_R);  
@@ -357,7 +362,7 @@ int main(void)
 				}
 		}
 		// инициализация GPIO
-		else if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater == 1){
+		if(mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater == 1){
 			memcpy(&mb_gpio_config.conf_named, &mb_data_union.mb_data_named.mb_gpio_config_union, sizeof(mb_gpio_config.conf_named));
 			my_gpio_init(&mb_gpio_config);
 			mb_data_union.mb_data_named.mb_gpio_config_union.conf_named.mask_config_named.data_updater = 0;
@@ -365,7 +370,7 @@ int main(void)
 		}
 		
 		//обновление состояния GPIO настроенных на выход
-		else if(mb_gpio_config.conf_named.on_of_mask.init_flag){
+		if(mb_gpio_config.conf_named.on_of_mask.init_flag){
       if(mb_data_union.mb_data_named.mb_gpio_out_union.gpio_out_named.data_updater == 1){
         memcpy(&mb_gpio_outputs, &mb_data_union.mb_data_named.mb_gpio_out_union, sizeof(mb_gpio_outputs));
         my_gpio_set(&mb_gpio_outputs);
@@ -377,7 +382,7 @@ int main(void)
 
 		
 		//spi receive
-		else if(mb_data_union.mb_data_named.mb_spi_receive.scaler == 1){
+		if(mb_data_union.mb_data_named.mb_spi_receive.scaler == 1){
 			memcpy(&mb_spi_receive, &mb_data_union.mb_data_named.mb_spi_receive, 20); // 20 bites are control part of struct
 			if(mb_spi_receive.start == 1){
 				mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 0;
@@ -410,7 +415,7 @@ int main(void)
 		
 		
 		//spi settings
-		else if(mb_data_union.mb_data_named.mb_spi_settings.scaler == 1){
+		if(mb_data_union.mb_data_named.mb_spi_settings.scaler == 1){
 			memcpy(&mb_spi_settings, &mb_data_union.mb_data_named.mb_spi_settings, sizeof(type_spi_settings_struct));
 			if(mb_spi_settings.set_default == 0x01){
 				my_spi_default_settings(&mb_spi_settings);
@@ -431,7 +436,7 @@ int main(void)
 		
 		
 		//обновление и отправка посылки по uart1
-		else if(mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler == 1){
+		if(mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler == 1){
 			memcpy(&mb_uart1_transmit, &mb_data_union.mb_data_named.mb_uart1_transmit_struct, sizeof(mb_uart1_transmit));
 			if(mb_uart1_transmit.start == 0x01 && mb_uart1_transmit.len != 0x00){
 				mb_data_union.mb_data_named.mb_uart1_transmit_struct.transmit_flag = 0x0000;
@@ -451,10 +456,11 @@ int main(void)
 			}
 		}
 		//Настройки ЮАРТ1, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
-		else if(mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler == 1){
+		if(mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler == 1){
 			memcpy(&mb_uart1_setting, &mb_data_union.mb_data_named.mb_uart1_setting_struct, sizeof(type_uart_setting_union));
 			if(mb_uart1_setting.settings_named.BAUD!=0){
 				HAL_UART_Abort_IT(&huart1);
+				HAL_UART_DeInit(&huart2);
 				MY_USART1_UART_Init(&mb_uart1_setting);
 				mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr = 0x00;
 				memset(&mb_data_union.mb_data_named.mb_uart1_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_receive_struct.data));
@@ -472,16 +478,16 @@ int main(void)
 				mb_data_union.mb_data_named.mb_uart1_setting_struct.settings_named.scaler =0;				
 			}
 		}
-		
 		//обновление и отправка посылки по uart2
-		else if(mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler == 1){
+		if(mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler == 1){
 			memcpy(&mb_uart2_transmit, &mb_data_union.mb_data_named.mb_uart2_transmit_struct, sizeof(mb_uart2_transmit));
 			if(mb_uart2_transmit.start == 0x01 && mb_uart2_transmit.len != 0x00){
 				mb_data_union.mb_data_named.mb_uart2_transmit_struct.transmit_flag = 0x0000;
 				mb_uart2_transmit.transmit_flag = 0x0000;
 				mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler = 2;
 				if(mb_uart2_transmit.len < UART_TRANSMIT_DATA_BUFF){
-					for(int i = 0; i<= mb_uart2_transmit.len; i++){ 
+					
+					for(int i = 0; i<= mb_uart2_transmit.len+1; i++){ 
 						Reverse_Bytes_Order_16(&mb_uart2_transmit.data[i]);
 					}
 					HAL_UART_Transmit_IT(&huart2, (uint8_t*) mb_uart2_transmit.data, mb_uart2_transmit.len);
@@ -493,15 +499,22 @@ int main(void)
 				}
 			}
 		}
+		
 		//Настройки ЮАРТ2, из простого, менять баудрэйт, при изменении настроек заново запускается буфер на прием
-		else if(mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler != mb_uart2_setting.settings_named.scaler){
+		if(mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler != mb_uart2_setting.settings_named.scaler){
 			memcpy(&mb_uart2_setting, &mb_data_union.mb_data_named.mb_uart2_setting_struct, sizeof(type_uart_setting_union));
 			if(mb_uart2_setting.settings_named.BAUD!=0){
 				HAL_UART_Abort_IT(&huart2);
+				HAL_UART_DeInit(&huart2);
+				
 				MY_USART2_UART_Init(&mb_uart2_setting);
+				
 				mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr = 0x00;
 				memset(&mb_data_union.mb_data_named.mb_uart2_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_receive_struct.data));
+				
 				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
+				
+				
 				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.flag = 0x01;
 				mb_data_union.mb_data_named.mb_uart2_setting_struct.settings_named.scaler = 0;	
 			}
@@ -517,7 +530,7 @@ int main(void)
 		}
 		
 		// alternative GPIO set
-		else if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler ==  1){
+		if(mb_data_union.mb_data_named.mb_gpio_alternative_out.scaler ==  1){
 				memcpy(&mb_gpio_alternative_outputs, &mb_data_union.mb_data_named.mb_gpio_alternative_out, sizeof(mb_gpio_alternative_outputs));
 				if(mb_gpio_alternative_outputs.start == 0x0001 && mb_gpio_alternative_outputs.stop == 0x00){
 					mb_gpio_alternative_outputs.end_flag = 0;
@@ -535,11 +548,13 @@ int main(void)
 		
 				
 		//power_module_cnfg
-		else if(mb_data_union.mb_data_named.mb_power_module_settings.scaler == 1){
-			if(mb_power_module.it_is_power_module != 1){
+		if(mb_data_union.mb_data_named.mb_power_module_settings.scaler == 1){
+			
+			if(mb_power_module.it_is_power_module != 1 ){
 					power_module_init(&mb_power_module);
 					ina226_power_module_init(&power_module_ina.INA_226[0], &hi2c2, 0x40,mb_power_module.over_voltage_aligned );
 			}			
+			
 			mb_power_module.voltage_aligned_temp = mb_data_union.mb_data_named.mb_power_module_settings.voltage *0.08; // lsb 12.5 мВ
 			if(mb_power_module.voltage_aligned != mb_power_module.voltage_aligned_temp){
 				mb_power_module.voltage_aligned = mb_power_module.voltage_aligned_temp;
@@ -569,8 +584,37 @@ int main(void)
 			}
 			mb_data_union.mb_data_named.mb_power_module_settings.scaler = 0;
 		}
+		//настройка модуля контроля питания
+		if(mb_data_union.mb_data_named.mb_power_module_settings.scaler == 0x02){
+			
+			if(mb_power_module.it_is_power_module != 2 ){
+					power_module_gpio_init();
+					ina226_power_module_init(&power_module_ina.INA_226[0], &hi2c2, 0x40,mb_power_module.over_voltage_aligned );	
+					mb_power_module.it_is_power_module = 2;	
+			}	
+						
+			//проверка на обновление ограничений
+			if(mb_data_union.mb_data_named.mb_power_module_settings.new_constrain == 0x01){
+				mb_power_module.overcurrent = mb_data_union.mb_data_named.mb_power_module_settings.overcurent;
+				mb_power_module.over_voltage_aligned = (mb_data_union.mb_data_named.mb_power_module_settings.overvoltage) *0.8; // lsb - 1.25 мВ
+				mb_power_module.constrain_avalible = 1;
+				mb_data_union.mb_data_named.mb_power_module_settings.new_constrain = 0;
+			}
+					
+			mb_power_module.on_off = mb_data_union.mb_data_named.mb_power_module_settings.on_off;		
+			power_module_voltage_on_off(&mb_power_module);
+			
+			if(mb_power_module.on_off){
+				mb_power_module.power_on_delay = 1500;
+				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_SET);
+			}
+			mb_data_union.mb_data_named.mb_power_module_settings.scaler = 0;
+		}
+		
+		
+		
 		//MKO
-		else if((mb_data_union.mb_data_named.mb_MKO_Struct.scaler & 0x01)== 0x01){
+		if((mb_data_union.mb_data_named.mb_MKO_Struct.scaler & 0x01)== 0x01){
 			if(mb_data_union.mb_data_named.mb_MKO_Struct.MKO_Cntrl.MKO_initFlag != 1){
 				MKO_Init();
 				mb_data_union.mb_data_named.mb_MKO_Struct.MKO_Cntrl.MKO_initFlag = 1;
@@ -580,7 +624,7 @@ int main(void)
 		}
 		
 		// it is STM module
-		else if((mb_data_union.mb_data_named.mb_STM_command_struct.scaler & 0x01)== 0x01){
+		if((mb_data_union.mb_data_named.mb_STM_command_struct.scaler & 0x01)== 0x01){
 			memcpy( &mb_stm_command_struct,&mb_data_union.mb_data_named.mb_STM_command_struct, sizeof(mb_stm_command_struct));
 			mb_data_union.mb_data_named.mb_STM_command_struct.scaler = 0;
 			if(mb_stm_command_struct.stm_module_flag){
@@ -592,6 +636,39 @@ int main(void)
 			}
 			
 		}
+		//воздействие мпп канал 1
+		if(mb_data_union.mb_data_named.mb_MPP_CH1_Module.scaler == 1){	
+			mb_MPP_Module_ch1.V_high = mb_data_union.mb_data_named.mb_MPP_CH1_Module.High_U & 0xFFF;
+			mb_MPP_Module_ch1.V_low = mb_data_union.mb_data_named.mb_MPP_CH1_Module.Low_U & 0xFFF;
+			mb_MPP_Module_ch1.Flag = 1;
+			mb_MPP_Module_ch1.Channel = 1; // потому что у Толи перепутано во втором канале 0
+			
+			mb_MPP_Module_ch1.Period_leng = mb_data_union.mb_data_named.mb_MPP_CH1_Module.t;
+			mb_MPP_Module_ch1.Number_period_original = mb_data_union.mb_data_named.mb_MPP_CH1_Module.N;
+			mb_MPP_Module_ch1.Pack_number = mb_data_union.mb_data_named.mb_MPP_CH1_Module.M;
+			mb_MPP_Module_ch1.Pack_period_original = 	mb_data_union.mb_data_named.mb_MPP_CH1_Module.T;			
+			mb_MPP_Module_ch1.Pack_period_original = mb_MPP_Module_ch1.Pack_period_original * 10;
+			mb_MPP_Module_ch1.Period_cycler = mb_MPP_Module_ch1.Period_leng;
+			mb_MPP_Module_ch1.Pack_period = mb_MPP_Module_ch1.Pack_period_original;
+			mb_MPP_Module_ch1.Number_period = mb_MPP_Module_ch1.Number_period_original+1;		
+			mb_data_union.mb_data_named.mb_MPP_CH1_Module.scaler = 0;
+		}
+		if(mb_data_union.mb_data_named.mb_MPP_CH2_Module.scaler == 1){	
+			mb_MPP_Module_ch2.V_high = mb_data_union.mb_data_named.mb_MPP_CH2_Module.High_U & 0xFFF;
+			mb_MPP_Module_ch2.V_low = mb_data_union.mb_data_named.mb_MPP_CH2_Module.Low_U & 0xFFF;
+			mb_MPP_Module_ch2.Flag = 1;
+			mb_MPP_Module_ch2.Channel = 0;
+			
+			mb_MPP_Module_ch2.Period_leng = mb_data_union.mb_data_named.mb_MPP_CH2_Module.t;
+			mb_MPP_Module_ch2.Number_period_original = mb_data_union.mb_data_named.mb_MPP_CH2_Module.N;
+			mb_MPP_Module_ch2.Pack_number = mb_data_union.mb_data_named.mb_MPP_CH2_Module.M;
+			mb_MPP_Module_ch2.Pack_period_original = 	mb_data_union.mb_data_named.mb_MPP_CH2_Module.T;								
+			mb_MPP_Module_ch2.Pack_period_original = mb_MPP_Module_ch2.Pack_period_original * 10;
+			mb_MPP_Module_ch2.Period_cycler = mb_MPP_Module_ch2.Period_leng;
+			mb_MPP_Module_ch2.Pack_period = mb_MPP_Module_ch2.Pack_period_original;
+			mb_MPP_Module_ch2.Number_period = mb_MPP_Module_ch2.Number_period_original+1;	
+			mb_data_union.mb_data_named.mb_MPP_CH2_Module.scaler = 0;			
+		}
 		//vcp read
 		if(vcp.rx_position>4){
 			led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 200);
@@ -599,6 +676,7 @@ int main(void)
 			//vcp.rx_position = 0;
 		}
   }
+  
   /* USER CODE END 3 */
 }
 
@@ -752,10 +830,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		time_slot_flag_5ms = 5;
 	}
 	
+	if (htim == &htim12) {
+		TIM_MPP_interrupt(&mb_MPP_Module_ch1);
+		TIM_MPP_interrupt(&mb_MPP_Module_ch2);
+	}
+	/*
+	if(htim == &htim1){
+		if(mb_data_union.mb_data_named.mb_MKO_Struct.MKO_Cntrl.TimeOutFlag == 1){
+			mb_data_union.mb_data_named.mb_MKO_Struct.scaler |= 0x04;
+			HAL_TIM_Base_Stop_IT(&htim1);	
+		}
+	}
+	*/
 	if(htim == &htim2){
 		if(mb_data_union.mb_data_named.mb_MKO_Struct.MKO_Cntrl.TimeOutFlag == 1){
 			mb_data_union.mb_data_named.mb_MKO_Struct.scaler |= 0x04;
-			HAL_TIM_Base_Stop_IT(&htim2);	
+			HAL_TIM_Base_Stop_IT(&htim1);	
 		}
 		else{
 			if(mb_gpio_alternative_outputs.it_scaler == 0){
@@ -768,6 +858,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				HAL_TIM_Base_Stop_IT(&htim2);	
 			}
 		}
+		
 	}
 	if(htim == &htim9){ // voltage tuning 
 				

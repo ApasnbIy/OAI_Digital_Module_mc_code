@@ -298,14 +298,14 @@ void my_gpio_set(type_gpio_out_union* gpio_out)
 	
 void my_gpio_get(type_gpio_in_union* gpio_in)	
 {
-	(GPIOC -> IDR & GPIO1)	? (gpio_in->gpio_in_named.gpio1 = 0x01) : (gpio_in->gpio_in_named.gpio1 = 0x00);
-	(GPIOC -> IDR & GPIO2)	? (gpio_in->gpio_in_named.gpio2 = 0x01) : (gpio_in->gpio_in_named.gpio2 = 0x00);
-	(GPIOC -> IDR & GPIO3)	? (gpio_in->gpio_in_named.gpio3 = 0x01) : (gpio_in->gpio_in_named.gpio3 = 0x00);
-	(GPIOC -> IDR & GPIO4)	? (gpio_in->gpio_in_named.gpio4 = 0x01) : (gpio_in->gpio_in_named.gpio4 = 0x00);
-	(GPIOC -> IDR & GPIO5)	? (gpio_in->gpio_in_named.gpio5 = 0x01) : (gpio_in->gpio_in_named.gpio5 = 0x00);
-	(GPIOC -> IDR & GPIO6)	? (gpio_in->gpio_in_named.gpio6 = 0x01) : (gpio_in->gpio_in_named.gpio6 = 0x00);
-	(GPIOC -> IDR & GPIO7)	? (gpio_in->gpio_in_named.gpio7 = 0x01) : (gpio_in->gpio_in_named.gpio7 = 0x00);
-	(GPIOC -> IDR & GPIO8)	? (gpio_in->gpio_in_named.gpio8 = 0x01) : (gpio_in->gpio_in_named.gpio8 = 0x00);
+	(GPIOC -> IDR & GPIO1)	?		(gpio_in->gpio_in_named.gpio1 = 0x01) : (gpio_in->gpio_in_named.gpio1 = 0x00);
+	(GPIOC -> IDR & GPIO2)	? 	(gpio_in->gpio_in_named.gpio2 = 0x01) : (gpio_in->gpio_in_named.gpio2 = 0x00);
+	(GPIOC -> IDR & GPIO3)	? 	(gpio_in->gpio_in_named.gpio3 = 0x01) : (gpio_in->gpio_in_named.gpio3 = 0x00);
+	(GPIOC -> IDR & GPIO4)	?   (gpio_in->gpio_in_named.gpio4 = 0x01) : (gpio_in->gpio_in_named.gpio4 = 0x00);
+	(GPIOC -> IDR & GPIO5)	?   (gpio_in->gpio_in_named.gpio5 = 0x01) : (gpio_in->gpio_in_named.gpio5 = 0x00);
+	(GPIOC -> IDR & GPIO6)	?   (gpio_in->gpio_in_named.gpio6 = 0x01) : (gpio_in->gpio_in_named.gpio6 = 0x00);
+	(GPIOC -> IDR & GPIO7)	?   (gpio_in->gpio_in_named.gpio7 = 0x01) : (gpio_in->gpio_in_named.gpio7 = 0x00);
+	(GPIOC -> IDR & GPIO8)	?   (gpio_in->gpio_in_named.gpio8 = 0x01) : (gpio_in->gpio_in_named.gpio8 = 0x00);
 
 	(GPIOE -> IDR & GPIO9  )	? (gpio_in->gpio_in_named.gpio9  = 0x01) : (gpio_in->gpio_in_named.gpio9  = 0x00);
 	(GPIOE -> IDR & GPIO10 )	? (gpio_in->gpio_in_named.gpio10 = 0x01) : (gpio_in->gpio_in_named.gpio10 = 0x00);
@@ -358,6 +358,7 @@ void my_gpio_get(type_gpio_in_union* gpio_in)
 	(GPIOF -> IDR & GPIO54 )	? (gpio_in->gpio_in_named.gpio54 = 0x01) : (gpio_in->gpio_in_named.gpio54 = 0x00);
 	(GPIOF -> IDR & GPIO57 )	? (gpio_in->gpio_in_named.gpio57 = 0x01) : (gpio_in->gpio_in_named.gpio57 = 0x00);
 	(GPIOF -> IDR & GPIO59 )	? (gpio_in->gpio_in_named.gpio59 = 0x01) : (gpio_in->gpio_in_named.gpio59 = 0x00);
+	(GPIOF -> IDR & GPIO60 )	? (gpio_in->gpio_in_named.gpio60 = 0x01) : (gpio_in->gpio_in_named.gpio60 = 0x00);
 
 	(GPIOB -> IDR & GPIO55 )	? (gpio_in->gpio_in_named.gpio55 = 0x01) : (gpio_in->gpio_in_named.gpio55 = 0x00);
 	(GPIOB -> IDR & GPIO56 )	? (gpio_in->gpio_in_named.gpio56 = 0x01) : (gpio_in->gpio_in_named.gpio56 = 0x00);
