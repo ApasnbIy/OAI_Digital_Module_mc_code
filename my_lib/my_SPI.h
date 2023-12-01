@@ -3,7 +3,8 @@
 
 #include "main.h"
 #include "my_GPIO.h"
-
+#include "spi.h"
+#include "dac.h"
 /*
 mode 				 	master - 0, slave -1
 direction 	 	2Line - 0, 2Line_rx_only - 1, 1Line - 2
@@ -33,7 +34,8 @@ typedef struct
 	uint16_t	ti_mode;			//+9	1255		//0
 	uint16_t	init_flag;		//+10	1256
 	uint16_t  set_default;	//+10	1257
-	uint16_t  reserved[8];	//+11	1258
+	uint16_t  spi_num;			//+11	1258    //0 SPI2 1 - SPI1
+	uint16_t  reserved[7];	//+12	1259
 }
 type_spi_settings_struct;
 
@@ -110,6 +112,8 @@ type_spi_receive_data;
 
 
 void MY_SPI2_Init(type_spi_settings_struct* spi_settings);
+void MY_SPI1_Init(type_spi_settings_struct* spi_settings);
+void MY_SPI1_MspInit(SPI_HandleTypeDef* spiHandle);
 void my_spi_transmit(type_spi_transmit_struct* spi_transmit);
 void my_spi_receive(type_spi_receive_struct* spi_receive, type_spi_receive_data* spi_receive_data);
 void my_spi_default_settings(type_spi_settings_struct* spi_settings);

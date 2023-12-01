@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "usart.h"
+#include "my_GPIO.h"
 
 #define UART_TRANSMIT_DATA_BUFF 128
 #define UART_RECIVE_DATA_BUFF 2048
@@ -38,7 +39,8 @@ typedef struct											// 1140 UART1 1218 UART2
 	uint16_t UART_PAIRITY;						//1144		/1222
 	uint16_t UART_WORD_LENGH;					//1145		/1223
 	uint16_t Default;									//1146		/1224
-	uint16_t Reserved[2];							//1147		/1225
+	uint16_t Duplex;									//1147		/1225
+	uint16_t Reserved;								//1148		/1226
 	uint16_t flag;										//1149		/1227											// 10regs
 }
 type_uart_setting_struct;
@@ -51,7 +53,8 @@ typedef struct
 	uint16_t UART_PARITY;
 	uint16_t UART_WORD_LENGH;
 	uint16_t Default;
-	uint16_t Reserved[2];
+	uint16_t Duplex;
+	uint16_t Reserved;
 	uint16_t flag;
 }
 type_uart_setting_named_struct;
@@ -66,9 +69,9 @@ type_uart_setting_union;
 #pragma pack(pop)
 
 
-void MY_USART1_UART_Init(type_uart_setting_union* uart_settings);
+void MY_USART1_UART_Init(type_uart_setting_union* uart_settings, type_gpio_config_union* gpio_conf);
 void MY_USART_UART_struct_default_init(type_uart_setting_union* uart_settings);
-void MY_USART2_UART_Init(type_uart_setting_union* uart_settings);
+void MY_USART2_UART_Init(type_uart_setting_union* uart_settings, type_gpio_config_union* gpio_conf);
 
 
 #endif

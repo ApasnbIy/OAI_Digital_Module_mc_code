@@ -25,6 +25,7 @@
 /* USER CODE END 0 */
 
 SPI_HandleTypeDef hspi2;
+SPI_HandleTypeDef hspi1;
 
 /* SPI2 init function */
 void MX_SPI2_Init(void)
@@ -92,6 +93,9 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
   /* USER CODE END SPI2_MspInit 1 */
   }
 }
+
+
+
 
 void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 {

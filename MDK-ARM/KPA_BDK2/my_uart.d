@@ -45,3 +45,4 @@ kpa_bdk2\my_uart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 kpa_bdk2\my_uart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 kpa_bdk2\my_uart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 kpa_bdk2\my_uart.o: ../Inc/usart.h
+kpa_bdk2\my_uart.o: ..\my_lib\my_GPIO.h

@@ -46,3 +46,4 @@ kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 kpa_bdk2\my_spi.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 kpa_bdk2\my_spi.o: ..\my_lib\my_GPIO.h
 kpa_bdk2\my_spi.o: ../Inc/spi.h
+kpa_bdk2\my_spi.o: ../Inc/dac.h

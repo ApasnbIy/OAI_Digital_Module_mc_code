@@ -839,6 +839,16 @@
               <FileType>5</FileType>
               <FilePath>.\DEP_AD.h</FilePath>
             </File>
+            <File>
+              <FileName>LoRa.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\my_lib\LoRa.h</FilePath>
+            </File>
+            <File>
+              <FileName>LoRa.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\my_lib\LoRa.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

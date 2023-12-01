@@ -63,6 +63,8 @@
 
 #define VOLTAGE_DEVIATION 25 //mV
 
+#define POWER_ON_DELAY 20 // Попугаи, время которое не проводится контроль выходного тока
+
 // backside struct
 typedef struct{												
 	uint16_t it_is_power_module;	//1 - модуль питания, 2 - модуль контроля питания (без регулировки)	

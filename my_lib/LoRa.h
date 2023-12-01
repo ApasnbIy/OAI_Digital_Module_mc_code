@@ -1,34 +1,36 @@
 #ifndef _LoRa_H
-#define _loRa_H
+#define _LoRa_H
 
 
 #include "my_SPI.h"
+#include "my_GPIO.h"
 
+
+extern type_gpio_out_union 		mb_gpio_outputs;
+
+#pragma pack(push, 2)
+
+typedef struct{
+	uint16_t scaler;     //1407
+	uint16_t Len;				//1408
+	uint16_t SPI_NUM; 	//1409 // 0 - SPI2   1 - SPI1
+	uint16_t cs_num;  	//1410 // Pin Number from 1 to 60
+	uint16_t t_r_flag;	//1411 // 0 - recieve 1 - transmit 2 - transmit receive
+	uint16_t Data[256];	//1412 
+	uint16_t SPI_Tranzaction_flag; // for detecting
+}
+type_SPI_RW_data;
 
 
 typedef struct{
-  uint16_t Reg_addr; 
-	uint16_t Len;
-	uint16_t Data[256];
+	uint16_t Data[255];
 }
-type_Lora_RdWr_data;
+type_SPI_Ansver;
 
+#pragma pack(pop, 2)
 
-
-typedef struct{
-  uint8_t ChipNum;
-	uint8_t Scaler;
-	uint16_t Reg_addr;
-	uint16_t Len;
-	type_Lora_RdWr_data Data[4];
-}
-type_Lora_Command;
-
-
-void LoRa_init(void);
-//void AD7490_body_read_queue(type_AD7490_data* AD7490_ptr);
-//void AD7490_start_read(type_AD7490_data* ad7490_ptr);
-//void AD7490_snake(type_AD7490_data* ad7490_ptr);
+void SPI_RW_routine(type_SPI_RW_data* spi_rw_data, type_SPI_Ansver* spi_answer);
+void CS_UP_DOWN(uint16_t pin_num, uint8_t SET_RESET);
 
 
 #endif

@@ -124,6 +124,11 @@ uint8_t ina226_power_allert_set(type_INA226_DEVICE* ina226_ptr, uint16_t voltage
 uint8_t power_module_init(type_power_module* pwr_module_ptr){
 	
 	power_module_gpio_init();
+	if(pwr_module_ptr ->overcurrent == 0 || pwr_module_ptr ->overcurrent >= 1500){
+		pwr_module_ptr ->overcurrent = 1500; // задаем ограничение по току по умолчанию. если нужно поменять, для этого есть функционал
+	}
+	
+	
 	MY_TIM3_Init();
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
@@ -133,9 +138,7 @@ uint8_t power_module_init(type_power_module* pwr_module_ptr){
 	HAL_TIM_Base_Start_IT(&htim9);	
 	pwr_module_ptr ->it_is_power_module = 1;
 	
-	if(pwr_module_ptr ->overcurrent == 0 || pwr_module_ptr ->overcurrent >= 1500){
-		pwr_module_ptr ->overcurrent = 1500; // задаем ограничение по току по умолчанию. если нужно поменять, для этого есть функционал
-	}
+	
 	return 0;
 }
 

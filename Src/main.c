@@ -92,6 +92,8 @@ type_MPP_Parametres mb_MPP_Module_ch1;
 type_MPP_Parametres mb_MPP_Module_ch2;
 uint16_t test_dac[] = {0, 500, 1000, 2000, 3000, 4000};
 uint8_t test_dac_i;
+uint8_t uart1_transmit_len;
+uint8_t uart2_transmit_len;
 
 type_spi_chipselect_settings	mb_spi_cs_settings;
 
@@ -115,6 +117,7 @@ type_gpio_in_union 			mb_gpio_inputs;
 type_gpio_out_union 		mb_gpio_outputs;
 
 type_gpio_config_union	mb_gpio_config;
+
 type_alternative_gpio_out_struct mb_gpio_alternative_outputs;
 uint8_t timer_slot_5ms_counter = 0;
 uint8_t time_slot_flag_5ms = 0;
@@ -190,7 +193,10 @@ int main(void)
   MX_TIM12_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-	//volatile uint16_t len_massive[] = {sizeof(mb_spi_cs_settings), sizeof(type_power_module_settings ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
+	
+	
+	
+	//volatile uint16_t len_massive[] = {sizeof(type_SPI_RW_data), sizeof(type_SPI_Ansver ), sizeof(type_uart_receive_struct), sizeof(type_gpio_in_union),sizeof(type_spi_receive_data),sizeof(type_uart_receive_struct)};
 	memset(&mb_data_union, 0, sizeof(mb_data_union));
 	HAL_TIM_Base_Start(&htim8);	// таймер ModBus	
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
@@ -217,7 +223,7 @@ int main(void)
 	
 	volatile uint16_t current_time ;
 	volatile uint16_t previous_time_1, previous_time_2, previous_time_3;
-	
+	volatile uint16_t previous_time_4, previous_time_5, previous_time_6;
 	
 	led_init(&mcu_state_led, 0);
 	led_init(&con_state_led, 1);
@@ -242,7 +248,49 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	                                                         
+	/*
+  mb_gpio_config.conf_named.mask_config_named.gpio33 = 1;
+	mb_gpio_config.conf_named.mask_config_named.gpio30 = 1;
+	mb_gpio_config.conf_named.mask_config_named.gpio28 = 1;
+	mb_gpio_config.conf_named.mask_config_named.gpio31 = 1;
+  my_gpio_init(&mb_gpio_config);
+  mb_gpio_outputs.gpio_out_named.gpio33 = 1;
+	mb_gpio_outputs.gpio_out_named.gpio30 = 1;
+	mb_gpio_outputs.gpio_out_named.gpio28 = 1;
+	mb_gpio_outputs.gpio_out_named.gpio31 = 1;
+	
+  my_gpio_set(&mb_gpio_outputs);
+  //my_spi_default_settings(&mb_data_union.mb_data_named.mb_spi_settings);
+  mb_data_union.mb_data_named.mb_spi_settings.baud = 4;
+  mb_data_union.mb_data_named.mb_spi_settings.data_size = 0;
+  mb_data_union.mb_data_named.mb_spi_settings.mode = 0;
+  mb_data_union.mb_data_named.mb_spi_settings.direction = 0;
+  mb_data_union.mb_data_named.mb_spi_settings.polarity = 0;
+  mb_data_union.mb_data_named.mb_spi_settings.phase = 1;
+  mb_data_union.mb_data_named.mb_spi_settings.firs_bit = 0;
+  mb_data_union.mb_data_named.mb_spi_settings.ti_mode = 0;
+
+  MY_SPI2_Init(&mb_data_union.mb_data_named.mb_spi_settings);
+  mb_data_union.mb_data_named.mb_SPI_Device1.scaler = 1;
+  
+	
+	mb_data_union.mb_data_named.mb_SPI_Device1.t_r_flag = 2;
+  mb_data_union.mb_data_named.mb_SPI_Device1.SPI_NUM = 0;
+	mb_data_union.mb_data_named.mb_SPI_Device1.Len = 4;
+	mb_data_union.mb_data_named.mb_SPI_Device1.cs_num = 30;
+		
+
+	
+	
+	mb_data_union.mb_data_named.mb_SPI_Device1.scaler = 1;
+	mb_data_union.mb_data_named.mb_SPI_Device1.Data[0] = 0x06;
+	SPI_RW_routine(&mb_data_union.mb_data_named.mb_SPI_Device1, &mb_data_union.mb_data_named.mb_SPI_Device);
+	
+	
+	*/
+
+	
+	
   while (1)
   {
     /* USER CODE END WHILE */
@@ -250,6 +298,9 @@ int main(void)
     /* USER CODE BEGIN 3 */
 		
 		current_time = (uint16_t)TIM5->CNT;
+		
+		
+		
 		if(mb_data_union.mb_data_named.mb_power_module_settings.it_is_power_module && ((current_time - previous_time_3)>10)){
 			memcpy(&mb_power_module.voltage_1, &mb_adc.data, 4);
 			previous_time_3 = current_time;
@@ -299,7 +350,7 @@ int main(void)
 					else{
 						//HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_2);
 						HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET);
-						if(mb_power_module.overcurrent <= mb_data_union.mb_data_named.mb_power_module_output_data.current || mb_power_module.voltage_aligned + 100 <= mb_data_union.mb_data_named.mb_power_module_output_data.ina_aligned_voltage){
+						if((mb_power_module.overcurrent <= mb_data_union.mb_data_named.mb_power_module_output_data.current) || (2890 <= mb_data_union.mb_data_named.mb_power_module_output_data.ina_aligned_voltage)){ //28.8 = 36*0.8 (максимальное напряжение питания для нашей аппаратуры
 							mb_data_union.mb_data_named.mb_power_module_settings.on_off = 0;
 							mb_power_module.on_off = 0;	
 							power_module_voltage_on_off(&mb_power_module);
@@ -420,7 +471,13 @@ int main(void)
 			if(mb_spi_settings.set_default == 0x01){
 				my_spi_default_settings(&mb_spi_settings);
 			}
-			MY_SPI2_Init(&mb_spi_settings);
+			if(mb_data_union.mb_data_named.mb_spi_settings.spi_num == 0){
+				MY_SPI2_Init(&mb_spi_settings);
+			}
+			else if(mb_data_union.mb_data_named.mb_spi_settings.spi_num == 1){
+				MY_SPI1_Init(&mb_spi_settings);
+			}
+			
 			mb_data_union.mb_data_named.mb_spi_settings.scaler = 0;	
 		}
 		
@@ -442,8 +499,16 @@ int main(void)
 				mb_data_union.mb_data_named.mb_uart1_transmit_struct.transmit_flag = 0x0000;
 				mb_uart1_transmit.transmit_flag = 0x0000;
 				if(mb_uart1_transmit.len < UART_TRANSMIT_DATA_BUFF){
-					for(int i = 0; i<= mb_uart1_transmit.len; i++){ 
+					//uart1_transmit_len = mb_uart1_transmit.len/2;
+					for(int i = 0; i <= mb_uart1_transmit.len; i++){ 
 						Reverse_Bytes_Order_16(&mb_uart1_transmit.data[i]);
+					}
+					
+					if(mb_uart1_setting.settings_named.Duplex){\
+						//huart1.Instance->CR1 &= ~0x04; //опускаем RE recieve enable
+						mb_gpio_outputs.gpio_out_named.gpio2 = 1;
+						my_gpio_set(&mb_gpio_outputs);
+						
 					}
 					HAL_UART_Transmit_IT(&huart1, (uint8_t*) mb_uart1_transmit.data, mb_uart1_transmit.len);
 					mb_data_union.mb_data_named.mb_uart1_transmit_struct.scaler = 0;
@@ -460,8 +525,8 @@ int main(void)
 			memcpy(&mb_uart1_setting, &mb_data_union.mb_data_named.mb_uart1_setting_struct, sizeof(type_uart_setting_union));
 			if(mb_uart1_setting.settings_named.BAUD!=0){
 				HAL_UART_Abort_IT(&huart1);
-				HAL_UART_DeInit(&huart2);
-				MY_USART1_UART_Init(&mb_uart1_setting);
+				HAL_UART_DeInit(&huart1);
+				MY_USART1_UART_Init(&mb_uart1_setting, &mb_gpio_config);
 				mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr = 0x00;
 				memset(&mb_data_union.mb_data_named.mb_uart1_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_receive_struct.data));
 				HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
@@ -470,7 +535,7 @@ int main(void)
 			}
 			else{
 				HAL_UART_Abort_IT(&huart1);
-				MY_USART1_UART_Init(&UART_settings_default);
+				MY_USART1_UART_Init(&UART_settings_default, &mb_gpio_config);
 				mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr = 0x00;
 				memset(&mb_data_union.mb_data_named.mb_uart1_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart1_receive_struct.data));
 				HAL_UART_Receive_IT(&huart1, &mb_data_union.mb_data_named.mb_uart1_receive_struct.data[mb_data_union.mb_data_named.mb_uart1_receive_struct.write_ptr],1);
@@ -484,11 +549,16 @@ int main(void)
 			if(mb_uart2_transmit.start == 0x01 && mb_uart2_transmit.len != 0x00){
 				mb_data_union.mb_data_named.mb_uart2_transmit_struct.transmit_flag = 0x0000;
 				mb_uart2_transmit.transmit_flag = 0x0000;
-				mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler = 2;
+				
 				if(mb_uart2_transmit.len < UART_TRANSMIT_DATA_BUFF){
 					
-					for(int i = 0; i<= mb_uart2_transmit.len+1; i++){ 
+					for(int i = 0; i <= 64; i++){ 
 						Reverse_Bytes_Order_16(&mb_uart2_transmit.data[i]);
+					}
+					if(mb_uart2_setting.settings_named.Duplex){
+						//huart2.Instance->CR1 &= ~0x04; //опускаем RE recieve enable
+						mb_gpio_outputs.gpio_out_named.gpio1 = 1;
+						my_gpio_set(&mb_gpio_outputs);
 					}
 					HAL_UART_Transmit_IT(&huart2, (uint8_t*) mb_uart2_transmit.data, mb_uart2_transmit.len);
 					mb_data_union.mb_data_named.mb_uart2_transmit_struct.scaler = 0;
@@ -507,7 +577,7 @@ int main(void)
 				HAL_UART_Abort_IT(&huart2);
 				HAL_UART_DeInit(&huart2);
 				
-				MY_USART2_UART_Init(&mb_uart2_setting);
+				MY_USART2_UART_Init(&mb_uart2_setting, &mb_gpio_config);
 				
 				mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr = 0x00;
 				memset(&mb_data_union.mb_data_named.mb_uart2_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_receive_struct.data));
@@ -520,7 +590,7 @@ int main(void)
 			}
 			else{
 				HAL_UART_Abort_IT(&huart2);
-				MY_USART2_UART_Init(&UART_settings_default);
+				MY_USART2_UART_Init(&UART_settings_default, &mb_gpio_config);
 				mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr = 0x00;
 				memset(&mb_data_union.mb_data_named.mb_uart2_receive_struct.data, 0x00, sizeof(mb_data_union.mb_data_named.mb_uart2_receive_struct.data));
 				HAL_UART_Receive_IT(&huart2, &mb_data_union.mb_data_named.mb_uart2_receive_struct.data[mb_data_union.mb_data_named.mb_uart2_receive_struct.write_ptr],1);
@@ -588,11 +658,15 @@ int main(void)
 		if(mb_data_union.mb_data_named.mb_power_module_settings.scaler == 0x02){
 			
 			if(mb_power_module.it_is_power_module != 2 ){
-					power_module_gpio_init();
+				power_module_gpio_init();
+				if(mb_power_module.overcurrent == 0 || mb_power_module.overcurrent >= 1500){
+						mb_power_module.overcurrent = 1500; // задаем ограничение по току по умолчанию. если нужно поменять, для этого есть функционал
+					}
 					ina226_power_module_init(&power_module_ina.INA_226[0], &hi2c2, 0x40,mb_power_module.over_voltage_aligned );	
 					mb_power_module.it_is_power_module = 2;	
 			}	
-						
+			
+			mb_power_module.voltage_aligned = mb_data_union.mb_data_named.mb_power_module_settings.voltage *0.08;
 			//проверка на обновление ограничений
 			if(mb_data_union.mb_data_named.mb_power_module_settings.new_constrain == 0x01){
 				mb_power_module.overcurrent = mb_data_union.mb_data_named.mb_power_module_settings.overcurent;
@@ -600,12 +674,11 @@ int main(void)
 				mb_power_module.constrain_avalible = 1;
 				mb_data_union.mb_data_named.mb_power_module_settings.new_constrain = 0;
 			}
-					
 			mb_power_module.on_off = mb_data_union.mb_data_named.mb_power_module_settings.on_off;		
 			power_module_voltage_on_off(&mb_power_module);
 			
 			if(mb_power_module.on_off){
-				mb_power_module.power_on_delay = 1500;
+				mb_power_module.power_on_delay = POWER_ON_DELAY;
 				HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_SET);
 			}
 			mb_data_union.mb_data_named.mb_power_module_settings.scaler = 0;
@@ -669,6 +742,12 @@ int main(void)
 			mb_MPP_Module_ch2.Number_period = mb_MPP_Module_ch2.Number_period_original+1;	
 			mb_data_union.mb_data_named.mb_MPP_CH2_Module.scaler = 0;			
 		}
+		// SPI normal send read
+		if(mb_data_union.mb_data_named.mb_SPI_Device1.scaler == 1){
+			SPI_RW_routine(&mb_data_union.mb_data_named.mb_SPI_Device1, &mb_data_union.mb_data_named.mb_SPI_Device);
+		}	
+		
+		
 		//vcp read
 		if(vcp.rx_position>4){
 			led_alt_setup(&con_state_led, LED_BLINK, 200, 127, 200);
@@ -786,6 +865,11 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 		mb_data_union.mb_data_named.mb_uart1_transmit_struct.start = 0x0;
 		mb_uart1_transmit.transmit_flag = 0x01;
 		HAL_UART_AbortTransmit_IT(&huart1);
+		if(mb_uart1_setting.settings_named.Duplex){
+						mb_gpio_outputs.gpio_out_named.gpio2 = 0;
+						my_gpio_set(&mb_gpio_outputs);
+					}
+		
 	}
 	else if(huart == &huart2){
 		//mb_uart_transmit.transmit_flag = 1;
@@ -793,7 +877,13 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 		mb_data_union.mb_data_named.mb_uart2_transmit_struct.start = 0x0;
 		mb_uart2_transmit.transmit_flag = 0x01;
 		HAL_UART_AbortTransmit_IT(&huart2);
+		
+		if(mb_uart2_setting.settings_named.Duplex){
+						mb_gpio_outputs.gpio_out_named.gpio1 = 0;
+						my_gpio_set(&mb_gpio_outputs);
+					} 		
 	}	
+	//huart->Instance->CR1 |= 0x04; //поднимаем RE recieve enable
 }
 
 
@@ -890,31 +980,40 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-  if(hspi == &hspi2)
-  {
+  
     if(hspi2.TxXferCount==0)
     {
-      HAL_SPI_Abort_IT(&hspi2);
-			mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 1;
-			mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
-			my_spi_chip_deselect(&mb_spi_transmit.chip_mask, &mb_spi_cs_settings, &mb_gpio_outputs);
+      	HAL_SPI_Abort_IT(&hspi2);
+	 	mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 1;
+		mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
+		my_spi_chip_deselect(&mb_spi_transmit.chip_mask, &mb_spi_cs_settings, &mb_gpio_outputs);
     }
-  }
+	else{
+		if(hspi1.TxXferCount==0 && hspi1.TxXferCount==0){
+			SPI_RW_routine(&mb_data_union.mb_data_named.mb_SPI_Device1 ,&mb_data_union.mb_data_named.mb_SPI_Device);
+		}
+	}
+  
 }
 
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-  if(hspi == &hspi2)
-  {
     if(hspi2.TxXferCount==0 && hspi2.TxXferCount==0)
     {
 
-		HAL_SPI_Abort_IT(&hspi2);
+		
 		if(mb_stm_command_struct.stm_module_flag){
+			HAL_SPI_Abort_IT(&hspi2);
 			AD7490_body_read_queue(&mb_data_union.mb_data_named.mb_AD7490);
 		}
+		else if(mb_data_union.mb_data_named.mb_SPI_Device1.SPI_Tranzaction_flag)
+		{
+			SPI_RW_routine(&mb_data_union.mb_data_named.mb_SPI_Device1 ,&mb_data_union.mb_data_named.mb_SPI_Device);
+		}
+		
 		else{
 			// часть относящаяся просто к SPI
+			HAL_SPI_Abort_IT(&hspi2);
 			mb_data_union.mb_data_named.mb_spi_transmit.transaction_end = 1;
 			mb_data_union.mb_data_named.mb_spi_transmit.start = 0;
 			mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 1;
@@ -922,19 +1021,27 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 			my_spi_chip_deselect(&mb_spi_transmit.chip_mask, &mb_spi_cs_settings, &mb_gpio_outputs);
 		}
     }
-  }
+	else{
+		if(hspi1.TxXferCount==0 && hspi1.TxXferCount==0){
+			SPI_RW_routine(&mb_data_union.mb_data_named.mb_SPI_Device1 ,&mb_data_union.mb_data_named.mb_SPI_Device);
+		}
+	}
 }
 void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-  if(hspi == &hspi2)
-  {
+  
     if(hspi2.RxXferCount==0)
     {
-      HAL_SPI_Abort_IT(&hspi2);
+      		HAL_SPI_Abort_IT(&hspi2);
 			mb_data_union.mb_data_named.mb_spi_receive.transaction_end = 1;
 			mb_data_union.mb_data_named.mb_spi_receive.start = 0;
     }
-  }
+	else{
+		if(hspi1.TxXferCount==0 && hspi1.TxXferCount==0){
+			SPI_RW_routine(&mb_data_union.mb_data_named.mb_SPI_Device1 ,&mb_data_union.mb_data_named.mb_SPI_Device);
+		}
+	}
+  
 }
 	
 	

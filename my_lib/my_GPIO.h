@@ -182,9 +182,10 @@ typedef struct
 type_gpio_full_stack;
 typedef union
 {
-	uint32_t 					gpio;
-	type_gpio_full_stack gpio_stack;
-	type_gpio_named		gpio_out_named;
+	uint64_t							gpio_full;
+	uint32_t 							gpio;
+	type_gpio_full_stack 	gpio_stack;
+	type_gpio_named				gpio_out_named;
 }
 type_gpio_out_union;
 

@@ -46,6 +46,8 @@ kpa_bdk2\ad7490.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 kpa_bdk2\ad7490.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 kpa_bdk2\ad7490.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
 kpa_bdk2\ad7490.o: ..\my_lib\my_GPIO.h
+kpa_bdk2\ad7490.o: ../Inc/spi.h
+kpa_bdk2\ad7490.o: ../Inc/dac.h
 kpa_bdk2\ad7490.o: ..\my_lib\modbus_data_formater.h
 kpa_bdk2\ad7490.o: ..\my_lib\my_MKO.h
 kpa_bdk2\ad7490.o: ..\my_lib\led.h

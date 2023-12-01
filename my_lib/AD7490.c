@@ -37,6 +37,7 @@ void AD7490_body_read_queue(type_AD7490_data* AD7490_ptr){
   else if(AD7490_ptr->device_num == 1){
     ad_7490_cs_mask = 2; // 0b0**0010
   }
+	
   my_spi_chip_deselect(ad_7490_cs_mask_p, &ad_7490_cs_settings, &mb_gpio_outputs);
 	my_spi_chip_select(ad_7490_cs_mask_p, &ad_7490_cs_settings, &mb_gpio_outputs);
   control_register = ((0x02 << 10) | ((ch_num & 0x0F) << 6) | (0x03 << 4) | (0x01 << 2) | (0x01 << 0)) << 4;
