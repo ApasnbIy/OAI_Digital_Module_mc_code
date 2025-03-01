@@ -201,6 +201,23 @@ int main(void)
 	HAL_TIM_Base_Start(&htim8);	// таймер ModBus	
 	MX_ADC3_Init(); // переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
 	MX_DAC_Init();	// переинициализация ацп для работы с ДМА инициализацию выше нужно закомментировать
+	HAL_DAC_Start(&hdac,DAC_CHANNEL_2);
+	HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
+	HAL_TIM_Base_Start_IT(&htim12);
+	                                                    
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R, 1024);
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R, 2024);
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R, 3024);
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_1,DAC_ALIGN_12B_R, 4024);
+	
+	
+	
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R, 1024);
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R, 2024);
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R, 3024);
+	HAL_DAC_SetValue(&hdac,DAC_CHANNEL_2,DAC_ALIGN_12B_R, 4024);
+	
+	
 	HAL_TIM_Base_Start(&htim5); //таймер АЦП, INA, GPIO	
 								//timer 8 - usb
 	HAL_TIM_Base_Start_IT(&htim7);	//таймер светодиоды	
@@ -237,11 +254,7 @@ int main(void)
 	timer_slot_5ms_counter = 0;
 	
 	
-	HAL_DAC_Start(&hdac,DAC_CHANNEL_2);
-	HAL_DAC_Start(&hdac,DAC_CHANNEL_1);
-	HAL_TIM_Base_Start_IT(&htim12);
-	                                                    
-	
+
 	//HAL_UART_Abort_IT(&huart2);
 	//MY_USART2_UART_Init(&mb_uart2_setting);                                                         
   /* USER CODE END 2 */
